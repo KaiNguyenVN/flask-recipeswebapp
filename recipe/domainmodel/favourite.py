@@ -11,6 +11,24 @@ class Favourite:
         self.__user = user
         self.__recipe = recipe
 
+    def __repr__(self) -> str:
+        return f"Favorite_recipe(id={self.id}, user={self.user.username}, recipe={self.recipe.name})"
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Favourite):
+            return False
+        else:
+            return self.id == other.id
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, Favourite):
+            return False
+        else:
+            return self.id < other.id
+
     @property
     def id(self) -> int:
         return self.__id

@@ -18,6 +18,22 @@ class Review:
         self.__review = review
         self.__date = date if date else datetime.now()
 
+    def __repr__(self) -> str:
+        return f"Review(id={self.id}, user={self.user}, recipe={self.recipe.name}, rate={self.rate}, review={self.review}, date={self.date})"
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Review):
+            return False
+        else:
+            return self.rate == other.rate
+    def __lt__(self, other) -> bool:
+        if not isinstance(other, Review):
+            return False
+        else:
+            return self.rate < other.rate
+    def __hash__(self) -> int:
+        return hash(self.id)
+
     @property
     def id(self) -> int:
         return self.__id
