@@ -1,11 +1,13 @@
-from recipe import Recipe
-from user import User
 from datetime import datetime
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from recipe.domainmodel.user import User
 
 
 class Review:
 # TODO: Complete the implementation of the Review class.
-    def __init__(self, id: int, user: User, recipe: Recipe, rate: int, review: str, date: datetime = None) -> None:
+    def __init__(self, id: int, user: "User", rate: int, review: str, date: datetime = None) -> None:
         if not isinstance(id, int) or id <= 0:
             raise ValueError("id must be a positive int.")
         if not isinstance(rate, int) or rate <= 0:
@@ -13,13 +15,12 @@ class Review:
 
         self.__id = id
         self.__user = user
-        self.__recipe = recipe
         self.__rate = rate
         self.__review = review
         self.__date = date if date else datetime.now()
 
     def __repr__(self) -> str:
-        return f"Review(id={self.id}, user={self.user}, recipe={self.recipe.name}, rate={self.rate}, review={self.review}, date={self.date})"
+        return f"Review(id={self.id}, user={self.user}, rate={self.rate}, review={self.review}, date={self.date})"
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Review):
@@ -38,11 +39,8 @@ class Review:
     def id(self) -> int:
         return self.__id
     @property
-    def user(self) -> User:
+    def user(self) -> "User":
         return self.__user
-    @property
-    def recipe(self) -> Recipe:
-        return self.__recipe
     @property
     def rate(self) -> int:
         return self.__rate
