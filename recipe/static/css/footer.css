@@ -1,0 +1,14 @@
+.header{
+    background-color: sandybrown;
+    border-radius:  5px;
+}
+.copyright{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+.head{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
