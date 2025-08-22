@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cozy-Style Header</title>
+<link rel="stylesheet" href="../static/css/header.css" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="brand-row">
+        <a href="#" class="brand" aria-label="Home">
+          <div class="brand-mark">CK</div>
+          <div class="brand-name">A Cozy Kitchen</div>
+        </a>
+
+        <div class="utils">
+          <a class="icon-btn" href="#" aria-label="Favorites">
+            <!-- heart -->
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+            </svg>
+          </a>
+          <a class="icon-btn" href="#" aria-label="Search">
+            <!-- search -->
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M21 21l-4.3-4.3"></path>
+            </svg>
+          </a>
+
+          <!-- Hamburger (mobile only) -->
+          <div class="hambox">
+            <input id="navtoggle" type="checkbox" />
+            <label for="navtoggle" aria-label="Toggle menu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 7h16M4 12h16M4 17h16"/>
+              </svg>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Nav -->
+    <nav aria-label="Primary">
+      <div class="container nav-row">
+        <ul class="menu">
+            <li><a href="#">SUMMER</a></li>
+
+          <li>
+            <a href="#">Category
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="dropdown" role="menu">
+              <a href="#">All Recipes</a>
+              <a href="#">Quick &amp; Easy</a>
+              <a href="#">Weeknight Dinners</a>
+              <a href="#">Vegetarian</a>
+              <a href="#">Drinks</a>
+            </div>
+          </li>
+
+          <li>
+            <a href="#">Desserts
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="dropdown" role="menu">
+              <a href="#">Cakes</a>
+              <a href="#">Cookies</a>
+              <a href="#">Pies &amp; Cobblers</a>
+              <a href="#">Frozen Treats</a>
+            </div>
+          </li>
+            <li><a href="#">ABOUT</a></li>
+
+        </ul>
+      </div>
+    </nav>
+  </header>
+</body>
+</html>
