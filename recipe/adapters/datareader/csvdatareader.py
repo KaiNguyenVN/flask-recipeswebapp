@@ -1,5 +1,6 @@
 
 import csv
+import re
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
 from recipe.domainmodel.nutrition import Nutrition
@@ -29,12 +30,16 @@ class CSVDataReader:
                 instructions = [row[24].strip()]
                 cookingTime = int(row[4].strip())
                 preparationTime = int(row[5].strip())
-                datePublished = datetime(row[7].strip())
+
+                datestr = row[7].strip()
+                datestr = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', datestr)
+                datePublished = datetime.strptime(datestr, '%d %b %Y')
+
                 imagesLink = [row[9].strip()]
                 ingrQuantities = [row[11].strip()]
                 servings = row[22].strip()
                 recipeYield = row[23].strip()
-                rating = int(input("Enter your rating: "))
+                rating = 0
 
                 # Author: id, name
                 author = Author(int(row[2]), str(row[3]), [])

@@ -1,10 +1,16 @@
-from recipe.domainmodel.recipe import Recipe
-from recipe.domainmodel.user import User
+# Hazziq add both from import and add if type checking
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .recipe import Recipe
+    from .user import User
 
 
 class Favourite:
 # TODO: Complete the implementation of the Favourite class.
-    def __init__(self, id: int, user: User, recipe: Recipe) -> None:
+    # Hazziq - recipe = "Recipe"
+    def __init__(self, id: int, user: User, recipe: "Recipe") -> None:
         if not isinstance(id, int) or id <= 0:
             raise ValueError("id must be a positive int.")
         self.__id = id

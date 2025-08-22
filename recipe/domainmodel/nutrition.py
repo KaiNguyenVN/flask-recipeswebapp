@@ -16,53 +16,62 @@ class Nutrition:
         #self.__protein = protein
         self.__nutris = {"calories": calories, "fat": fat, "saturatedfat": saturatedfat, "cholesterol": cholesterol, "sodium": sodium, "carbohydrates": carbohydrates, "fiber": fiber , "sugar": sugar, "protein": protein}
 
-        def __repr__(self):
-            return str(self.__nutris)
+    def __repr__(self):
+        return str(self.__nutris)
 
-        def __eq__(self, other, nutri):
-            if isinstance(other, Nutrition):
-                return self.__nutris[nutri] == other.__nutris[nutri]
-            else:
-                return False
+    def __eq__(self, other, nutri):
+        if isinstance(other, Nutrition):
+            return self.__nutris[nutri] == other.__nutris[nutri]
+        else:
+            return False
 
-        def __lt__(self, other, nutri):
-            if isinstance(other, Nutrition):
-                return self.__nutris[nutri] < other.__nutris[nutri]
-            else:
-                return False
+    def __lt__(self, other, nutri):
+        if isinstance(other, Nutrition):
+            return self.__nutris[nutri] < other.__nutris[nutri]
+        else:
+            return False
 
-        def __hash__(self) -> int:
-            return hash(self.id)
+    def __hash__(self) -> int:
+       return hash(self.id)
 
 
 
-        @property
-        def id(self) -> int:
-            return self.__id
-        @property
-        def calories(self) -> int:
-            return self.__nutirs["calories"]
-        @property
-        def fat(self) -> int:
-            return self.__nutris["fat"]
-        @property
-        def saturatedfat(self) -> int:
-            return self.__nutris["saturatedfat"]
-        @property
-        def cholesterol(self) -> int:
-            return self.__nutris["cholesterol"]
-        @property
-        def sodium(self) -> int:
-            return self.__nutris["sodium"]
-        @property
-        def carbohydrates(self) -> int:
-            return self.__nutris["carbohydrates"]
-        @property
-        def fiber(self) -> int:
-            return self.__nutris["fiber"]
-        @property
-        def sugar(self) -> int:
-            return self.__nutris["sugar"]
-        @property
-        def protein(self) -> int:
-            return self.__nutris["protein"]
+    @property
+    def id(self) -> int:
+        return self.__id
+
+    @property
+    def calories(self) -> float:
+        return self.__nutris["calories"]
+
+    @property
+    def fat(self) -> float:
+        return self.__nutris["fat"]
+
+    @property
+    def saturatedfat(self) -> float:
+        return self.__nutris["saturatedfat"]
+
+    @property
+    def cholesterol(self) -> float:
+        return self.__nutris["cholesterol"]
+
+    @property
+    def sodium(self) -> float:
+        return self.__nutris["sodium"]
+
+    @property
+    def carbohydrates(self) -> float:
+        return self.__nutris["carbohydrates"]
+
+    @property
+    def fiber(self) -> float:
+        return self.__nutris["fiber"]
+
+    @property
+    def sugar(self) -> float:
+        return self.__nutris["sugar"]
+
+    @property
+    def protein(self) -> float:
+        return self.__nutris["protein"]

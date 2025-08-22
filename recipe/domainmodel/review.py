@@ -1,11 +1,15 @@
-from recipe import Recipe
-from user import User
+from __future__ import annotations # Hazziq - fix error
+from typing import TYPE_CHECKING
 from datetime import datetime
 
+if TYPE_CHECKING:
+    from .user import User
+    from .recipe import Recipe
 
 class Review:
 # TODO: Complete the implementation of the Review class.
-    def __init__(self, id: int, user: User, recipe: Recipe, rate: int, review: str, date: datetime = None) -> None:
+    # Hazziq - recipe: "Recipe" to fix error
+    def __init__(self, id: int, user: "User", recipe: "Recipe", rate: int, review: str, date: datetime = None) -> None:
         if not isinstance(id, int) or id <= 0:
             raise ValueError("id must be a positive int.")
         if not isinstance(rate, int) or rate <= 0:

@@ -1,5 +1,9 @@
-from recipe.domainmodel.favourite import Favourite
-from recipe.domainmodel.review import Review
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .favourite import Favourite
+    from .review import Review
 
 class User:
     def __init__(self, username: str, password: str, user_id: int = None):
