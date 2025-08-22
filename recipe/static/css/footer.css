@@ -1,8 +1,9 @@
 .header{
-    background-color: sandybrown;
+    background-color: white;
     border-radius:  5px;
+    border-top: 1px solid #ccc; /* add line above footer text */
 }
-.copyright{
+.copyright {
     display: flex;
     justify-content: center;
     margin: 20px;
@@ -11,4 +12,5 @@
     display: flex;
     justify-content: center;
     margin: 20px;
+    font-size: 2em;
 }
