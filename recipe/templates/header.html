@@ -13,50 +13,21 @@
 
   <!-- Header -->
   <header class="site-header">
-    <div class="container">
-      <div class="brand-row">
-        <a href="#" class="brand" aria-label="Home">
-          <div class="brand-mark">CK</div>
-          <div class="brand-name">A Cozy Kitchen</div>
-        </a>
+  <div class="container">
+    <div class="brand-row">
+      <!-- Logo -->
+      <a href="#" class="brand" aria-label="Home">
+        <div class="brand-mark">CK</div>
+        <div class="brand-name">A Cozy Kitchen</div>
+      </a>
 
-        <div class="utils">
-          <a class="icon-btn" href="#" aria-label="Favorites">
-            <!-- heart -->
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
-            </svg>
-          </a>
-          <a class="icon-btn" href="#" aria-label="Search">
-            <!-- search -->
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="M21 21l-4.3-4.3"></path>
-            </svg>
-          </a>
-
-          <!-- Hamburger (mobile only) -->
-          <div class="hambox">
-            <input id="navtoggle" type="checkbox" />
-            <label for="navtoggle" aria-label="Toggle menu">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M4 7h16M4 12h16M4 17h16"/>
-              </svg>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Primary Nav -->
-    <nav aria-label="Primary">
-      <div class="container nav-row">
+      <!-- Navbar -->
+      <nav class="nav-row" aria-label="Primary">
         <ul class="menu">
-            <li><a href="#">SUMMER</a></li>
-
+          <li><a href="#">BROWSE</a></li>
           <li>
-            <a href="#">Category
-              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 9 6 6 6-6"/></svg>
+            <a href="#">CATEGORY
+              <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
             </a>
             <div class="dropdown" role="menu">
               <a href="#">All Recipes</a>
@@ -66,23 +37,26 @@
               <a href="#">Drinks</a>
             </div>
           </li>
-
-          <li>
-            <a href="#">Desserts
-              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 9 6 6 6-6"/></svg>
-            </a>
-            <div class="dropdown" role="menu">
-              <a href="#">Cakes</a>
-              <a href="#">Cookies</a>
-              <a href="#">Pies &amp; Cobblers</a>
-              <a href="#">Frozen Treats</a>
-            </div>
-          </li>
-            <li><a href="#">ABOUT</a></li>
-
+          <li><a href="#">ABOUT</a></li>
         </ul>
-      </div>
-    </nav>
-  </header>
+      </nav>
+
+      <!-- Icons -->
+  <div class="utils">
+    <a class="icon-btn" href="#" aria-label="Favorites">
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+    </svg>
+    </a>
+    <a class="icon-btn" href="#" aria-label="Search">
+    <svg class="icon" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    </a>
+  </div>
+  </div>
+  </div>
+</header>
 </body>
 </html>
