@@ -6,6 +6,7 @@
     <link
       rel="stylesheet" href="../static/css/main.css"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -24,6 +25,19 @@
     </li>
     {% endfor %}
 </ul>
+</div>
+<div class="Categories">
+    <h1>Top view Categories</h1>
+    <ul class="category-list">
+        {% for category in categories %}
+        <li class="category-card">
+            <a href="#">
+                <img  src="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/84/pickFstbF.jpg" alt="Category Image">
+                <p class="name">{{ category.name }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 <footer>
     {% include 'footer.html' %}

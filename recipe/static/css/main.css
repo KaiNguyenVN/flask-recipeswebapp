@@ -1,12 +1,13 @@
 /* --- Recipe grid --- */
 .recipe-list {
-    list-style: none;
-    margin: 2rem auto;
-    padding: 0;
-    width: min(1200px, 92%);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;   /* horizontal scroll if too many cards */
+  flex-wrap: nowrap;
 }
 .recipe-card a {
     display: block;
@@ -37,5 +38,64 @@
     line-height: 1.4;
 }
 
-.recipe-of-the-day { width: min(1200px, 92%); margin: 2rem auto; }
+.recipe-of-the-day {
+    width: min(1200px, 92%); margin: 2rem auto;
+    border-bottom: 1px solid #ddd;  /* light grey line */
+    padding-bottom: 32px;           /* spacing before the line */
+    margin-bottom: 32px;            /* spacing after the line */
+
+}
 .recipe-of-the-day h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+
+/** category grid */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;   /* horizontal scroll if too many cards */
+  flex-wrap: nowrap;
+}
+.category-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.category-card img {
+    width: 150px;
+    height: 150px;      /* uniform, magazine-like tiles */
+    object-fit: cover;  /* crop without distortion */
+    border-radius: 50%;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.category-card:hover img {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.category-card .name {
+    margin-top: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    display: block;
+}
+.category-card .desc {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.Categories { width: min(1200px, 92%); margin: 2rem auto; }
+.Categories h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5em;   /* adjust as needed */
+  font-weight: 700;   /* bold for emphasis */
+  line-height: 1.2;
+  color: #444;        /* similar dark grey as your example */
+}

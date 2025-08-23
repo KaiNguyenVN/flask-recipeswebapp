@@ -1,7 +1,7 @@
 """Initialize Flask app."""
 from datetime import datetime
 from flask import Flask, render_template
-from recipe.adapters.datareader.csvdatareader import list_of_recipes
+from recipe.adapters.datareader.csvdatareader import list_of_recipes, list_of_categories
 
 # TODO: Access to the recipe should be implemented via the repository pattern and using blueprints, so this can not
 #  stay here!
@@ -31,6 +31,6 @@ def create_app():
     def home():
         some_recipe = create_some_recipe()
         # Use Jinja to customize a predefined html page rendering the layout for showing a single recipe.
-        return render_template('recipeDescription.html', recipes=list_of_recipes)
+        return render_template('recipeDescription.html', recipes=list_of_recipes, categories = list_of_categories)
 
     return app

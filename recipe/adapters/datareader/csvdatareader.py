@@ -12,7 +12,7 @@ class CSVDataReader:
 
 def create_recipes() -> list[Recipe]:
     author1 = Author(1024, "sid")
-    recipe1 = Recipe(24, "Coke", author1, description="it is cool", ingredients= ["happy", "love"], instructions=["do this", "then this", "and this"],images="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/12/9/picI35rA2.jpg")
+    recipe1 = Recipe(24, "Coke", author1,description= "it is cool", ingredients= ["happy", "love"], instructions=["do this", "then this", "and this"],images="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/12/9/picI35rA2.jpg")
 
     author2 = Author(2048, "cool_sid")
     recipe2 = Recipe(48, "Pepsi", author2, description="this is even cooler", ingredients=["double_happy", "love"], instructions=["secret"], images="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/16/7/pictKxvMg.jpg")
@@ -26,5 +26,8 @@ def create_recipes() -> list[Recipe]:
                      images="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/84/pickFstbF.jpg")
 
     return [recipe1, recipe2, recipe3, recipe4]
-
+c1 = Category("Coke")
+c2 = Category("Pepsi")
+c3 = Category("coconut")
+list_of_categories = [c1, c2, c3]
 list_of_recipes = create_recipes()
