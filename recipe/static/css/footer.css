@@ -7,10 +7,11 @@
     display: flex;
     justify-content: center;
     margin: 20px;
+    font-size: 0.5em;
 }
 .head{
     display: flex;
     justify-content: center;
     margin: 20px;
-    font-size: 2em;
+    font-size: 1em;
 }
