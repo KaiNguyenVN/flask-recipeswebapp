@@ -8,18 +8,17 @@ if TYPE_CHECKING:
 
 
 class Favourite:
-# TODO: Complete the implementation of the Favourite class.
     # Hazziq - recipe = "Recipe"
-    def __init__(self, id: int, user: User, recipe: "Recipe") -> None:
-        if not isinstance(id, int) or id <= 0:
+    def __init__(self, favourite_id: int, user: User, recipe: "Recipe") -> None:
+        if not isinstance(favourite_id, int) or favourite_id <= 0:
             raise ValueError("id must be a positive int.")
-        self.__id = id
+        self.__favourite_id = favourite_id
         self.__user = user
         self.__recipe = recipe
 
     @property
     def id(self) -> int:
-        return self.__id
+        return self.__favourite_id
     @property
     def user(self) -> User:
         return self.__user

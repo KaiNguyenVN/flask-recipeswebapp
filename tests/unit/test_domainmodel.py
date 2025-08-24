@@ -5,6 +5,9 @@ from recipe.domainmodel.user import User
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
 from recipe.domainmodel.recipe import Recipe
+from recipe.domainmodel.review import Review
+from recipe.domainmodel.favourite import Favourite
+from recipe.domainmodel.nutrition import Nutrition
 
 # Fixtures
 @pytest.fixture
@@ -232,3 +235,61 @@ def test_author_set_recipe_invalid_type(my_author):
     with pytest.raises(TypeError):
         my_author.add_recipe("not a recipe")
 
+
+# ---------------------FAVOURITE TESTS ----------------
+
+def test_favourite_construction(my_user, my_recipe):
+    fav = Favourite(1, my_user, my_recipe)
+    assert fav.id == 1
+    assert fav.user == my_user
+    assert fav.recipe == my_recipe
+
+def test_favourite_invalid_id(my_user, my_recipe):
+    with pytest.raises(ValueError):
+        Favourite(0, my_user, my_recipe)
+
+
+# ---------------- NUTRITION TESTS ----------------
+def test_nutrition_construction():
+    nutri = Nutrition(1, calories=200, fat=10, protein=5)
+    assert nutri.id == 1
+    assert nutri.calories == 200
+    assert nutri.fat == 10
+    assert nutri.protein == 5
+
+def test_nutrition_equality():
+    n1 = Nutrition(1, calories=200, fat=10)
+    n2 = Nutrition(1, calories=200, fat=12)
+    assert n1.__eq__(n2, "calories")  # they have same calories
+    assert not n1.__eq__(n2, "fat")   # different fat
+
+def test_nutrition_comparison():
+    n1 = Nutrition(1, calories=200)
+    n2 = Nutrition(2, calories=300)
+    assert n1.__lt__(n2, "calories")
+    assert not n2.__lt__(n1, "calories")
+
+def test_nutrition_repr_and_hash():
+    n1 = Nutrition(1, calories=100)
+    repr_str = repr(n1)
+    assert "calories" in repr_str
+    assert isinstance(hash(n1), int)
+
+
+# ---------------- REVIEW TESTS ----------------
+def test_review_construction(my_user, my_recipe):
+    review = Review(1, my_user, my_recipe, 5, "Amazing!")
+    assert review.review_id == 1
+    assert review.user == my_user
+    assert review.recipe == my_recipe
+    assert review.rate == 5
+    assert review.review == "Amazing!"
+    assert isinstance(review.date, datetime)
+
+def test_review_invalid_id(my_user, my_recipe):
+    with pytest.raises(ValueError):
+        Review(0, my_user, my_recipe, 4, "Nice")
+
+def test_review_invalid_rate(my_user, my_recipe):
+    with pytest.raises(ValueError):
+        Review(1, my_user, my_recipe, -1, "Bad")
