@@ -1,14 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from recipe.domainmodel.author import Author
-    from recipe.domainmodel.category import Category
-
 from datetime import datetime
 
+if TYPE_CHECKING:
+    from .author import Author
+    from .category import Category
+    from .review import Review
+
 from recipe.domainmodel.nutrition import Nutrition
-from recipe.domainmodel.review import Review
 
 class Recipe:
     def __init__(self, recipe_id: int, name: str, author: "Author",
