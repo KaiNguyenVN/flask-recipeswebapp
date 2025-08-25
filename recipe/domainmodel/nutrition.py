@@ -1,48 +1,69 @@
 class Nutrition:
 # TODO: Complete the implementation of the Nutrition class.
-    def __init__(self, id: int, calories: int = None, fat: int = None,
-                 saturatedfat: int = None, cholesterol:int = None,
-                 sodium: int = None, carbohydrates: int = None,
-                 fiber: int = None, sugar:int = None, protein:int = None) -> None:
-        self.__id = id
-        self.__calories = calories
-        self.__fat = fat
-        self.__saturatedfat = saturatedfat
-        self.__cholesterol = cholesterol
-        self.__sodium = sodium
-        self.__carbohydrates = carbohydrates
-        self.__fiber = fiber
-        self.__sugar = sugar
-        self.__protein = protein
+#nutrition id is basically recipes id
+    def __init__(self, recipe_id: int, calories: float = None, fat: float = None,
+                 saturated_fat: float = None, cholesterol:float = None,
+                 sodium: float = None, carbohydrates: float = None,
+                 fiber: float = None, sugar:float = None, protein:float = None) -> None:
+        self.__recipe_id = recipe_id
+        self.__nutri_content = {"calories": calories, "fat": fat, "saturated_fat": saturated_fat, "cholesterol": cholesterol, "sodium": sodium, "carbohydrates": carbohydrates, "fiber": fiber , "sugar": sugar, "protein": protein}
+
+    def __repr__(self):
+        return str(self.__nutri_content)
+
+    def __eq__(self, other, nutri_type):
+        if isinstance(other, Nutrition):
+            return self.__nutri_content[nutri_type] == other.__nutri_content[nutri_type]
+        else:
+            return False
+
+    def __lt__(self, other, nutri):
+        if isinstance(other, Nutrition):
+            return self.__nutri_content[nutri] < other.__nutri_content[nutri]
+        else:
+            return False
+
+    def __hash__(self) -> int:
+       return hash(self.id)
 
 
-        @property
-        def id(self) -> int:
-            return self.__id
-        @property
-        def calories(self) -> int:
-            return self.__calories
-        @property
-        def fat(self) -> int:
-            return self.__fat
-        @property
-        def saturatedfat(self) -> int:
-            return self.__saturatedfat
-        @property
-        def cholesterol(self) -> int:
-            return self.__cholesterol
-        @property
-        def sodium(self) -> int:
-            return self.__sodium
-        @property
-        def carbohydrates(self) -> int:
-            return self.__carbohydrates
-        @property
-        def fiber(self) -> int:
-            return self.__fiber
-        @property
-        def sugar(self) -> int:
-            return self.__sugar
-        @property
-        def protein(self) -> int:
-            return self.__protein
+
+    @property
+    def id(self) -> int:
+        return self.__recipe_id
+
+    @property
+    def calories(self) -> float:
+        return self.__nutri_content["calories"]
+
+    @property
+    def fat(self) -> float:
+        return self.__nutri_content["fat"]
+
+    @property
+    def saturated_fat(self) -> float:
+        return self.__nutri_content["saturated_fat"]
+
+    @property
+    def cholesterol(self) -> float:
+        return self.__nutri_content["cholesterol"]
+
+    @property
+    def sodium(self) -> float:
+        return self.__nutri_content["sodium"]
+
+    @property
+    def carbohydrates(self) -> float:
+        return self.__nutri_content["carbohydrates"]
+
+    @property
+    def fiber(self) -> float:
+        return self.__nutri_content["fiber"]
+
+    @property
+    def sugar(self) -> float:
+        return self.__nutri_content["sugar"]
+
+    @property
+    def protein(self) -> float:
+        return self.__nutri_content["protein"]

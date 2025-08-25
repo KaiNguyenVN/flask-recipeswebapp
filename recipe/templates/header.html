@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cozy-Style Header</title>
+<link rel="stylesheet" href="../static/css/header.css" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+  <!-- Header -->
+  <header class="site-header">
+  <div class="container">
+    <div class="brand-row">
+      <!-- Logo -->
+      <a href="#" class="brand" aria-label="Home">
+        <div class="brand-mark">CK</div>
+        <div class="brand-name">A Cozy Kitchen</div>
+      </a>
+
+      <!-- Navbar -->
+      <nav class="nav-row" aria-label="Primary">
+        <ul class="menu">
+          <li><a href="#">BROWSE</a></li>
+          <li>
+            <a href="#">CATEGORY
+              <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="dropdown" role="menu">
+              <a href="#">All Recipes</a>
+              <a href="#">Quick &amp; Easy</a>
+              <a href="#">Weeknight Dinners</a>
+              <a href="#">Vegetarian</a>
+              <a href="#">Drinks</a>
+            </div>
+          </li>
+          <li><a href="{{ url_for('home_bp.home')}}">HOME</a></li>
+        </ul>
+      </nav>
+
+      <!-- Icons -->
+  <div class="utils">
+    <a class="icon-btn" href="#" aria-label="Favorites">
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+    </svg>
+    </a>
+    <a class="icon-btn" href="#" aria-label="Search">
+    <svg class="icon" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    </a>
+  </div>
+  </div>
+  </div>
+</header>
+</body>
+</html>

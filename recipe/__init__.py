@@ -26,10 +26,7 @@ def create_app():
     # Create the Flask app object.
     app = Flask(__name__)
 
-    @app.route('/')
-    def home():
-        some_recipe = create_some_recipe()
-        # Use Jinja to customize a predefined html page rendering the layout for showing a single recipe.
-        return render_template('recipeDescription.html', recipe=some_recipe)
-
+    with app.app_context():
+        from .home import home
+        app.register_blueprint(home.home_blueprint)
     return app
