@@ -1,7 +1,6 @@
 """Initialize Flask app."""
 from datetime import datetime
 from flask import Flask, render_template
-from recipe.adapters.datareader.csvdatareader import list_of_recipes, list_of_categories
 
 # TODO: Access to the recipe should be implemented via the repository pattern and using blueprints, so this can not
 #  stay here!

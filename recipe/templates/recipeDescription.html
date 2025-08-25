@@ -18,9 +18,9 @@
     {% for recipe in recipes %}
         <li class="recipe-card">
         <a href="#">
-            <img src="{{ recipe.images }}" alt="Recipe Image">
+            <img src="{{ recipe.images[0] }}" alt="Recipe Image">
             <p class="name">{{ recipe.name}}</p>
-            <p class="desc">{{ recipe.description}}</p>
+            <p class="desc">{{ recipe.author.name}}</p>
         </a>
     </li>
     {% endfor %}
@@ -32,7 +32,7 @@
         {% for category in categories %}
         <li class="category-card">
             <a href="#">
-                <img  src="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/84/pickFstbF.jpg" alt="Category Image">
+                <img  src={{ category.recipes[2].images[0] }} alt="Category Image">
                 <p class="name">{{ category.name }}</p>
             </a>
         </li>
