@@ -1,10 +1,10 @@
 from typing import List
-
-from recipe import Author
+from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
 from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 import abc
+
 
 class AbstractRepository(abc.ABC):
     @abc.abstractmethod
@@ -18,4 +18,7 @@ class AbstractRepository(abc.ABC):
         pass
     @abc.abstractmethod
     def get_nutrition(self) -> List[Nutrition]:
+        pass
+    @abc.abstractmethod
+    def add_recipe(self, recipe: Recipe) -> None:
         pass
