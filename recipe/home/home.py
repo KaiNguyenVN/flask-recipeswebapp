@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint
-from recipe.adapters.data.recipe_data import *
+from recipe.adapters.data.memory_repository import *
 
 home_blueprint = Blueprint('home_bp', __name__)
 
