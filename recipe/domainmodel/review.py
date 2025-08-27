@@ -39,4 +39,3 @@ class Review:
     @property
     def date(self) -> datetime:
         return self.__date
-

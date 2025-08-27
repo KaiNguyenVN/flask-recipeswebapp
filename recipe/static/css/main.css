@@ -1,25 +1,235 @@
-#header {
-  padding: 20px;
-  background: 	#E6E6FA;
-  border-bottom: 1px solid #e0e4e8;
-  font-size: 25px;
-  font-weight: bold;
-  text-align: center;
+/* --- Recipe grid --- */
+.recipe-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;   /* horizontal scroll if too many cards */
+  flex-wrap: nowrap;
+}
+.recipe-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.recipe-card img {
+    width: 100%;
+    height: 300px;      /* uniform, magazine-like tiles */
+    object-fit: cover;  /* crop without distortion */
+    border-radius: 4px;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.recipe-card:hover img {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.recipe-card .name {
+    margin: 0.75rem 0 0.25rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.recipe-card .desc {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
 
-.copyright {
-  color: black;
-  font-size: 0.9em;
+.recipe-of-the-day {
+    width: min(1200px, 92%); margin: 2rem auto;
+    border-bottom: 1px solid #ddd;  /* light grey line */
+    padding-bottom: 32px;           /* spacing before the line */
+    margin-bottom: 32px;            /* spacing after the line */
+
+}
+.recipe-of-the-day h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+
+/** category grid */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;   /* horizontal scroll if too many cards */
+  flex-wrap: nowrap;
+}
+.category-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.category-card img {
+    width: 150px;
+    height: 150px;      /* uniform, magazine-like tiles */
+    object-fit: cover;  /* crop without distortion */
+    border-radius: 50%;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.category-card:hover img {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.category-card .name {
+    margin-top: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    display: block;
+}
+.category-card .desc {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
 
-.description p i {
-    font-family: 'Gill Sans';
-    font-weight: bold;
+.Categories { width: min(1200px, 92%); margin: 2rem auto; }
+.Categories h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5em;   /* adjust as needed */
+  font-weight: 700;   /* bold for emphasis */
+  line-height: 1.2;
+  color: #444;        /* similar dark grey as your example */
+}
+
+/* --recipeIndex-- */
+
+/* for browse title */
+.recipe-index{
+    width: min(1200px, 92%);
+    margin: 2rem auto;
+    border-bottom: 1px solid #ddd;  /* light grey line */
+    padding-bottom: 32px;           /* spacing before the line */
+    margin-bottom: 32px;            /* spacing after the line */
+}
+
+.recipe-index h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    margin-top: 0;
+    color: #444;
+}
+
+.visit-link{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 300;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+.visit-link a{
+    text-decoration: none;
+    color: #444;
+}
+
+.visit-link a:hover{
+    text-decoration: underline;
+}
+
+.text-box {
+    width: 1200px;
+    padding: 25px 20px 25px;
+    border: 2px burlywood;
+    border-radius: 0;
+    background-color: burlywood;
+    text-align: left;
     font-size: 18px;
-    text-transform: uppercase;
-    color:darkslateblue
-    }
+}
 
-.description img {
-        vertical-align: top;
-    }
+/* for By Name and how the pictures shown */
+.Categories h2 { font-size: 2.0rem; margin-bottom: 1rem; color: #444}
+
+.browse-list{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    list-style: none;
+    padding: 25px 50px;
+    margin: 0;
+}
+
+.browse-list li:nth-child(n+13) {
+    display: none;
+}
+
+.browse-card a{
+    text-decoration: none;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.browse-image{
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.browse-image img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.browse-card .name{
+    margin-top: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* for pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.page-btn, .current-page {
+    padding: 8px 14px;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: 0.3s;
+}
+
+.page-btn:hover {
+    background-color: #ddd;
+}
+
+.current-page {
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+.dots {
+    padding: 6px 10px;
+    color: #999;
+    font-size: 14px;
+}
+
+
+
+
