@@ -13,6 +13,7 @@ list_of_categories = data.get_categories()
 
 home_blueprint = Blueprint('home_bp', __name__)
 browse_blueprint = Blueprint('browse_bp', __name__)
+recipe_blueprint = Blueprint('recipe_bp', __name__)
 
 @home_blueprint.route('/', methods=['GET'])
 def home():
@@ -57,3 +58,14 @@ def browse():
 
 
 
+
+@recipe_blueprint.route('/recipe/<int:recipe_id>', methods=['GET'])
+def recipe_detail(recipe_id):
+    # Find recipe by id
+    recipe = next((r for r in list_of_recipes if r.id == recipe_id), None)
+
+    if recipe is None:
+        # simple 404 fallback
+        return render_template('404.html', message="Recipe not found"), 404
+
+    return render_template('recipe_detail.html', recipe=recipe)

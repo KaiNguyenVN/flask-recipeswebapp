@@ -2,9 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe_Detail</title>
+    <title>Recipe Description</title>
+    <link
+      rel="stylesheet" href="../static/css/main.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
 
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+    <div class = "recipe-detail">
+        <!-- Recipe Title -->
+        <h1 class="recipe-title">{{ recipe.name }}</h1>
+
+        <!-- Author & Date -->
+        <div class="meta">
+            <span>By {{ recipe.author.name }}</span> •
+            <span>{{ recipe.created_date.utctime('%B %d, %Y') if recipe.created_date else "" }}</span>
+        </div>
+
+        <!-- Image -->
+        <div class="recipe-image">
+            <img src="{{ recipe.images[0] if recipe.images else 'https://via.placeholder.com/600x400?text=No+Image' }}"
+                 alt="{{ recipe.name }}">
+        </div>
+
+        <!-- Description -->
+        <p class="recipe-description">{{ recipe.description }}</p>
+
+        <!-- Times -->
+        <div class="times">
+            <p><strong>Cook time:</strong> {{ recipe.cook_time }} mins</p>
+            <p><strong>Prep time:</strong> {{ recipe.preparation_time }} mins</p>
+        </div>
+
+        <!-- Category -->
+        <p><strong>Category:</strong> {{ recipe.category.name if recipe.category else "Uncategorized" }}</p>
+
+        <!-- Servings & Yield -->
+        <p><strong>Servings:</strong> {{ recipe.servings or "-" }}</p>
+        <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
+
+        <!-- Rating -->
+        <p><strong>Rating:</strong> {{ recipe.rating or "Not rated" }}</p>
+
+        <!-- Nutrition -->
+        {% if recipe.nutrition %}
+        <div class="nutrition">
+            <h3>Nutrition</h3>
+            <ul>
+                <li>Calories: {{ recipe.nutrition.calories }}</li>
+                <li>Fat: {{ recipe.nutrition.fat }} g</li>
+                <li>Saturated Fat: {{ recipe.nutrition.saturated_fat }} g</li>
+                <li>Cholesterol: {{ recipe.nutrition.cholesterol }} mg</li>
+                <li>Sodium: {{ recipe.nutrition.sodium }} mg</li>
+                <li>Carbs: {{ recipe.nutrition.carbohydrates }} g</li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Ingredients -->
+        <div class="ingredients">
+            <h3>Ingredients</h3>
+            <ul>
+                {% for ingredient in recipe.ingredients %}
+                    <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>Instructions</h3>
+            <ol>
+                {% for step in recipe.instructions %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+
+    <footer>
+        {%  include 'footer.html' %}
+    </footer>
 </body>
-</html>

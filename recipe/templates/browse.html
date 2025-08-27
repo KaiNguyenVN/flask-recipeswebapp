@@ -16,7 +16,6 @@
 </header>
 
 <div class="recipe-index">
-    <h5 class = visit-link style="font-weight: 300;"><a href="{{ url_for('home_bp.home') }}">Home</a></h5>
     <h2 style = "font-family: 'Playfair Display', serif;">Browse</h2>
     <div class="text-box">Browse our collection of our cozy and comforting recipes that are easy to make and perfect for your everyday life. We have a lot of category of recipes that you could choose from. Check it out!</div>
 </div>
@@ -26,7 +25,7 @@
     <ul class="browse-list">
         {% for recipe in recipes %}
         <li class="browse-card">
-            <a href = "#">
+            <a href = "{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">
                 <div class =  "browse-image">
                     <img src="{{ recipe.images[0] }}" alt="{{ recipe.name }}">
                 </div>
@@ -65,7 +64,7 @@
         {% endif %}
 
         {% if page < total_pages %}
-            <a href="{{ url_for('browse_bp.browse', page=page+1) }}" class="page-btn">Next</a>
+            <a href="{{ url_for('browse_bp.browse', page=page + 1) }}" class="page-btn">Next</a>
         {% endif %}
     </div>
 </div>

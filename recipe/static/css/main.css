@@ -1,11 +1,14 @@
+body {
+  background-color: rgb(255,238,140); /* Sets the background color of the entire page */
+}
                                    /* --- RECIPE GRID --- */
 .recipe-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 per row */
-  gap: 20px;  /* space between cards */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    list-style: none;
+    padding: 25px 50px;
+    margin: 0;
 }
 
 .recipe-card {
@@ -242,6 +245,69 @@ h1 {
     font-size: 14px;
 }
 
+                        /** ===================== RECIPE DETAIL============= **/
+.recipe-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: rgb(238, 240, 138);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+}
 
+.recipe-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.recipe-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.times p,
+.nutrition li,
+.ingredients li,
+.instructions li {
+    margin: 0.3rem 0;
+}
+
+.nutrition, .ingredients, .instructions {
+    margin-top: 1.5rem;
+}
+
+.nutrition h3,
+.ingredients h3,
+.instructions h3 {
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-size: 1.3rem;
+}
+
+.ingredients ul, .nutrition ul {
+    list-style: disc inside;
+}
+
+.instructions ol {
+    padding-left: 1.2rem;
+}
 
 

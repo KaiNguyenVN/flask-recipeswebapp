@@ -8,6 +8,7 @@ from recipe.adapters.datareader.csvreader import CSVReader
 
 from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
+from recipe.home.home import recipe_blueprint
 
 
 # TODO: Access to the recipe should be implemented via the repository pattern and using blueprints, so this can not
@@ -32,5 +33,6 @@ def create_app():
 
         app.register_blueprint(home_blueprint)
         app.register_blueprint(browse_blueprint)
+        app.register_blueprint(recipe_blueprint)
 
     return app

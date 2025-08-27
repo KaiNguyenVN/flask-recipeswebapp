@@ -8,39 +8,40 @@
     />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<header>
-    {% include 'header.html' %}
-</header>
-<div class="recipe-of-the-day">
-    <h1>Recipes of the Day</h1>
-    <ul class="recipe-list">
-        {% for recipe in recipes %}
-            <li class="recipe-card">
-            <a href="#">
-                <img src="{{ recipe.images[0] }}" alt="Recipe Image">
-                <p class="name">{{ recipe.name}}</p>
-                <p class="desc">{{ recipe.description}}</p>
-            </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="Categories">
-    <h1>Top view Categories</h1>
-    <ul class="category-list">
-        {% for category in categories %}
-            <li class="category-card">
-                <a href="#">
-                    <img  src= "{{ category.recipes[0].images[0] }}" alt="Category Image">
-                    <p class="name">{{ category.name }}</p>
+    <header>
+        {% include 'header.html' %}
+    </header>
+    <div class="recipe-of-the-day">
+        <h1 style = "font-family: 'Playfair Display', serif;">Recipes of the Day</h1>
+        <ul class="recipe-list">
+            {% for recipe in recipes %}
+                <li class="recipe-card">
+                <a href="{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">
+                    <img src="{{ recipe.images[0] }}" alt="Recipe Image">
+                    <p class="name">{{ recipe.name}}</p>
+                    <p class="desc">{{ recipe.description}}</p>
                 </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-<footer>
-    {% include 'footer.html' %}
-</footer>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="Categories">
+        <h1 style = "font-family: 'Playfair Display', serif;">Top view Categories</h1>
+        <ul class="category-list">
+            {% for category in categories %}
+                <li class="category-card">
+                    <a href="#">
+                        <img  src= "{{ category.recipes[0].images[0] }}" alt="Category Image">
+                        <p class="name">{{ category.name }}</p>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
 </body>
 </html>
