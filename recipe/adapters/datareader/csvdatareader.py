@@ -1,67 +1,119 @@
-
 import csv
-import re
-from recipe.domainmodel.author import Author
-from recipe.domainmodel.category import Category
-from recipe.domainmodel.nutrition import Nutrition
-from recipe.domainmodel.recipe import Recipe
+from ast import literal_eval
 from datetime import datetime
+from pathlib import Path
+from typing import List
+from dateutil import parser as date_parser
 
-class CSVDataReader:
-    def __init__(self, file_path):
-        self.file_path = file_path
-        self.nutriID_count = 1
+from recipe.domainmodel.recipe import Recipe
+from recipe.domainmodel.author import Author
+from recipe.domainmodel.nutrition import Nutrition
+from recipe.domainmodel.category import Category
 
-    def read_recipes(self):
-        recipes = []
-        with open(self.file_path, newline='', encoding="utf-8") as csvfile:
-            reader = csv.reader(csvfile)
-            next(reader)  # skip header
+
+class CSVReader:
+    def __init__(self, file_path: str | Path):
+        self.__file_path = Path(file_path)
+        self.__recipes: list[Recipe] = []
+        self.__authors: dict[int, Author] = {}
+        self.__categories: dict[str, Category] = {}
+        self.__nutrition: dict[int, Nutrition] = {}
+
+    def extract_data(self) -> None:
+        """Reads the CSV and creates domain model objects."""
+
+        def parse_list(value:str) -> list:
+            if value == "None":
+                return []
+            try:
+                return literal_eval(value)
+            except (ValueError, SyntaxError):
+                return []
+
+        with open(self.__file_path, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            category_id = 0
             for row in reader:
-                # nutrition id - since it don't have id, I put incremental id instead
-                nutriID = self.nutriID_count
-                self.nutriID_count += 1
 
-                # Recipe: id, name, description, ingredients, instructions, cookingTime
-                id = int(row[0].strip())
-                name = row[1].strip()
-                description = row[8].strip()
-                ingredients = [row[12].strip()]
-                instructions = [row[24].strip()]
-                cookingTime = int(row[4].strip())
-                preparationTime = int(row[5].strip())
+                created_date = None,
+                if row.get("DatePublished"):
+                    try:
+                        created_date = date_parser.parse(row["DatePublished"])
+                    except (ValueError, OverflowError):
+                        created_date = None
 
-                datestr = row[7].strip()
-                datestr = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', datestr)
-                datePublished = datetime.strptime(datestr, '%d %b %Y')
+                # --- Author ---
+                author_id = int(row["AuthorId"])
+                if author_id not in self.__authors:
+                    self.__authors[author_id] = Author(
+                        author_id = author_id,
+                        name = row["AuthorName"]
+                    )
 
-                imagesLink = [row[9].strip()]
-                ingrQuantities = [row[11].strip()]
-                servings = row[22].strip()
-                recipeYield = row[23].strip()
-                rating = 0
+                # --- Category ---
+                category_type = row["RecipeCategory"]
+                if category_type not in self.__categories:
+                    category_id = category_id + 1
+                    self.__categories[category_type] = Category(
+                        name = category_type,
+                        category_id = category_id
+                    )
 
-                # Author: id, name
-                author = Author(int(row[2]), str(row[3]), [])
-                # declare category
-                category = Category(row[10].strip(), [])
-                # declare: cal, fat, saturated fate, cholesterol, sodium, carbohydrate, fiber, sugar, protein
-                nutrition = Nutrition(nutriID, float(row[13]), float(row[14]), float(row[15]), float(row[16]), float(row[17]),
-                                      float(row[18]), float(row[19]), float(row[20]), float(row[21]))
-                recipe = Recipe(id, name, author, cookingTime, preparationTime, datePublished, description, imagesLink, category,
-                                ingrQuantities, ingredients, rating, nutrition, servings, recipeYield, instructions)
+                # --- Nutrition ---
+                nutrition = Nutrition(
+                    recipe_id = int(row["RecipeId"]),
+                    calories = float(row["Calories"]) if row["Calories"] else None,
+                    fat = float(row["FatContent"]) if row["FatContent"] else None,
+                    saturated_fat = float(row["SaturatedFatContent"]) if row["SaturatedFatContent"] else None,
+                    cholesterol = float(row["CholesterolContent"]) if row["CholesterolContent"] else None,
+                    sodium = float(row["SodiumContent"]) if row["SodiumContent"] else None,
+                    carbohydrates = float(row["CarbohydrateContent"]) if row["CarbohydrateContent"] else None,
+                    fiber = float(row["FiberContent"]) if row["FiberContent"] else None,
+                    sugar = float(row["SugarContent"]) if row["SugarContent"] else None,
+                    protein = float(row["ProteinContent"]) if row["ProteinContent"] else None
+                )
+                self.__nutrition[int(row["RecipeId"])] = nutrition
 
-                # list of recipes: category
-                category.add_recipe(recipe)
-                # list of recipes: author
-                author.add_recipe(recipe)
-                recipes.append(recipe)
-        return recipes
+                # --- Recipe ---
+                recipe = Recipe(
+                    recipe_id = int(row["RecipeId"]),
+                    name = row["Name"],
+                    author = self.__authors[author_id],
+                    cook_time = int(row["CookTime"]) if row["CookTime"] else 0,
+                    preparation_time = int(row["PrepTime"]) if row["PrepTime"] else 0,
+                    created_date = created_date,
+                    description = row.get("Description", ""),
+                    images = parse_list(row.get("Images")),
+                    category = self.__categories[category_type],
+                    ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities")),
+                    ingredients = parse_list(row.get("RecipeIngredientParts")),
+                    nutrition = nutrition,
+                    servings = row.get("RecipeServings"),
+                    recipe_yield = row.get("RecipeYield"),
+                    instructions = parse_list(row.get("instructions"))
+                )
 
-# main
-if __name__ == "__main__":
-    reader = CSVDataReader("recipe/adapters/data/recipes.csv")
-    recipes = reader.read_recipes()
-    for r in recipes:
-        print(f"{r.name} by {r.author.name} [{r.category.name}] -> {r.nutrition.calories} cal")
+                self.__recipes.append(recipe)
+                # connect author & category relationships
+                self.__authors[author_id].add_recipe(recipe)
+                self.__categories[category_type].add_recipe(recipe)
 
+    # --- Accessors ---
+    def get_recipes(self) -> List[Recipe]:
+        return self.__recipes
+
+    def get_authors(self) -> List[Author]:
+        return list(self.__authors.values())
+
+    def get_categories(self) -> List[Category]:
+        return list(self.__categories.values())
+
+    def get_nutrition(self) -> List[Nutrition]:
+        return list(self.__nutrition.values())
+
+
+reader = CSVReader("recipe/adapters/data/recipes.csv")
+reader.extract_data()
+
+list_of_recipes = reader.get_recipes()
+list_of_categories = reader.get_categories()

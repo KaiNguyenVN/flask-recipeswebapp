@@ -1,0 +1,141 @@
+:root{
+  --brand:#6a2b3a;          /* deep plum like the logo text */
+  --accent:#e3c2bf;         /* muted rose for the bar & hovers */
+  --text:#2a2a2a;
+  --muted:#7a7a7a;
+  --border:#eee;
+  --bg:#fff;
+  --maxw:1120px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg);padding:10px;}
+a{color:inherit;text-decoration:none}
+
+
+/* Header shell */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+}
+
+.container{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* spreads logo, nav, and icons */
+}
+
+/* Brand */
+.brand{
+  display:flex; align-items:center; gap:.75rem;
+}
+.brand-mark{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--brand);
+  color:#fff; display:grid; place-items:center;
+  font-weight:700; font-family:Playfair Display, serif;
+}
+.brand-name{
+  font-family:Playfair Display, serif;
+  font-weight:700; color:var(--brand);
+  font-size: clamp(1.4rem, 2.2vw + .4rem, 2.2rem);
+  letter-spacing:.01em;
+}
+
+/* Utilities (icons) */
+.utils{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-left:24px; /* place icons close to the nav */
+}
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid var(--border);
+}
+.icon-btn:hover{background:#fafafa}
+.icon{
+  width:20px;
+  height:20px;
+  stroke:currentColor;
+  stroke-width:1.6;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  display:block;
+}
+
+/* Nav */
+nav{
+}
+.nav-row{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  margin-left:auto; /* push nav toward the right, next to icons */
+}
+.menu{display:flex;align-items:center;gap:28px;padding:0;margin:0;list-style:none}
+.menu > li{position:relative}
+.menu > li > a{
+  display:flex;align-items:center;gap:.35rem;
+  padding:16px 0;
+  font-weight:500; color:#333; text-transform:uppercase;
+  font-size:.92rem; letter-spacing:.06em;
+}
+.menu > li > a:hover{color:var(--brand)}
+.chev{width:14px;height:14px;opacity:.65}
+
+/* Dropdowns */
+.dropdown{
+  position:absolute;left:0;top:100%;
+  min-width:220px;background:#fff;border:1px solid var(--border);
+  padding:10px 0;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.08);
+  opacity:0;visibility:hidden;translate:0 -4px;transition:.18s;
+}
+.menu > li:hover .dropdown{opacity:1;visibility:visible;translate:0 0}
+.dropdown a{
+  display:block;padding:10px 14px;font-size:.95rem;color:#333
+}
+.dropdown a:hover{background:#faf7f7;color:var(--brand)}
+
+/* Mobile */
+.hambox{display:none}
+.hambox input{display:none}
+.hambox label{
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border:1px solid var(--border);
+  border-radius:8px;cursor:pointer;
+}
+.hambox svg{width:20px;height:20px}
+
+@media (max-width: 900px){
+  nav{border-top:none}
+
+  .menu{
+    position:fixed; inset:auto 0 0 0; top:72px;
+    background:#fff; border-top:1px solid var(--border);
+    display:block; padding:10px 16px 24px; max-height:0; overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .menu > li > a{padding:14px 2px}
+  .menu .dropdown{position:static;border:none;box-shadow:none;padding:0;opacity:1;visibility:visible;translate:0}
+  .menu .dropdown a{padding:10px 6px 10px 16px}
+  .hambox{display:block}
+  /* open/close */
+  #navtoggle:checked ~ .menu{max-height:70vh}
+  /* hide desktop chevrons on mobile labels */
+  .menu > li > a .chev{opacity:.35}
+}
+
+/* Small helpers */
+.pill{
+  font-size:.75rem;padding:.15rem .5rem;border:1px solid var(--border);
+  border-radius:999px;color:var(--muted)
+}
