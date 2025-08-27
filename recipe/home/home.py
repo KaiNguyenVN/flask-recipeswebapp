@@ -3,14 +3,20 @@ from urllib import request
 from flask import render_template, Blueprint, request
 
 from recipe import Recipe
-from recipe.adapters.datareader.csvdatareader import list_of_recipes, list_of_categories
+from recipe.adapters.datareader.csvreader import CSVReader
+import os
+
+data = CSVReader('recipe/adapters/data/recipes.csv')
+data.extract_data()
+list_of_recipes = data.get_recipes()
+list_of_categories = data.get_categories()
 
 home_blueprint = Blueprint('home_bp', __name__)
 browse_blueprint = Blueprint('browse_bp', __name__)
 
 @home_blueprint.route('/', methods=['GET'])
 def home():
-    return render_template('recipeDescription.html', recipes=list_of_recipes, categories=list_of_categories)
+    return render_template('recipeDescription.html', recipes=list_of_recipes[:6], categories=list_of_categories[:6])
 
 @browse_blueprint.route('/browse', methods=['GET'])
 def browse():
