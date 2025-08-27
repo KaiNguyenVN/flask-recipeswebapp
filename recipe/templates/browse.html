@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Description</title>
+    <link
+      rel="stylesheet" href="../static/css/browse.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+    {% include 'header.html' %}
+</header>
+
+<div class="recipe-index">
+    <h2 style = "font-family: 'Playfair Display', serif;">Browse</h2>
+    <div class="text-box">Browse our collection of our cozy and comforting recipes that are easy to make and perfect for your everyday life. We have a lot of category of recipes that you could choose from. Check it out!</div>
+</div>
+
+<div class="Categories">
+    <h2 style = "font-family: 'Playfair Display', serif;">By Name</h2>
+    <ul class="browse-list">
+        {% for recipe in recipes %}
+        <li class="browse-card">
+            <a href = "{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">
+                <div class =  "browse-image">
+                    <img src="{{ recipe.images[0] }}" alt="{{ recipe.name }}">
+                </div>
+                <p class="browse-name">{{ recipe.name }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- pagination code -->
+    <div class="pagination">
+        {%  if page > 1 %}
+            <a href="{{ url_for('browse_bp.browse', page=page-1) }}" class="page-btn">Previous</a>
+        {% endif %}
+
+        {% if 1 not in pages %}
+            <a href="{{ url_for('browse_bp.browse', page=1) }}" class="page-btn">1</a>
+            {% if 2 not in pages %}
+                <span class="dots">...</span>
+            {% endif %}
+        {% endif %}
+
+        {% for p in pages %}
+            {% if p == page %}
+                <span class="current-page">{{ p }}</span>
+            {% else %}
+                <a href="{{ url_for('browse_bp.browse', page=p) }}" class="page-btn">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if total_pages not in pages %}
+            {% if total_pages - 1 not in pages %}
+                <span class="dots">...</span>
+            {% endif %}
+                <a href="{{ url_for('browse_bp.browse', page=total_pages) }}" class="page-btn">{{ total_pages }}</a>
+        {% endif %}
+
+        {% if page < total_pages %}
+            <a href="{{ url_for('browse_bp.browse', page=page + 1) }}" class="page-btn">Next</a>
+        {% endif %}
+    </div>
+</div>
+
+<footer>
+    {% include 'footer.html' %}
+</footer>
+
+</body>
+</html>

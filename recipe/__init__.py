@@ -11,6 +11,12 @@ def create_app():
     app = Flask(__name__)
 
     with app.app_context():
-        from .home import home
-        app.register_blueprint(home.home_blueprint)
+        from recipe.home.home import home_blueprint
+        from recipe.browse.browse import browse_blueprint
+        from recipe.recipe_detail.recipe_detail import recipe_blueprint
+
+        app.register_blueprint(home_blueprint)
+        app.register_blueprint(browse_blueprint)
+        app.register_blueprint(recipe_blueprint)
+
     return app

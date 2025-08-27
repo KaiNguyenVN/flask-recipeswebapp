@@ -8,39 +8,44 @@
     />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<header>
-    {% include 'header.html' %}
-</header>
-<div class="recipe-of-the-day">
-<h1>Recipes of the Day</h1>
-<ul class="recipe-list">
-    {% for recipe in recipes %}
-        <li class="recipe-card">
-        <a href="#">
-            <img src="{{ recipe.images[0] }}" alt="Recipe Image">
-            <p class="name">{{ recipe.name}}</p>
-            <p class="desc">{{ recipe.author.name}}</p>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
-</div>
-<div class="Categories">
-    <h1>Top view Categories</h1>
-    <ul class="category-list">
-        {% for category in categories %}
-        <li class="category-card">
-            <a href="#">
-                <img  src={{ category.recipes[2].images[0] }} alt="Category Image">
-                <p class="name">{{ category.name }}</p>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-<footer>
-    {% include 'footer.html' %}
-</footer>
+    <header>
+        {% include 'header.html' %}
+    </header>
+    <div class="recipe-index">
+    <h2 style = "font-family: 'Playfair Display', serif;">HOME</h2>
+    <div class="text-box">Welcome to A Cozy Kitchen — your place for easy, heartwarming recipes that bring comfort to every meal. Whether you’re cooking for family, friends, or just yourself, we’ve got dishes that fit every mood and occasion.</div>
+    </div>
+    <div class="recipe-of-the-day">
+        <h1 style = "font-family: 'Playfair Display', serif;">Recipes of the Day</h1>
+        <ul class="recipe-list">
+            {% for recipe in recipes %}
+                <li class="recipe-card">
+                <a href="{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">
+                    <img src="{{ recipe.images[0] }}" alt="Recipe Image">
+                    <p class="name">{{ recipe.name}}</p>
+                    <p class="desc">{{ recipe.author.name}}</p>
+                </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="Categories">
+        <h1 style = "font-family: 'Playfair Display', serif;">Top view Categories</h1>
+        <ul class="category-list">
+            {% for category in categories %}
+                <li class="category-card">
+                    <a href="#">
+                        <img  src= "{{ category.recipes[0].images[0] }}" alt="Category Image">
+                        <p class="name">{{ category.name }}</p>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
 </body>
 </html>
