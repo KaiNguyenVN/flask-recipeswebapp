@@ -2,14 +2,10 @@ from urllib import request
 
 from flask import render_template, Blueprint, request
 
-from recipe import Recipe
-from recipe.adapters.datareader.csvreader import CSVReader
-import os
+from recipe.adapters.memory_repository import repo_instance as repo
 
-data = CSVReader('recipe/adapters/data/recipes.csv')
-data.extract_data()
-list_of_recipes = data.get_recipes()
-list_of_categories = data.get_categories()
+list_of_recipes = repo.get_recipes()
+list_of_categories = repo.get_categories()
 
 home_blueprint = Blueprint('home_bp', __name__)
 browse_blueprint = Blueprint('browse_bp', __name__)
