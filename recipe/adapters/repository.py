@@ -17,8 +17,8 @@ class AbstractRepository(abc.ABC):
     def get_categories(self) -> List[Category]:
         pass
     @abc.abstractmethod
-    def get_nutrition(self) -> List[Nutrition]:
+    def add_recipe(self, recipe: Recipe) -> None:
         pass
     @abc.abstractmethod
-    def add_recipe(self, recipe: Recipe) -> None:
+    def get_recipe_by_id(self, recipe_id: int) -> Recipe:
         pass
