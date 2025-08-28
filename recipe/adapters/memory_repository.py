@@ -20,12 +20,16 @@ class MemoryRepository(AbstractRepository):
         return self.__recipes
     def get_categories(self) -> List[Category]:
         return self.__categories
-    def get_nutrition(self) -> List[Nutrition]:
-        return self.__nutrition
     def get_authors(self) -> List[Author]:
         return self.__authors
     def add_recipe(self, recipe: Recipe) -> None:
         self.__recipes.append(recipe)
+    def get_recipe_by_id(self, recipe_id: int):
+        for recipe in self.__recipes:
+            if recipe.id == recipe_id:
+                return recipe
+        else:
+            return None
 
 data_path = Path('recipe/adapters/data/recipes.csv')
 repo_instance = MemoryRepository(data_path)
