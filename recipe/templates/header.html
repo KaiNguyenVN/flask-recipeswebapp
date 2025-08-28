@@ -16,7 +16,7 @@
   <div class="container">
     <div class="brand-row">
       <!-- Logo -->
-      <a href="#" class="brand" aria-label="Home">
+      <a href="{{ url_for('home_bp.home')}}" class="brand" aria-label="Home">
         <div class="brand-mark">CK</div>
         <div class="brand-name">A Cozy Kitchen</div>
       </a>
@@ -24,7 +24,7 @@
       <!-- Navbar -->
       <nav class="nav-row" aria-label="Primary">
         <ul class="menu">
-          <li><a href="#">BROWSE</a></li>
+          <li><a href="{{ url_for('browse_bp.browse') }}">BROWSE</a></li>
           <li>
             <a href="#">CATEGORY
               <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>

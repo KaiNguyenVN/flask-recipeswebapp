@@ -1,0 +1,70 @@
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5em;   /* adjust as needed */
+  font-weight: 700;   /* bold for emphasis */
+  line-height: 1.2;
+  color: #444;        /* similar dark grey as your example */
+}
+.recipe-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: rgb(238, 240, 138);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.recipe-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.recipe-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.times p,
+.nutrition li,
+.ingredients li,
+.instructions li {
+    margin: 0.3rem 0;
+}
+
+.nutrition, .ingredients, .instructions {
+    margin-top: 1.5rem;
+}
+
+.nutrition h3,
+.ingredients h3,
+.instructions h3 {
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-size: 1.3rem;
+}
+
+.ingredients ul, .nutrition ul {
+    list-style: disc inside;
+}
+
+.instructions ol {
+    padding-left: 1.2rem;
+}
