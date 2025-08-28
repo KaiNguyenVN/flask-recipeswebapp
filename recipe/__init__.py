@@ -1,9 +1,6 @@
 """Initialize Flask app."""
 from flask import Flask
 
-
-
-
 def create_app():
     """Construct the core application."""
 

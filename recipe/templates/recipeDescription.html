@@ -36,10 +36,10 @@
         <ul class="category-list">
             {% for category in categories %}
                 <li class="category-card">
-                    <a href="#">
+
                         <img  src= "{{ category.recipes[0].images[0] }}" alt="Category Image">
                         <p class="name">{{ category.name }}</p>
-                    </a>
+
                 </li>
             {% endfor %}
         </ul>
