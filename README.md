@@ -52,6 +52,16 @@ The *project directory/.env* file contains variable settings. They are set with 
 * `SECRET_KEY`: Secret key used to encrypt session data.
 * `TESTING`: Set to False for running the application. Overridden and set to True automatically when testing the application.
 * `WTF_CSRF_SECRET_KEY`: Secret key used by the WTForm library.
+
+## what we have done
+* Create domainmodels.
+* Create a csv file reader.
+* Did unit test for domainmodels.
+* Create a memory_repository to store the recipe data.
+* Create a Home page for our Web app.
+* Create a Browse page to display all the recipes.
+* Create a Detail page to display recipe detail.
+* Did unit test for the service layer and memory_repository.
  
 ## Data sources
 
