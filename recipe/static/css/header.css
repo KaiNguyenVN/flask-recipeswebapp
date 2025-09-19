@@ -139,3 +139,9 @@ nav{
   font-size:.75rem;padding:.15rem .5rem;border:1px solid var(--border);
   border-radius:999px;color:var(--muted)
 }
+
+/* Dropdown menu max height and scrolling */
+.dropdown[role="menu"] {
+  max-height: 300px;
+  overflow-y: auto;
+}
