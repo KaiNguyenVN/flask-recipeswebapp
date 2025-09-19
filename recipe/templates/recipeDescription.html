@@ -34,7 +34,7 @@
     <div class="Categories">
         <h1 style = "font-family: 'Playfair Display', serif;">Top view Categories</h1>
         <ul class="category-list">
-            {% for category in categories %}
+            {% for category in categories[0:6] %}
                 <li class="category-card">
 
                         <img  src= "{{ category.recipes[0].images[0] }}" alt="Category Image">

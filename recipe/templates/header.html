@@ -25,27 +25,26 @@
       <nav class="nav-row" aria-label="Primary">
         <ul class="menu">
           <li><a href="{{ url_for('browse_bp.browse') }}">BROWSE</a></li>
+          <li><a href="{{ url_for('home_bp.home')}}">HOME</a></li>
           <li>
             <a href="#">CATEGORY
               <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
             </a>
             <div class="dropdown" role="menu">
-              <a href="#">Pie</a>
-              <a href="#">Quick &amp; Easy</a>
-              <a href="#">Weeknight Dinners</a>
-              <a href="#">Vegetarian</a>
-              <a href="#">Drinks</a>
+              {% for category in categories %}
+              <a href="#">{{ category.name }}</a>
+                {% endfor %}
             </div>
           </li>
-          <li><a href="{{ url_for('home_bp.home')}}">HOME</a></li>
         </ul>
       </nav>
 
       <!-- Icons -->
   <div class="utils">
-    <a class="icon-btn" href="#" aria-label="Favorites">
-    <svg class="icon" viewBox="0 0 24 24">
-      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+    <a class="icon-btn" href="#" aria-label="Login">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
     </svg>
     </a>
     <a class="icon-btn" href="#" aria-label="Search">
