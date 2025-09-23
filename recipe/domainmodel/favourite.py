@@ -21,7 +21,7 @@ class Favourite:
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Favourite):
-            return False
+            raise TypeError("Comparison must be between Favorite instances")
         else:
             return self.__favourite_id == other.__favourite_id
 
@@ -30,7 +30,7 @@ class Favourite:
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Favourite):
-            return False
+            raise TypeError("Comparison must be between Favorite instances")
         else:
             return self.__favourite_id < other.__favourite_id
 
