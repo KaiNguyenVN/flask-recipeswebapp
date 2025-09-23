@@ -26,12 +26,12 @@ class Review:
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Review):
-            return False
+            raise TypeError("Comparison must be between Review instances")
         else:
             return self.rate == other.rate
     def __lt__(self, other) -> bool:
         if not isinstance(other, Review):
-            return False
+            raise TypeError("Comparison must be between Review instances")
         else:
             return self.rate < other.rate
     def __hash__(self) -> int:
