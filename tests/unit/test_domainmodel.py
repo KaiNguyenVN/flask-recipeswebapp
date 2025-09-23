@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime
 
+from recipe.adapters.memory_repository import MemoryRepository
 from recipe.domainmodel.user import User
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
@@ -8,6 +9,9 @@ from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.review import Review
 from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.nutrition import Nutrition
+from recipe.adapters.datareader.csvreader import CSVReader
+from pathlib import Path
+
 
 # Fixtures
 @pytest.fixture
@@ -328,3 +332,22 @@ def test_review_hash(my_user, my_recipe):
     review2 = Review(2, my_user, my_recipe, 3, "Bad")
     review_set = {review1, review2}
     assert len(review_set) == 2
+
+# ---------------- csvreader TESTS ----------------
+
+def test_csvreader_get_recipes():
+    repo = CSVReader(Path('tests/data/test_recipes.csv'))
+    assert len(repo.get_recipes()) == 3
+    assert repo.get_recipes()[0].id == 38
+    assert repo.get_recipes()[1].id == 40
+    assert repo.get_recipes()[2].id == 41
+
+def test_csvreader_get_author_and_category():
+    repo = CSVReader(Path('tests/data/test_recipes.csv'))
+    author= Author(1533, "Dancer")
+    recipes = repo.get_recipes()
+    category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 0)
+    category2 = Category("Soy/Tofu", [recipes[2]], 1)
+    assert len(repo.get_recipes()) == 3
+    assert len(repo.get_authors()) == 3 and author in repo.get_authors()
+    assert repo.get_categories() == [category1, category2]
