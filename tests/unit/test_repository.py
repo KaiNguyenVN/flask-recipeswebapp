@@ -55,6 +55,3 @@ def test_get_authors(repo):
     assert authors[1].id == 1566
     assert authors[2].id == 1586
 
-
-
-

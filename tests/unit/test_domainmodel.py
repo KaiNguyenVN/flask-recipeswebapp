@@ -248,6 +248,23 @@ def test_favourite_invalid_id(my_user, my_recipe):
     with pytest.raises(ValueError):
         Favourite(0, my_user, my_recipe)
 
+def test_favourite_equality(my_user, my_recipe):
+    fav1 = Favourite(1, my_user, my_recipe)
+    fav2 = Favourite(1, my_user, my_recipe)
+    fav3 = Favourite(2, my_user, my_recipe)
+    assert fav1 == fav2
+    assert fav1 != fav3
+
+def test_favourite_less_than(my_user, my_recipe):
+    fav1 = Favourite(1, my_user, my_recipe)
+    fav2 = Favourite(2, my_user, my_recipe)
+    assert fav1 < fav2
+
+def test_favourite_hash(my_user, my_recipe):
+    fav1 = Favourite(1, my_user, my_recipe)
+    fav2 = Favourite(1, my_user, my_recipe)
+    fav_set = {fav1, fav2}
+    assert len(fav_set) == 1
 
 # ---------------- NUTRITION TESTS ----------------
 def test_nutrition_construction():
@@ -293,3 +310,21 @@ def test_review_invalid_id(my_user, my_recipe):
 def test_review_invalid_rate(my_user, my_recipe):
     with pytest.raises(ValueError):
         Review(1, my_user, my_recipe, -1, "Bad")
+
+def test_review_equality(my_user, my_recipe):
+    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
+    review2 = Review(2, my_user, my_recipe, 2, "Bad")
+    review3 = Review(3, my_user, my_recipe, 3, "Nice")
+    assert review1 == review2
+    assert review1 != review3
+
+def test_review_comparison(my_user, my_recipe):
+    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
+    review2 = Review(2, my_user, my_recipe, 3, "Bad")
+    assert review1 < review2
+
+def test_review_hash(my_user, my_recipe):
+    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
+    review2 = Review(2, my_user, my_recipe, 3, "Bad")
+    review_set = {review1, review2}
+    assert len(review_set) == 2
