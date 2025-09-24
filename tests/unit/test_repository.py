@@ -41,18 +41,16 @@ def test_add_recipe(repo):
 
 def test_get_categories(repo):
     categories = repo.get_categories()
-    categories.sort(key=lambda x: x.name)
+    names = ["Soy/Tofu", "Beverages", "Frozen Desserts"]
     assert len(categories) == 3
-    assert categories[0].name == "Beverages"
-    assert categories[1].name == "Frozen Desserts"
-    assert categories[2].name == "Soy/Tofu"
+    for category_id in categories:
+        assert categories[category_id].name in names
 
 
 def test_get_authors(repo):
     authors = repo.get_authors()
-    authors.sort(key=lambda x: x.id)
+    ids = [1533, 1566, 1586]
     assert len(authors) == 3
-    assert authors[0].id == 1533
-    assert authors[1].id == 1566
-    assert authors[2].id == 1586
+    for author_id in authors:
+        assert authors[author_id].id in ids
 
