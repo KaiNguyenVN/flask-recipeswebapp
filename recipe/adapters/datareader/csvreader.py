@@ -92,7 +92,7 @@ class CSVReader:
                     nutrition = nutrition,
                     servings = row.get("RecipeServings"),
                     recipe_yield = row.get("RecipeYield"),
-                    instructions = parse_list(row.get("instructions"))
+                    instructions = parse_list(row.get("RecipeInstructions"))
                 )
 
                 self.__recipes.append(recipe)

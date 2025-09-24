@@ -15,13 +15,13 @@ class Nutrition:
         if isinstance(other, Nutrition):
             return self.__nutri_content[nutri_type] == other.__nutri_content[nutri_type]
         else:
-            return False
+            raise TypeError("Comparison must be between Nutrition instances")
 
     def __lt__(self, other, nutri):
         if isinstance(other, Nutrition):
             return self.__nutri_content[nutri] < other.__nutri_content[nutri]
         else:
-            return False
+            raise TypeError("Comparison must be between Nutrition instances")
 
     def __hash__(self) -> int:
        return hash(self.id)
