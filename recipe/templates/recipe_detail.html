@@ -13,6 +13,13 @@
     <header>
         {% include 'header.html' %}
     </header>
+
+    <div class="breadcrumb">
+        <a href="{{ url_for('home_bp.home') }}">Home < </a>
+        <a href="{{ url_for('browse_bp.browse') }}">Browse < </a>
+        <a href="{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">{{ recipe.name }}</a>
+    </div>
+
     <div class = "recipe-detail">
         <!-- Recipe Title -->
         <h1 class="recipe-title">{{ recipe.name }}</h1>
@@ -47,11 +54,10 @@
 
         <!-- Rating -->
         <p><strong>Rating:</strong>
-            {% set stars = recipe.health_stars %}
-            {% if stars is not none %}
-                {% set full_stars = stars|int %}
-                {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
-                {{ '★' * full_stars }}{{ '½' * half_star }} ({{ "%.1f"|format(stars) }})
+            {% if health_stars[recipe.id] %}
+                {% set full_stars = health_stars[recipe.id]|int %}
+                {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
+                {{ '★' * full_stars }}{{ '½' * half_star }} ({{ health_stars[recipe.id] }})
             {% else %}
                 Health star rating unavailable
             {% endif %}

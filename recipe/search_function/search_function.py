@@ -67,10 +67,13 @@ def search():
     pages = range(start_page, end_page + 1)
 
     # Find Nutrition for this recipe
-    recipes = repo.get_recipes()
-    for recipe in recipes:
+    health_stars = {}
+    for recipe in recipes_to_show:
         nutrition = repo.get_nutrition_by_recipe_id(recipe.id)
-        health_stars = {recipe.id: repo.get_nutrition_by_recipe_id(recipe.id).calculate_health_stars() for recipe in recipes_to_show}
+        if nutrition:
+            health_stars[recipe.id] = nutrition.calculate_health_stars()
+        else:
+            health_stars[recipe.id] = None
 
     return render_template(
         "search_results.html",

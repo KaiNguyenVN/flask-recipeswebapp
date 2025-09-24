@@ -1,3 +1,24 @@
+/* Breadcrumb Grid */
+.breadcrumb {
+    width: min(1200px, 92%);
+    margin: 15px auto 25px;
+    font-size: 16px;
+    color: #444;
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 600;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Categories Grid */
 .Categories { width: min(1200px, 92%); margin: 2rem auto; }
 .Categories h1 { font-size: 1.5rem; margin-bottom: 1rem; }
 
@@ -144,4 +165,50 @@ h1 {
     padding: 6px 10px;
     color: #999;
     font-size: 14px;
+}
+
+/* search box */
+.search-container {
+    margin: 20px auto;
+    max-width: 1200px; /* same as .text-box */
+    background-color: #6e1f2d; /* warmer, muted maroon */
+    color: white;
+    padding: 25px 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* paragraph on top, form below */
+    gap: 15px;
+}
+
+.search-container p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.search-container form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* ensures it wraps nicely on smaller screens */
+}
+
+.search-container input[type="text"],
+.search-container select {
+    font-size: 16px;
+}
+
+.search-container button {
+    padding: 10px 20px;
+    background-color: #b8864b;  /* keep submit button color */
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-container button:hover {
+    background-color: #e5944e;
 }

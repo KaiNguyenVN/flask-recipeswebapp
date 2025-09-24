@@ -15,6 +15,11 @@
     {% include 'header.html' %}
 </header>
 
+<div class="breadcrumb">
+    <a href="{{ url_for('home_bp.home') }}">Home < </a>
+    <a href="{{ url_for('browse_bp.browse') }}">Browse</a>
+</div>
+
 <div class="recipe-index">
     <h2 style = "font-family: 'Playfair Display', serif;">Browse</h2>
     <div class="text-box">Browse our collection of our cozy and comforting recipes that are easy to make and perfect for your everyday life. We have a lot of category of recipes that you could choose from. Check it out!</div>
@@ -31,11 +36,10 @@
                 </div>
                 <p class="browse-name">{{ recipe.name }}</p>
                 <p class="desc"><strong>Rating:</strong>
-                    {% set stars = recipe.health_stars %}
-                    {% if stars is not none %}
-                        {% set full_stars = stars|int %}
-                        {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
-                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ "%.1f"|format(stars) }})
+                    {% if health_stars[recipe.id] %}
+                        {% set full_stars = health_stars[recipe.id]|int %}
+                        {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
+                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ health_stars[recipe.id] }})
                     {% else %}
                         Health star rating unavailable
                     {% endif %}

@@ -10,9 +10,12 @@ home_blueprint = Blueprint('home_bp', __name__)
 @home_blueprint.route('/', methods=['GET'])
 def home():
     # Find Nutrition for this recipe
-    recipes = repo.get_recipes()
-    for recipe in recipes:
+    health_stars = {}
+    for recipe in list_of_recipes[:6]:  # only first 6 for home page
         nutrition = repo.get_nutrition_by_recipe_id(recipe.id)
-        health_stars = {recipe.id: repo.get_nutrition_by_recipe_id(recipe.id).calculate_health_stars() for recipe in list_of_recipes}
+        if nutrition:
+            health_stars[recipe.id] = nutrition.calculate_health_stars()
+        else:
+            health_stars[recipe.id] = None
 
     return render_template('home.html', recipes=list_of_recipes[:6], categories=list_of_categories, nutrition=nutrition, health_stars=health_stars)

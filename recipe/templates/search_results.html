@@ -12,10 +12,37 @@
     {% include "header.html" %}
 </header>
 
+<div class="breadcrumb">
+    <a href="{{ url_for('home_bp.home') }}">Home < </a>
+    <a href="{{ url_for('browse_bp.browse') }}">Browse < </a>
+    <a href="{{ url_for('search_bp.search', filter_by=filter_by) }}">{{ filter_by }}</a>
+</div>
+
 <!-- Search context -->
 <div class="recipe-index">
     <h2 style = "font-family: 'Playfair Display', serif;">Search Recipe</h2>
     <div class="text-box">Find cozy and comforting recipes by name, category, author, or ingredients.</div>
+</div>
+
+<div class="search-container">
+    <p>Search for a specific recipe. Or you can search for recipes by Name, Category, Author or Ingredients!</p>
+    <form action="{{ url_for('search_bp.search') }}" method="get" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+        <!-- Dropdown filter -->
+        <select name="filter_by" style="padding: 10px; border-radius:6px; border:1px solid #aaa; font-size:16px; flex:1;">
+            <option value="name">Name</option>
+            <option value="category">Category</option>
+            <option value="author">Author</option>
+            <option value="ingredients">Ingredients</option>
+        </select>
+
+        <!-- Search input -->
+        <input type="text" name="q" placeholder="Search recipes..." style="flex:2; padding: 10px 12px; border-radius:6px; border:1px solid #aaa; font-size:16px;" required>
+
+        <!-- Submit button -->
+        <button type="submit" style="padding: 10px 20px; background-color:#b8864b; border:none; border-radius:6px; color:#fff; font-weight:bold; cursor:pointer; transition:0.3s;">
+            Search
+        </button>
+    </form>
 </div>
 
 <!-- Recipe display -->
@@ -33,11 +60,10 @@
                 </div>
                 <p class="browse-name">{{ recipe.name }}</p>
                 <p class="desc"><strong>Rating:</strong>
-                    {% set stars = recipe.health_stars %}
-                    {% if stars is not none %}
-                        {% set full_stars = stars|int %}
-                        {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
-                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ "%.1f"|format(stars) }})
+                    {% if health_stars[recipe.id] %}
+                        {% set full_stars = health_stars[recipe.id]|int %}
+                        {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
+                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ health_stars[recipe.id] }})
                     {% else %}
                         Health star rating unavailable
                     {% endif %}
