@@ -50,6 +50,12 @@ def my_recipe(my_author, my_category):
         instructions=["Boil pasta", "Cook bacon", "Mix with eggs"]
     )
 
+@pytest.fixture
+def info():
+    data_path = Path('tests/data/test_recipes.csv')
+    info = CSVReader(data_path)
+    info.extract_data()
+    return info
 
 # User tests
 def test_user_construction():
@@ -335,19 +341,17 @@ def test_review_hash(my_user, my_recipe):
 
 # ---------------- csvreader TESTS ----------------
 
-def test_csvreader_get_recipes():
-    repo = CSVReader(Path('tests/data/test_recipes.csv'))
-    assert len(repo.get_recipes()) == 3
-    assert repo.get_recipes()[0].id == 38
-    assert repo.get_recipes()[1].id == 40
-    assert repo.get_recipes()[2].id == 41
+def test_csvreader_get_recipes(info):
+    assert len(info.get_recipes()) == 3
+    assert info.get_recipes()[0].id == 38
+    assert info.get_recipes()[1].id == 40
+    assert info.get_recipes()[2].id == 41
 
-def test_csvreader_get_author_and_category():
-    repo = CSVReader(Path('tests/data/test_recipes.csv'))
+def test_csvreader_get_author_and_category(info):
     author= Author(1533, "Dancer")
-    recipes = repo.get_recipes()
-    category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 0)
-    category2 = Category("Soy/Tofu", [recipes[2]], 1)
-    assert len(repo.get_recipes()) == 3
-    assert len(repo.get_authors()) == 3 and author in repo.get_authors()
-    assert repo.get_categories() == [category1, category2]
+    recipes = info.get_recipes()
+    category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 1)
+    category2 = Category("Soy/Tofu", [recipes[2]], 2)
+    assert len(info.get_recipes()) == 3
+    assert len(info.get_authors()) == 3 and author in info.get_authors()
+    assert info.get_categories() == [category1, category2]
