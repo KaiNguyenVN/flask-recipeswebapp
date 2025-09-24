@@ -76,6 +76,17 @@ h1 {
     align-items: center;
 }
 
+.browse-card .desc {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: left;      /* force left alignment */
+    align-self: flex-start; /* override flex centering */
+    width: 100%;           /* make it span the card width */
+}
+
+
 .browse-image{
     width: 100%;
     padding-top: 100%;

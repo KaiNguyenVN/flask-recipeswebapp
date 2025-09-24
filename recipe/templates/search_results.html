@@ -12,6 +12,7 @@
     {% include "header.html" %}
 </header>
 
+<!-- Search context -->
 <div class="recipe-index">
     <h2 style = "font-family: 'Playfair Display', serif;">Search Recipe</h2>
     <div class="text-box">Find cozy and comforting recipes by name, category, author, or ingredients.</div>
@@ -21,6 +22,8 @@
 <div class="Categories">
     <h2 style="font-family: 'Playfair Display', serif;">By {{ filter_by|capitalize }}: {{ query }}</h2>
     {% if recipes %}
+
+    <!-- Recipe List -->
     <ul class="browse-list">
         {% for recipe in recipes %}
         <li class="browse-card">
@@ -29,47 +32,63 @@
                     <img src="{{ recipe.images[0] }}" alt="{{ recipe.name }}">
                 </div>
                 <p class="browse-name">{{ recipe.name }}</p>
+                <p class="desc"><strong>Rating:</strong>
+                    {% set stars = recipe.health_stars %}
+                    {% if stars is not none %}
+                        {% set full_stars = stars|int %}
+                        {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
+                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ "%.1f"|format(stars) }})
+                    {% else %}
+                        Health star rating unavailable
+                    {% endif %}
+                </p>
             </a>
         </li>
         {% endfor %}
     </ul>
 
-    <!-- Pagination code -->
+    <!-- Pagination -->
     {% if total_pages > 1 %}
     <div class="pagination">
+        <!-- Previous button -->
         {% if page > 1 %}
-            <a href="{{ url_for('search_bp.search_redirect', page=page-1, q=query, filter_by=filter_by) }}" class="page-btn">Previous</a>
+            <a href="{{ url_for('search_bp.search', page=page-1, q=query, filter_by=filter_by) }}" class="page-btn">Previous</a>
         {% endif %}
 
+        <!-- First page -->
         {% if 1 not in pages %}
-            <a href="{{ url_for('search_bp.search_redirect', page=1, q=query, filter_by=filter_by) }}" class="page-btn">1</a>
+            <a href="{{ url_for('search_bp.search', page=1, q=query, filter_by=filter_by) }}" class="page-btn">1</a>
             {% if 2 not in pages %}
                 <span class="dots">...</span>
             {% endif %}
         {% endif %}
 
+        <!-- Current displayed page numbers -->
         {% for p in pages %}
             {% if p == page %}
                 <span class="current-page">{{ p }}</span>
             {% else %}
-                <a href="{{ url_for('search_bp.search_redirect', page=p, q=query, filter_by=filter_by) }}" class="page-btn">{{ p }}</a>
+                <a href="{{ url_for('search_bp.search', page=p, q=query, filter_by=filter_by) }}" class="page-btn">{{ p }}</a>
             {% endif %}
         {% endfor %}
 
+        <!-- Last page -->
         {% if total_pages not in pages %}
             {% if total_pages - 1 not in pages %}
                 <span class="dots">...</span>
             {% endif %}
-                <a href="{{ url_for('search_bp.search_redirect', page=total_pages, q=query, filter_by=filter_by) }}" class="page-btn">{{ total_pages }}</a>
+                <a href="{{ url_for('search_bp.search', page=total_pages, q=query, filter_by=filter_by) }}" class="page-btn">{{ total_pages }}</a>
         {% endif %}
 
+        <!-- Next button -->
         {% if page < total_pages %}
-            <a href="{{ url_for('search_bp.search_redirect', page=page + 1, q=query, filter_by=filter_by) }}" class="page-btn">Next</a>
+            <a href="{{ url_for('search_bp.search', page=page + 1, q=query, filter_by=filter_by) }}" class="page-btn">Next</a>
         {% endif %}
     </div>
     {% endif %}
 
     {% else %}
+    <!-- No results message -->
     <p>No recipes found.</p>
     {% endif %}
 </div>

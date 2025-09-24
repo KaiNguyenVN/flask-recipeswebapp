@@ -26,6 +26,16 @@
                     <img src="{{ recipe.images[0] }}" alt="Recipe Image">
                     <p class="name">{{ recipe.name}}</p>
                     <p class="desc">{{ recipe.author.name}}</p>
+                    <p class="desc"><strong>Rating:</strong>
+                        {% set stars = recipe.health_stars %}
+                        {% if stars is not none %}
+                            {% set full_stars = stars|int %}
+                            {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
+                            {{ '★' * full_stars }}{{ '½' * half_star }} ({{ "%.1f"|format(stars) }})
+                        {% else %}
+                            Health star rating unavailable
+                        {% endif %}
+                    </p>
                 </a>
                 </li>
             {% endfor %}

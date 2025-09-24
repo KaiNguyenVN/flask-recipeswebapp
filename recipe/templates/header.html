@@ -39,7 +39,7 @@
         </ul>
       </nav>
 
-      <!-- Icons -->
+  <!-- Icons -->
   <div class="utils">
     <a class="icon-btn" href="#" aria-label="Login">
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -48,10 +48,21 @@
     </svg>
     </a>
 
-      <!-- Search Bar -->
+      <!-- Search Section -->
       <div class="search-section-inline">
-        <form action="{{ url_for('search_bp.search_redirect') }}" method="get" class="search-form-inline">
-        <!-- Search icon first -->
+        <form id="searchForm" action="{{ url_for('search_bp.search') }}" method="get" class="search-form-inline">
+            <!-- Filter dropdown -->
+            <select name="filter_by" id="filterSelect" onchange="document.getElementById('searchForm').submit();">
+                <option value="">-- Select Filter --</option>
+                <option value="name" {% if filter_by == "name" %}selected{% endif %}>Name</option>
+                <option value="category" {% if filter_by == "category" %}selected{% endif %}>Category</option>
+                <option value="author" {% if filter_by == "author" %}selected{% endif %}>Author</option>
+                <option value="ingredients" {% if filter_by == "ingredients" %}selected{% endif %}>Ingredients</option>
+            </select>
+
+        <!-- Text input for search queries-->
+        <input type="text" name="q" value="{{ query }}" placeholder="Search..." list="suggestions" {% if not filter_by %}disabled{% endif %}>
+
         <button type="submit" aria-label="Search">
             <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
                 <circle cx="11" cy="11" r="7"></circle>
@@ -59,21 +70,21 @@
             </svg>
         </button>
 
-        <!-- Text input -->
-        <input type="text" name="q" placeholder="Search..." list="names" required>
-
-        <!-- Filter dropdown -->
-        <select name="filter_by">
-            <option value="name">Name</option>
-            <option value="category">Category</option>
-            <option value="author">Author</option>
-            <option value="ingredients">Ingredients</option>
-        </select>
-
-        <datalist id="names">
-            {% for c in categories %}<option value="{{ c.name }}"></option>{% endfor %}
+        <!-- Dropdown Suggestion based on filter -->
+        <!-- datalist use for autocomplete suggestions -->
+        <datalist id="suggestions">
+            {% if filter_by == 'name' %}
+                {% for n in names %}<option value="{{ n }}"></option>{% endfor %}
+            {% elif filter_by == 'category' %}
+                {% for c in categories %}<option value="{{ c }}"></option>{% endfor %}
+            {% elif filter_by == 'author' %}
+                {% for a in authors %}<option value="{{ a }}"></option>{% endfor %}
+            {% elif filter_by == 'ingredients' %}
+                {% for i in ingredients %}<option value="{{ i }}"></option>{% endfor %}
+            {% endif %}
         </datalist>
         </form>
+
     </div>
   </div>
   </div>

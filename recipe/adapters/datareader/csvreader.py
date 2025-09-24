@@ -25,12 +25,17 @@ class CSVReader:
         """Reads the CSV and creates domain model objects."""
 
         def parse_list(value:str) -> list:
-            if value == "None":
+            if not value or value == "None":
                 return []
-            try:
-                return literal_eval(value)
-            except (ValueError, SyntaxError):
-                return []
+            value = value.strip()
+            # Try literal_eval first (works for CSV stringified lists)
+            if value.startswith("[") and value.endswith("]"):
+                try:
+                    return literal_eval(value)
+                except Exception:
+                    pass
+            # fallback: split by dot or newline
+            return [step.strip() for step in value.replace("\n", ".").split(".") if step.strip()]
 
         with open(self.__file_path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -77,6 +82,8 @@ class CSVReader:
                 self.__nutrition[int(row["RecipeId"])] = nutrition
 
                 # --- Recipe ---
+                instructions_column = row.get("Instructions") or row.get("RecipeInstructions") or ""
+                instructions = parse_list(instructions_column)
                 recipe = Recipe(
                     recipe_id = int(row["RecipeId"]),
                     name = row["Name"],
@@ -92,7 +99,7 @@ class CSVReader:
                     nutrition = nutrition,
                     servings = row.get("RecipeServings"),
                     recipe_yield = row.get("RecipeYield"),
-                    instructions = parse_list(row.get("instructions"))
+                    instructions = instructions
                 )
 
                 self.__recipes.append(recipe)

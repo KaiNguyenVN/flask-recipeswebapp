@@ -30,6 +30,12 @@ class MemoryRepository(AbstractRepository):
                 return recipe
         else:
             return None
+    def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition | None:
+        for n in self.__nutrition:
+            if n.id == recipe_id:
+                return n
+        return None
+
 
 data_path = Path('recipe/adapters/data/recipes.csv')
 repo_instance = MemoryRepository(data_path)
