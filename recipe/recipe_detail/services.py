@@ -41,7 +41,10 @@ def remove_review(username: str, recipe_id: int, review_id: int, repo: AbstractR
     return review_to_remove
 
 
-
+def get_reviews_for_recipe(recipe_id: int, repo: AbstractRepository):
+    """Return all reviews for a recipe."""
+    recipe = repo.get_recipe_by_id(recipe_id)
+    return recipe.reviews
 
 def add_favorite_recipe(username: str, recipe_id: int, repo: AbstractRepository):
     """Add a recipe to user's favourites."""
