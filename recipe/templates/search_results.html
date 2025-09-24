@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="../static/css/browse.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    {% include "header.html" %}
+</header>
+
+<div class="recipe-index">
+    <h2 style = "font-family: 'Playfair Display', serif;">Search Recipe</h2>
+    <div class="text-box">Find cozy and comforting recipes by name, category, author, or ingredients.</div>
+</div>
+
+<!-- Recipe display -->
+<div class="Categories">
+    <h2 style="font-family: 'Playfair Display', serif;">By {{ filter_by|capitalize }}: {{ query }}</h2>
+    {% if recipes %}
+    <ul class="browse-list">
+        {% for recipe in recipes %}
+        <li class="browse-card">
+            <a href="{{ url_for('recipe_bp.recipe_detail', recipe_id=recipe.id) }}">
+                <div class="browse-image">
+                    <img src="{{ recipe.images[0] }}" alt="{{ recipe.name }}">
+                </div>
+                <p class="browse-name">{{ recipe.name }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Pagination code -->
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('search_bp.search_redirect', page=page-1, q=query, filter_by=filter_by) }}" class="page-btn">Previous</a>
+        {% endif %}
+
+        {% if 1 not in pages %}
+            <a href="{{ url_for('search_bp.search_redirect', page=1, q=query, filter_by=filter_by) }}" class="page-btn">1</a>
+            {% if 2 not in pages %}
+                <span class="dots">...</span>
+            {% endif %}
+        {% endif %}
+
+        {% for p in pages %}
+            {% if p == page %}
+                <span class="current-page">{{ p }}</span>
+            {% else %}
+                <a href="{{ url_for('search_bp.search_redirect', page=p, q=query, filter_by=filter_by) }}" class="page-btn">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if total_pages not in pages %}
+            {% if total_pages - 1 not in pages %}
+                <span class="dots">...</span>
+            {% endif %}
+                <a href="{{ url_for('search_bp.search_redirect', page=total_pages, q=query, filter_by=filter_by) }}" class="page-btn">{{ total_pages }}</a>
+        {% endif %}
+
+        {% if page < total_pages %}
+            <a href="{{ url_for('search_bp.search_redirect', page=page + 1, q=query, filter_by=filter_by) }}" class="page-btn">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p>No recipes found.</p>
+    {% endif %}
+</div>
+
+<footer>
+    {% include "footer.html" %}
+</footer>
+
+</body>
+</html>

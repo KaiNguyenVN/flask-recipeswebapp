@@ -47,12 +47,34 @@
       <circle cx="12" cy="7" r="4"/>
     </svg>
     </a>
-    <a class="icon-btn" href="#" aria-label="Search">
-    <svg class="icon" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="7"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-    </svg>
-    </a>
+
+      <!-- Search Bar -->
+      <div class="search-section-inline">
+        <form action="{{ url_for('search_bp.search_redirect') }}" method="get" class="search-form-inline">
+        <!-- Search icon first -->
+        <button type="submit" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
+
+        <!-- Text input -->
+        <input type="text" name="q" placeholder="Search..." list="names" required>
+
+        <!-- Filter dropdown -->
+        <select name="filter_by">
+            <option value="name">Name</option>
+            <option value="category">Category</option>
+            <option value="author">Author</option>
+            <option value="ingredients">Ingredients</option>
+        </select>
+
+        <datalist id="names">
+            {% for n in names %}<option value="{{ n }}"></option>{% endfor %}
+        </datalist>
+        </form>
+    </div>
   </div>
   </div>
   </div>

@@ -9,4 +9,4 @@ home_blueprint = Blueprint('home_bp', __name__)
 
 @home_blueprint.route('/', methods=['GET'])
 def home():
-    return render_template('recipeDescription.html', recipes=list_of_recipes[:6], categories=list_of_categories)
+    return render_template('home.html', recipes=list_of_recipes[:6], categories=list_of_categories)
