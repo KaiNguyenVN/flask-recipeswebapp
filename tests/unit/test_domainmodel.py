@@ -53,7 +53,7 @@ def test_user_construction():
     assert user.id == 1
     assert user.username == "john_doe"
     assert user.password == "secret123"
-    assert user.favourite_recipes == []
+    assert user.get_favourite_recipes == []
     assert user.reviews == []
 
 
@@ -239,30 +239,30 @@ def test_author_set_recipe_invalid_type(my_author):
 # ---------------------FAVOURITE TESTS ----------------
 
 def test_favourite_construction(my_user, my_recipe):
-    fav = Favourite(1, my_user, my_recipe)
+    fav = Favourite(my_user.username, my_recipe,1)
     assert fav.id == 1
-    assert fav.user == my_user
+    assert fav.username == my_user.username
     assert fav.recipe == my_recipe
 
 def test_favourite_invalid_id(my_user, my_recipe):
     with pytest.raises(ValueError):
-        Favourite(0, my_user, my_recipe)
+        Favourite(my_user.username, my_recipe, 0)
 
 def test_favourite_equality(my_user, my_recipe):
-    fav1 = Favourite(1, my_user, my_recipe)
-    fav2 = Favourite(1, my_user, my_recipe)
-    fav3 = Favourite(2, my_user, my_recipe)
+    fav1 = Favourite(my_user.username, my_recipe, 1)
+    fav2 = Favourite(my_user.username, my_recipe, 1)
+    fav3 = Favourite(my_user.username, my_recipe, 2)
     assert fav1 == fav2
     assert fav1 != fav3
 
 def test_favourite_less_than(my_user, my_recipe):
-    fav1 = Favourite(1, my_user, my_recipe)
-    fav2 = Favourite(2, my_user, my_recipe)
+    fav1 = Favourite(my_user.username, my_recipe, 1)
+    fav2 = Favourite(my_user.username, my_recipe, 2)
     assert fav1 < fav2
 
 def test_favourite_hash(my_user, my_recipe):
-    fav1 = Favourite(1, my_user, my_recipe)
-    fav2 = Favourite(1, my_user, my_recipe)
+    fav1 = Favourite(my_user.username, my_recipe, 1)
+    fav2 = Favourite(my_user.username, my_recipe, 1)
     fav_set = {fav1, fav2}
     assert len(fav_set) == 1
 
@@ -295,36 +295,36 @@ def test_nutrition_repr_and_hash():
 
 # ---------------- REVIEW TESTS ----------------
 def test_review_construction(my_user, my_recipe):
-    review = Review(1, my_user, my_recipe, 5, "Amazing!")
+    review = Review(my_user.username, my_recipe.id, 5, "Amazing!", datetime.now(),1)
     assert review.review_id == 1
-    assert review.user == my_user
-    assert review.recipe == my_recipe
-    assert review.rate == 5
+    assert review.username == my_user.username
+    assert review.recipe_id == my_recipe.id
+    assert review.rating == 5
     assert review.review == "Amazing!"
     assert isinstance(review.date, datetime)
 
 def test_review_invalid_id(my_user, my_recipe):
     with pytest.raises(ValueError):
-        Review(0, my_user, my_recipe, 4, "Nice")
+        Review(my_user.username, my_recipe.id, 4, "Nice",datetime.now(),0)
 
 def test_review_invalid_rate(my_user, my_recipe):
     with pytest.raises(ValueError):
-        Review(1, my_user, my_recipe, -1, "Bad")
+        Review(my_user.username, my_recipe.id, -1, "Bad", datetime.now(), 1)
 
 def test_review_equality(my_user, my_recipe):
-    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
-    review2 = Review(2, my_user, my_recipe, 2, "Bad")
-    review3 = Review(3, my_user, my_recipe, 3, "Nice")
+    review1 = Review(my_user.username, my_recipe.id, 2, "Amazing!",datetime.now(), 1)
+    review2 = Review(my_user.username, my_recipe.id, 2, "Bad", datetime.now(),2)
+    review3 = Review(my_user.username, my_recipe.id, 3, "Nice", datetime.now(),3)
     assert review1 == review2
     assert review1 != review3
 
 def test_review_comparison(my_user, my_recipe):
-    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
-    review2 = Review(2, my_user, my_recipe, 3, "Bad")
+    review1 = Review(my_user.username, my_recipe.id, 2, "Amazing!",datetime.now(), 1)
+    review2 = Review(my_user.username, my_recipe.id, 3, "Bad", datetime.now(), 2)
     assert review1 < review2
 
 def test_review_hash(my_user, my_recipe):
-    review1 = Review(1, my_user, my_recipe, 2, "Amazing!")
-    review2 = Review(2, my_user, my_recipe, 3, "Bad")
+    review1 = Review(my_user.username, my_recipe.id, 2, "Amazing!", datetime.now(), 1)
+    review2 = Review(my_user.username, my_recipe.id, 3, "Bad", datetime.now(), 2)
     review_set = {review1, review2}
     assert len(review_set) == 2

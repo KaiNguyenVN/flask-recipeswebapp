@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from .review import Review
 
 if TYPE_CHECKING:
     from .favourite import Favourite
