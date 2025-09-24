@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime
 
+from recipe.adapters.memory_repository import MemoryRepository
 from recipe.domainmodel.user import User
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
@@ -8,6 +9,9 @@ from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.review import Review
 from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.nutrition import Nutrition
+from recipe.adapters.datareader.csvreader import CSVReader
+from pathlib import Path
+
 
 # Fixtures
 @pytest.fixture
@@ -46,6 +50,12 @@ def my_recipe(my_author, my_category):
         instructions=["Boil pasta", "Cook bacon", "Mix with eggs"]
     )
 
+@pytest.fixture
+def info():
+    data_path = Path('tests/data/test_recipes.csv')
+    info = CSVReader(data_path)
+    info.extract_data()
+    return info
 
 # User tests
 def test_user_construction():
@@ -328,3 +338,20 @@ def test_review_hash(my_user, my_recipe):
     review2 = Review(2, my_user, my_recipe, 3, "Bad")
     review_set = {review1, review2}
     assert len(review_set) == 2
+
+# ---------------- csvreader TESTS ----------------
+
+def test_csvreader_get_recipes(info):
+    assert len(info.get_recipes()) == 3
+    assert info.get_recipes()[0].id == 38
+    assert info.get_recipes()[1].id == 40
+    assert info.get_recipes()[2].id == 41
+
+def test_csvreader_get_author_and_category(info):
+    author= Author(1533, "Dancer")
+    recipes = info.get_recipes()
+    category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 1)
+    category2 = Category("Soy/Tofu", [recipes[2]], 2)
+    assert len(info.get_recipes()) == 3
+    assert len(info.get_authors()) == 3 and author in info.get_authors()
+    assert info.get_categories() == [category1, category2]

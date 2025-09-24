@@ -41,10 +41,9 @@ def test_add_recipe(repo):
 def test_get_categories(repo):
     categories = repo.get_categories()
     categories.sort(key=lambda x: x.name)
-    assert len(categories) == 3
-    assert categories[0].name == "Beverages"
-    assert categories[1].name == "Frozen Desserts"
-    assert categories[2].name == "Soy/Tofu"
+    assert len(categories) == 2
+    assert categories[0].name == "Frozen Desserts"
+    assert categories[1].name == "Soy/Tofu"
 
 
 def test_get_authors(repo):
