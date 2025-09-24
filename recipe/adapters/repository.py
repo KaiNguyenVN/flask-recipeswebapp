@@ -34,6 +34,9 @@ class AbstractRepository(abc.ABC):
     def add_review(self, review: Review):
         raise NotImplementedError
 
+    def remove_review(self, review: Review):
+        raise NotImplementedError
+
     @abc.abstractmethod
     def add_favorite_recipe(self, favorite: Favourite):
         """ Adds a recipe to the user's favorites list. """

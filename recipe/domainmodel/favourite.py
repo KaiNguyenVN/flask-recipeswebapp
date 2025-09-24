@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class Favourite:
     # Hazziq - recipe = "Recipe"
-    def __init__(self, favourite_id: int, username: str, recipe: "Recipe") -> None:
+    def __init__(self, username: str, recipe: "Recipe", favourite_id = None) -> None:
         if not isinstance(favourite_id, int) or favourite_id <= 0:
             raise ValueError("id must be a positive int.")
         self.__favourite_id = favourite_id

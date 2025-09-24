@@ -46,11 +46,24 @@ class MemoryRepository(AbstractRepository):
 
     def add_review(self, review: Review):
         """ Adds a review for a recipe. """
-        user = review.user
+        user = self.get_user(review.username)
         user.add_review(review)
-        recipe = review.recipe
+        recipe = self.get_recipe_by_id(review.recipe_id)
         recipe.add_review(review)
         self.__reviews.append(review)
+
+    def remove_review(self, review: Review):
+        user = self.get_user(review.username)
+        if review in user.reviews:
+            user.remove_review(review)
+
+        recipe = self.get_recipe_by_id(review.recipe_id)
+        if review in recipe.reviews:
+            recipe.reviews.remove(review)
+
+        if review in self.__reviews:
+            self.__reviews.remove(review)
+
 
     def add_favorite_recipe(self, favorite: Favourite):
         """ Adds a recipe to a user's favorites list. """

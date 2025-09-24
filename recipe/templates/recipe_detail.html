@@ -2,90 +2,145 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Description</title>
-    <link
-      rel="stylesheet" href="../static/css/detail.css"
-    />
+    <title>{{ recipe.name }} - Recipe Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        {% include 'header.html' %}
-    </header>
-    <div class = "recipe-detail">
-        <!-- Recipe Title -->
-        <h1 class="recipe-title">{{ recipe.name }}</h1>
+<header>
+    {% include 'header.html' %}
+</header>
 
-        <!-- Author & Date -->
-        <div class="meta">
-            <span>By {{ recipe.author.name }}</span> •
-            <span>{{ recipe.created_date.utctime('%B %d, %Y') if recipe.created_date else "" }}</span>
-        </div>
+<div class="recipe-detail">
+    <!-- Recipe Title -->
+    <h1 class="recipe-title">{{ recipe.name }}</h1>
 
-        <!-- Image -->
-        <div class="recipe-image">
-            <img src="{{ recipe.images[0] if recipe.images else 'https://via.placeholder.com/600x400?text=No+Image' }}"
-                 alt="{{ recipe.name }}">
-        </div>
-
-        <!-- Description -->
-        <p class="recipe-description">{{ recipe.description }}</p>
-
-        <!-- Times -->
-        <div class="times">
-            <p><strong>Cook time:</strong> {{ recipe.cook_time }} mins</p>
-            <p><strong>Prep time:</strong> {{ recipe.preparation_time }} mins</p>
-        </div>
-
-        <!-- Category -->
-        <p><strong>Category:</strong> {{ recipe.category.name if recipe.category else "Uncategorized" }}</p>
-
-        <!-- Servings & Yield -->
-        <p><strong>Servings:</strong> {{ recipe.servings or "-" }}</p>
-        <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
-
-        <!-- Rating -->
-        <p><strong>Rating:</strong> {{ recipe.rating or "Not rated" }}</p>
-
-        <!-- Nutrition -->
-        {% if recipe.nutrition %}
-        <div class="nutrition">
-            <h3>Nutrition</h3>
-            <ul>
-                <li>Calories: {{ recipe.nutrition.calories }}</li>
-                <li>Fat: {{ recipe.nutrition.fat }} g</li>
-                <li>Saturated Fat: {{ recipe.nutrition.saturated_fat }} g</li>
-                <li>Cholesterol: {{ recipe.nutrition.cholesterol }} mg</li>
-                <li>Sodium: {{ recipe.nutrition.sodium }} mg</li>
-                <li>Carbs: {{ recipe.nutrition.carbohydrates }} g</li>
-            </ul>
-        </div>
-        {% endif %}
-
-        <!-- Ingredients -->
-        <div class="ingredients">
-            <h3>Ingredients</h3>
-            <ul>
-                {% for ingredient in recipe.ingredients %}
-                    <li>{{ ingredient }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- Instructions -->
-        <div class="instructions">
-            <h3>Instructions</h3>
-            <ul>
-                {% for step in recipe.instructions %}
-                    <li>{{ step }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+    <!-- Author & Date -->
+    <div class="meta">
+        <span>By {{ recipe.author.name }}</span> •
+        <span>
+            {{ recipe.created_date.utctime('%B %d, %Y') if recipe.created_date else "" }}
+        </span>
     </div>
 
+    <!-- Image -->
+    <div class="recipe-image">
+        <img src="{{ recipe.images[0] if recipe.images else 'https://via.placeholder.com/600x400?text=No+Image' }}"
+             alt="{{ recipe.name }}">
+    </div>
 
-    <footer>
-        {%  include 'footer.html' %}
-    </footer>
+    <!-- Description -->
+    <p class="recipe-description">{{ recipe.description }}</p>
+
+    <!-- Times -->
+    <div class="times">
+        <p><strong>Cook time:</strong> {{ recipe.cook_time }} mins</p>
+        <p><strong>Prep time:</strong> {{ recipe.preparation_time }} mins</p>
+    </div>
+
+    <!-- Category -->
+    <p><strong>Category:</strong> {{ recipe.category.name if recipe.category else "Uncategorized" }}</p>
+
+    <!-- Servings & Yield -->
+    <p><strong>Servings:</strong> {{ recipe.servings or "-" }}</p>
+    <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
+
+    <!-- Rating -->
+    <p><strong>Average Rating:</strong> {{ recipe.rating |default("Not rated") }}</p>
+
+    <!-- Nutrition -->
+    {% if recipe.nutrition %}
+    <div class="nutrition">
+        <h3>Nutrition</h3>
+        <ul>
+            <li>Calories: {{ recipe.nutrition.calories }}</li>
+            <li>Fat: {{ recipe.nutrition.fat }} g</li>
+            <li>Saturated Fat: {{ recipe.nutrition.saturated_fat }} g</li>
+            <li>Cholesterol: {{ recipe.nutrition.cholesterol }} mg</li>
+            <li>Sodium: {{ recipe.nutrition.sodium }} mg</li>
+            <li>Carbs: {{ recipe.nutrition.carbohydrates }} g</li>
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Ingredients -->
+    <div class="ingredients">
+        <h3>Ingredients</h3>
+        <ul>
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+        <h3>Instructions</h3>
+        <ul>
+            {% for step in recipe.instructions %}
+                <li>{{ step }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Reviews -->
+    <div class="reviews">
+        <h3>Reviews</h3>
+        {% if reviews %}
+            <ul>
+                {% for r in reviews %}
+                    <li>
+                        <strong>{{ r.user.user_name }}</strong>
+                        ({{ r.rating }}/5):
+                        {{ r.review }}
+                        {% if 'user_name' in session and r.user.user_name == session['user_name'] %}
+                            <form method="POST"
+                                  action="{{ url_for('recipe_bp.remove_review', recipe_id=recipe.id, review_id=r.id) }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet. Be the first!</p>
+        {% endif %}
+    </div>
+
+    <!-- Add Review Form -->
+    {% if 'user_name' in session %}
+    <div class="add-review">
+        <h3>Add Your Review</h3>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.review_text.label }}<br>
+                {{ form.review_text(rows=3) }}
+                {% for error in form.review_text.errors %}
+                    <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.rating.label }}<br>
+                {{ form.rating(min=1, max=5) }}
+                {% for error in form.rating.errors %}
+                    <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    </div>
+    {% else %}
+    <p><a href="{{ url_for('authentication_bp.login') }}">Login</a> to post a review.</p>
+    {% endif %}
+
+</div>
+
+<footer>
+    {% include 'footer.html' %}
+</footer>
 </body>
+</html>
