@@ -23,18 +23,8 @@
       <!-- Navbar -->
       <nav class="nav-row" aria-label="Primary">
         <ul class="menu">
-          <li><a href="{{ url_for('browse_bp.browse') }}">BROWSE</a></li>
           <li><a href="{{ url_for('home_bp.home')}}">HOME</a></li>
-          <li>
-            <a href="#">CATEGORY
-              <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-            </a>
-            <div class="dropdown" role="menu">
-              {% for category in categories %}
-              <a href="#">{{ category.name }}</a>
-                {% endfor %}
-            </div>
-          </li>
+          <li><a href="{{ url_for('browse_bp.browse') }}">BROWSE</a></li>
         </ul>
       </nav>
 
