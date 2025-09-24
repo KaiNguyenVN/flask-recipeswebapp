@@ -22,7 +22,9 @@ class ReviewForm(FlaskForm):
 @login_required
 def recipe_detail(recipe_id):
     recipe = repo.repo_instance.get_recipe_by_id(recipe_id)
+    list_of_recipes = repo.repo_instance.get_recipes()
     if recipe is None:
+        # simple 404 fallback
         return render_template('404.html', message="Recipe not found"), 404
 
     form = ReviewForm()
@@ -53,10 +55,17 @@ def recipe_detail(recipe_id):
 
     # If GET request or failed POST, render recipe detail + form again
     reviews = services.get_reviews_for_recipe(recipe_id, repo.repo_instance)
+    # Find Nutrition for this recipe
+    nutrition = repo.repo_instance.get_nutrition_by_recipe_id(recipe_id)
+    health_stars = {recipe.id: repo.repo_instance.get_nutrition_by_recipe_id(recipe.id).calculate_health_stars() for recipe in
+                    list_of_recipes}
     return render_template(
         "recipe_detail.html",
         recipe=recipe,
         form=form,
         reviews=reviews,
         handler_url=url_for("recipe_bp.recipe_detail", recipe_id=recipe_id),
+        nutrition=nutrition,
+        health_stars=health_stars
     )
+

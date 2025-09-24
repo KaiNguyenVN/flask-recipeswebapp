@@ -159,3 +159,41 @@ nav{
   max-height: 300px;
   overflow-y: auto;
 }
+
+/* Search function*/
+.search-form-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.search-form-inline input {
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-form-inline select {
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-form-inline button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.search-form-inline button .icon {
+  display: block;
+}
+
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+

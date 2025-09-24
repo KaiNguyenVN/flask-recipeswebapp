@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Description</title>
+    <title>Home</title>
     <link
       rel="stylesheet" href="../static/css/main.css"
     />
@@ -13,6 +13,11 @@
     <header>
         {% include 'header.html' %}
     </header>
+
+    <div class="breadcrumb">
+        <a href="{{ url_for('home_bp.home') }}">Home</a>
+    </div>
+
     <div class="recipe-index">
     <h2 style = "font-family: 'Playfair Display', serif;">HOME</h2>
     <div class="text-box">Welcome to A Cozy Kitchen — your place for easy, heartwarming recipes that bring comfort to every meal. Whether you’re cooking for family, friends, or just yourself, we’ve got dishes that fit every mood and occasion.</div>
@@ -26,6 +31,16 @@
                     <img src="{{ recipe.images[0] }}" alt="Recipe Image">
                     <p class="name">{{ recipe.name}}</p>
                     <p class="desc">{{ recipe.author.name}}</p>
+                    <p class="desc"><strong>Rating:</strong>
+                        {% set stars = health_stars[recipe.id] %}
+                        {% if stars %}
+                            {% set full_stars = stars|int %}
+                            {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
+                            {{ '★' * full_stars }}{{ '½' * half_star }} ({{ stars }})
+                        {% else %}
+                            Health star rating unavailable
+                        {% endif %}
+                    </p>
                 </a>
                 </li>
             {% endfor %}

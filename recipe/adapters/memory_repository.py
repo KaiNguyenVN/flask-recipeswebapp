@@ -3,12 +3,12 @@ from pathlib import Path
 from recipe.adapters.repository import AbstractRepository
 from recipe.adapters.datareader.csvreader import CSVReader
 from recipe.domainmodel.favourite import Favourite
+from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
 from recipe.domainmodel.user import User
 from recipe.domainmodel.review import Review
-#from recipe.domainmodel.nutrition import Nutrition
 
 
 class MemoryRepository(AbstractRepository):
@@ -96,5 +96,11 @@ class MemoryRepository(AbstractRepository):
                 return recipe
         else:
             return None
+    def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition | None:
+        for n in self.__nutrition:
+            if n.id == recipe_id:
+                return n
+        return None
+
 
 #data_path = Path('recipe/adapters/data/recipes.csv')
