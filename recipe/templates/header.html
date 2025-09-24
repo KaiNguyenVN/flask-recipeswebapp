@@ -71,7 +71,7 @@
         </select>
 
         <datalist id="names">
-            {% for n in names %}<option value="{{ n }}"></option>{% endfor %}
+            {% for c in categories %}<option value="{{ c.name }}"></option>{% endfor %}
         </datalist>
         </form>
     </div>

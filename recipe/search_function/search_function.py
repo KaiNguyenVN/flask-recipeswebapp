@@ -13,7 +13,7 @@ def search_page():
     # Collect unique names, categories, authors
     names = sorted({r.name for r in recipes})
     categories = sorted({r.category.name for r in recipes})
-    authors = sorted({r.author.username for r in recipes})
+    authors = sorted({r.author.name for r in recipes})
 
     return render_template(
         "search_results.html",
