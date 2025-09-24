@@ -6,8 +6,10 @@ if TYPE_CHECKING:
     from .review import Review
 
 class User:
-    def __init__(self, username: str, password: str, user_id: int = None):
+    #_id_counter = 1
+    def __init__(self, username: str, password: str, user_id = None):
         self.__id = user_id
+        #User._id_counter += 1
         self.__username = username
         self.__password = password
         self.__favourite_recipes = []
@@ -42,7 +44,7 @@ class User:
         return self.__password
 
     @property
-    def favourite_recipes(self) -> list["Favourite"]:
+    def get_favourite_recipes(self) -> list["Favourite"]:
         return self.__favourite_recipes
 
     @property

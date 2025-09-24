@@ -9,8 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
-
   <!-- Header -->
   <header class="site-header">
   <div class="container">
@@ -39,22 +37,17 @@
         </ul>
       </nav>
 
-      <!-- Icons -->
-  <div class="utils">
-    <a class="icon-btn" href="#" aria-label="Login">
-    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-      <circle cx="12" cy="7" r="4"/>
-    </svg>
-    </a>
-    <a class="icon-btn" href="#" aria-label="Search">
-    <svg class="icon" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="7"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-    </svg>
-    </a>
-  </div>
-  </div>
+      <div class="utils">
+          {% if 'user_name' in session %}
+            <span class="welcome-msg">Hi, {{ session['user_name'] }}</span>
+            <a href="{{ url_for('authentication_bp.logout') }}" class="auth-link secondary">Logout</a>
+          {% else %}
+            <a href="{{ url_for('authentication_bp.login') }}" class="auth-link">Login</a>
+            <a href="{{ url_for('authentication_bp.register') }}" class="auth-link secondary">Register</a>
+          {% endif %}
+      </div>
+
+    </div>
   </div>
 </header>
 </body>

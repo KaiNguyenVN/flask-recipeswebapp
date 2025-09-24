@@ -104,11 +104,11 @@ class CSVReader:
     def get_recipes(self) -> List[Recipe]:
         return self.__recipes
 
-    def get_authors(self) -> List[Author]:
-        return list(self.__authors.values())
+    def get_authors(self) -> dict[int, Author]:
+        return self.__authors
 
-    def get_categories(self) -> List[Category]:
-        return list(self.__categories.values())
+    def get_categories(self) -> dict[str, Category]:
+        return self.__categories
 
-    def get_nutrition(self) -> List[Nutrition]:
-        return list(self.__nutrition.values())
+    def get_nutrition(self) -> dict[int, Nutrition]:
+        return self.__nutrition

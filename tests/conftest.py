@@ -1,16 +1,17 @@
 import pytest
-
+from pathlib import Path
 from recipe import create_app
-from recipe.adapters import memory_repository
 from recipe.adapters.memory_repository import MemoryRepository
 
-from utils import get_project_root
+#from utils import get_project_root
 
-TEST_DATA_PATH = get_project_root() / "tests" / "data"
+TEST_DATA_PATH =  Path('./tests/data/test_recipes.csv')
+
 
 @pytest.fixture
 def in_memory_repo():
-    repo = MemoryRepository(TEST_DATA_PATH)
+    repo = MemoryRepository()
+    repo.retrieve_csv_data(TEST_DATA_PATH)
     return repo
 
 @pytest.fixture

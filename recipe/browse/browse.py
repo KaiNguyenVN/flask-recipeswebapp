@@ -2,10 +2,10 @@ from urllib import request
 
 from flask import render_template, Blueprint, request
 
-from recipe.adapters.memory_repository import repo_instance as repo
+import recipe.adapters.repository as repo
 
-list_of_recipes = repo.get_recipes()
-list_of_categories = repo.get_categories()
+list_of_recipes = repo.repo_instance.get_recipes()
+list_of_categories = list(repo.repo_instance.get_categories().values())
 
 browse_blueprint = Blueprint('browse_bp', __name__)
 

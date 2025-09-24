@@ -13,7 +13,8 @@ from recipe.adapters.memory_repository import MemoryRepository
 @pytest.fixture
 def repo():
     data_path = Path('tests/data/test_recipes.csv')
-    repo = MemoryRepository(data_path)
+    repo = MemoryRepository()
+    repo.retrieve_csv_data(data_path)
     return repo
 
 def test_get_recipes(repo):
@@ -34,7 +35,7 @@ def test_add_recipe(repo):
     author = Author(1, "sid")
     recipe = Recipe(1, "coke", author)
     repo.add_recipe(recipe)
-    assert repo.get_recipe_by_id(1) != None
+    assert repo.get_recipe_by_id(1) is not None
     assert repo.get_recipe_by_id(1).name == "coke"
     assert repo.get_recipe_by_id(1).author == author
 
