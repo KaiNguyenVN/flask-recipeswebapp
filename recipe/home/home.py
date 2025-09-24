@@ -12,7 +12,7 @@ def home():
     # Find Nutrition for this recipe
     health_stars = {}
     for recipe in list_of_recipes[:6]:  # only first 6 for home page
-        nutrition = repo.get_nutrition_by_recipe_id(recipe.id)
+        nutrition = repo.repo_instance.get_nutrition_by_recipe_id(recipe.id)
         if nutrition:
             health_stars[recipe.id] = nutrition.calculate_health_stars()
         else:

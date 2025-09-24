@@ -1,9 +1,10 @@
 import math
 
 from flask import request, render_template, Blueprint
-from recipe.adapters.memory_repository import repo_instance as repo
+import recipe.adapters.repository as abs_repo
 
 search_blueprint = Blueprint('search_bp', __name__)
+repo = abs_repo.repo_instance
 
 @search_blueprint.route("/search")
 def search():

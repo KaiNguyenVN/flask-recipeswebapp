@@ -98,8 +98,8 @@ class MemoryRepository(AbstractRepository):
             return None
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition | None:
         for n in self.__nutrition:
-            if n.id == recipe_id:
-                return n
+            if self.__nutrition[n].id == recipe_id:
+                return self.__nutrition[n]
         return None
 
 
