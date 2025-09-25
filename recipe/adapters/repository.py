@@ -3,6 +3,7 @@ from pathlib import Path
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
 from recipe.domainmodel.favourite import Favourite
+from recipe.domainmodel.nutrition import Nutrition
 #from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 import abc
@@ -71,6 +72,10 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     def get_recipe_by_id(self, recipe_id: int) -> Recipe:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
         raise NotImplementedError
 
 

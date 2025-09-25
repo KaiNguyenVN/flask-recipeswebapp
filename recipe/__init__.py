@@ -1,9 +1,10 @@
 """Initialize Flask app."""
-from flask import Flask
+from flask import Flask, session
 from pathlib import Path
 import recipe.adapters.repository as repo
 from recipe.adapters.memory_repository import MemoryRepository
 from recipe.authentication.authentication import authentication_blueprint
+
 
 
 def create_app(test_config=None):
@@ -13,6 +14,13 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_object('config.Config')
     data_path = Path('recipe/adapters/data/recipes.csv')
+
+    @app.before_request
+    def check_session_user():
+        user_name = session.get("user_name")
+        if user_name and repo.repo_instance.get_user(user_name) is None:
+            session.clear()  # invalidate cookie if user no longer exists
+
 
     if test_config is not None:
         # Load test configuration, and override any configuration settings.

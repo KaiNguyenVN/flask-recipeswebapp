@@ -88,3 +88,14 @@ h1 {
 .instructions ol {
     padding-left: 1.2rem;
 }
+
+.login-link {
+    font-weight: bold;
+    color: #d9534f; /* a strong red */
+    text-decoration: underline;
+}
+
+.login-link:hover {
+    color: #c9302c;
+    text-decoration: none;
+}
