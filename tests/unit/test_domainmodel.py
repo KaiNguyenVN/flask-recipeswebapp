@@ -353,5 +353,5 @@ def test_csvreader_get_author_and_category(info):
     category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 1)
     category2 = Category("Soy/Tofu", [recipes[2]], 2)
     assert len(info.get_recipes()) == 3
-    assert len(info.get_authors()) == 3 and author in info.get_authors()
-    assert info.get_categories() == [category1, category2]
+    assert len(info.get_authors()) == 3 and author.id in info.get_authors()
+    assert info.get_categories() == {"Frozen Desserts":category1, "Soy/Tofu":category2}

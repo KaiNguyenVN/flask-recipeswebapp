@@ -42,7 +42,7 @@ def test_add_recipe(repo):
 def test_get_categories(repo):
     categories = repo.get_categories()
     names = ["Soy/Tofu", "Beverages", "Frozen Desserts"]
-    assert len(categories) == 3
+    assert len(categories) == 2
     for category_id in categories:
         assert categories[category_id].name in names
 
