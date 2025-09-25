@@ -217,9 +217,8 @@ class Recipe:
 
     def __update_rating(self) -> None:
         ratings = []
-
         if self.__reviews:
-            ratings += [r.rating for r in self.__reviews if
+            ratings = [r.rating for r in self.__reviews if
                        hasattr(r, "rating") and r.rating is not None]
         if ratings:
             average_rating = sum(ratings) / len(ratings)
