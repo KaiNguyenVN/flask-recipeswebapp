@@ -37,12 +37,14 @@ def create_app(test_config=None):
         from recipe.recipe_detail.recipe_detail import recipe_blueprint
         from recipe.authentication.authentication import authentication_blueprint
         from recipe.search_function.search_function import search_blueprint
+        from recipe.favorites.favorite import favorite_blueprint
 
         app.register_blueprint(home_blueprint)
         app.register_blueprint(browse_blueprint)
         app.register_blueprint(recipe_blueprint)
         app.register_blueprint(authentication_blueprint)
         app.register_blueprint(search_blueprint)
+        app.register_blueprint(favorite_blueprint)
 
         # Provides full lists of recipes for search suggestions
         @app.context_processor
