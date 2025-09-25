@@ -124,18 +124,8 @@ def test_post_review_requires_login_redirects_to_login(client):
     assert b"<title>Login</title>" in r.data
     assert b"You must be logged in to post a review" in r.data
 
+# ----------------- Search Test -----------------
 
-
-
-
-
-
-
-
-
-
-
-# Search Test
 def test_search_by_name(search_service):
     results = search_service.search_recipes(query="Chocolate", filter_by="name")
     assert results['total_recipes'] == 1
@@ -181,8 +171,8 @@ def test_nutrition_data_included(search_service):
         assert recipe.id in results['nutrition']
         assert recipe.id in results['health_stars']
 
+# ----------------- Health Star Rating Test -----------------
 
-# Health Star Rating Test
 def test_health_stars_calculation(sample_nutrition):
     # Use the fixture nutrition object
     stars = sample_nutrition.calculate_health_stars()
