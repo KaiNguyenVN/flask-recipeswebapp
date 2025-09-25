@@ -47,6 +47,7 @@ def test_get_categories(repo):
         assert categories[category_id].name in names
 
 
+
 def test_get_authors(repo):
     authors = repo.get_authors()
     ids = [1533, 1566, 1586]
