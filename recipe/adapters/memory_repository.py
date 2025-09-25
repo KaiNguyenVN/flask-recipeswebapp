@@ -104,6 +104,13 @@ class MemoryRepository(AbstractRepository):
         if recipe_id in self.__nutrition:
             return self.__nutrition[recipe_id]
         return None
-
+    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+        return sorted(
+            self.__recipes,
+            key=lambda r: r.nutrition_rating or 0,
+            reverse=descending
+        )
+    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+        return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
 
 #data_path = Path('recipe/adapters/data/recipes.csv')
