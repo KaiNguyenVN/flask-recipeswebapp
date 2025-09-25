@@ -69,7 +69,53 @@ The data files are modified excerpts downloaded from:
 
 https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews/
 
+## About health star rating calculation
+First: Baseline points (negative).
 
+    These penalized high amounts of saturated fat, sugar, and sodium.
+    Higher value of these "bad" nutrients increase baseline, which reduces the health score. 
+
+    Saturated fat (per 100g/ml):
+    ≤1 → 0 points
+    ≤3 → 1 point
+    ≤5 → 2 points
+    5 → 3 points
+
+    Sugar (per 100g/ml):
+    ≤5 → 0 points
+    ≤10 → 1 point
+    ≤15 → 2 points
+    15 → 3 points
+
+    Sodium (per 100g/ml):
+    ≤120 → 0 points
+    ≤200 → 1 point
+    ≤400 → 2 points
+    400 → 3 points
+
+Second: Modifying points (positive).
+
+    These give credit for “good” nutrients fiber and protein.
+    Higher values of these "good" nutrients incresed modifying points, 
+    which increases the health score
+
+    Fiber:
+    ≥4 → +1
+    ≥8 → +1 extra
+
+    Protein:
+    ≥5 → +1
+    ≥10 → +1 extra
+
+Third: Calculate final score
+
+    score = 5 - baseline + modifying
+
+    Then clamp the score between 0.5 and 5, and round to the nearest 0.5 stars
+
+We're trying to follow the Australia/New Zealand HSR but we simplify it 
+because the real system is more complex and need to consider a lot of things.
+So here, we only take into account the amount of saturated fat, sugar, sodium, fiber and protein.
 
 
 

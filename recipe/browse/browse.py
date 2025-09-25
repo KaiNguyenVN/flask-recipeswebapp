@@ -2,10 +2,10 @@ from urllib import request
 
 from flask import render_template, Blueprint, request
 
-from recipe.adapters.memory_repository import repo_instance as repo
+import recipe.adapters.repository as repo
 
-list_of_recipes = repo.get_recipes()
-list_of_categories = repo.get_categories()
+list_of_recipes = repo.repo_instance.get_recipes()
+list_of_categories = list(repo.repo_instance.get_categories().values())
 
 browse_blueprint = Blueprint('browse_bp', __name__)
 
@@ -43,5 +43,14 @@ def browse():
         start_page = max(1, end_page - (max_display - 1))
     pages = range(start_page, end_page + 1)
 
+    # Find Nutrition for this recipe
+    health_stars = {}
+    for recipe in list_of_recipes:
+        nutrition = repo.get_nutrition_by_recipe_id(recipe.id)
+        if nutrition:
+            health_stars[recipe.id] = nutrition.calculate_health_stars()
+        else:
+            health_stars[recipe.id] = None
+
     return render_template('browse.html', recipes=recipes, categories=list_of_categories, category_images = category_images,
-                           page=page, total_pages=total_pages, pages=pages)
+                           page=page, total_pages=total_pages, pages=pages, nutrition=nutrition, health_stars=health_stars)

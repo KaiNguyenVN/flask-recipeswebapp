@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 from recipe.domainmodel.nutrition import Nutrition
 
 class Recipe:
+    query = None
+
     def __init__(self, recipe_id: int, name: str, author: "Author",
                  cook_time: int = 0,
                  preparation_time: int = 0,

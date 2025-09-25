@@ -13,7 +13,8 @@ from recipe.adapters.memory_repository import MemoryRepository
 @pytest.fixture
 def repo():
     data_path = Path('tests/data/test_recipes.csv')
-    repo = MemoryRepository(data_path)
+    repo = MemoryRepository()
+    repo.retrieve_csv_data(data_path)
     return repo
 
 def test_get_recipes(repo):
@@ -34,23 +35,23 @@ def test_add_recipe(repo):
     author = Author(1, "sid")
     recipe = Recipe(1, "coke", author)
     repo.add_recipe(recipe)
-    assert repo.get_recipe_by_id(1) != None
+    assert repo.get_recipe_by_id(1) is not None
     assert repo.get_recipe_by_id(1).name == "coke"
     assert repo.get_recipe_by_id(1).author == author
 
 def test_get_categories(repo):
     categories = repo.get_categories()
-    categories.sort(key=lambda x: x.name)
-    assert len(categories) == 2
-    assert categories[0].name == "Frozen Desserts"
-    assert categories[1].name == "Soy/Tofu"
+    names = ["Soy/Tofu", "Beverages", "Frozen Desserts"]
+    assert len(categories) == 3
+    for category_id in categories:
+        assert categories[category_id].name in names
+
 
 
 def test_get_authors(repo):
     authors = repo.get_authors()
-    authors.sort(key=lambda x: x.id)
+    ids = [1533, 1566, 1586]
     assert len(authors) == 3
-    assert authors[0].id == 1533
-    assert authors[1].id == 1566
-    assert authors[2].id == 1586
+    for author_id in authors:
+        assert authors[author_id].id in ids
 

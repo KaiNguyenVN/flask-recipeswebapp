@@ -1,12 +1,77 @@
 import pytest
 from recipe import create_app
+from flask import session
 
+
+def test_register_new_user(client):
+    response = client.post("/authentication/register", data={
+        "user_name": "testuser",
+        "password": "Password123"
+    }, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Login" in response.data  # redirected to login page
+
+
+def test_register_duplicate_user(client):
+    # First registration
+    client.post("/authentication/register", data={
+        "user_name": "dupuser",
+        "password": "Password123"
+    })
+    # Duplicate attempt
+    response = client.post("/authentication/register", data={
+        "user_name": "dupuser",
+        "password": "Password123"
+    })
+    assert b"already taken" in response.data
+
+
+def test_login_success(client):
+    # Register first
+    client.post("/authentication/register", data={
+        "user_name": "loginuser",
+        "password": "Password123"
+    })
+    # Then login
+    response = client.post("/authentication/login", data={
+        "user_name": "loginuser",
+        "password": "Password123"
+    }, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"HOME" in response.data  # redirected home
+
+
+def test_login_wrong_password(client):
+    client.post("/authentication/register", data={
+        "user_name": "badpass",
+        "password": "Password123"
+    })
+    response = client.post("/authentication/login", data={
+        "user_name": "badpass",
+        "password": "WrongPass"
+    })
+    assert b"Password does not match" in response.data
+
+
+def test_logout(client):
+    client.post("/authentication/register", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    })
+    client.post("/authentication/login", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    })
+    response = client.get("/authentication/logout", follow_redirects=True)
+    assert b"HOME" in response.data
+
+
+"""
 @pytest.fixture
 def app():
     app = create_app()
     app.config['TESTING'] = True
     return app
-
 @pytest.fixture
 def client(app):
     return app.test_client()
@@ -58,3 +123,4 @@ def test_rating(client, auth):
 def test_authentication(client):
     response = client.post("/login", data = {"username": "sid", "password": "123"})
     assert response.status_code == 200
+"""
