@@ -57,6 +57,12 @@ def info():
     info.extract_data()
     return info
 
+@pytest.fixture
+def repo():
+    repo = MemoryRepository()
+    repo.retrieve_csv_data(Path('tests/data/test_recipes.csv'))
+    return repo
+
 # User tests
 def test_user_construction():
     user = User("john_doe", "secret123", 1)
@@ -354,3 +360,17 @@ def test_csvreader_get_author_and_category(info):
     assert len(info.get_recipes()) == 3
     assert len(info.get_authors()) == 3 and author.id in info.get_authors()
     assert info.get_categories() == {"Frozen Desserts":category1, "Soy/Tofu":category2}
+
+# ---------------------------------------------
+
+def test_get_recipes_sorted_by_nutrition(repo):
+    recipes = repo.get_recipes()
+    assert len(recipes) == 3
+    assert recipes[0].id == 38
+    assert recipes[1].id == 40
+    assert recipes[2].id == 41
+
+def test_get_healthy_recipes(repo):
+    recipes = repo.get_healthy_recipes(min_rating = 2)
+    assert len(recipes) == 1
+    assert recipes[0].id == 40
