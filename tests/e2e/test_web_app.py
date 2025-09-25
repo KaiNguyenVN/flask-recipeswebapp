@@ -125,6 +125,38 @@ def test_post_review_requires_login_redirects_to_login(client):
     assert b"You must be logged in to post a review" in r.data
 
 
+def test_add_favorite_recipe(client):
+    # log in a user (fixture should register + login)
+    client.post("/authentication/register", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    })
+    client.post("/authentication/login", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    }, follow_redirects=True)
+
+    r = client.post("/recipe/38/favorite", follow_redirects=True)
+
+    assert r.status_code == 200
+    assert b"Low-Fat Berry Blue Frozen Dessert" in r.data
+
+def test_remove_favorite_recipe(client):
+    # log in a user (fixture should register + login)
+    client.post("/authentication/register", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    })
+    client.post("/authentication/login", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    }, follow_redirects=True)
+
+    client.post("/recipe/38/favorite", follow_redirects=True)
+    r = client.post("/recipe/38/unfavorite", follow_redirects=True)
+
+    assert r.status_code == 200
+
 
 
 

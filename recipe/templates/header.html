@@ -24,6 +24,9 @@
         <ul class="menu">
           <li><a href="{{ url_for('home_bp.home')}}">HOME</a></li>
           <li><a href="{{ url_for('browse_bp.browse') }}">BROWSE</a></li>
+            {% if 'user_name' in session %}
+            <li><a href="{{ url_for('favorite_bp.favorite') }}">FAVORITES</a></li>
+            {% endif %}
         </ul>
       </nav>
 

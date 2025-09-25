@@ -8,6 +8,7 @@ from recipe.authentication import services as auth_services
 from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.review import Review
 from recipe.recipe_detail import services as recipe_services
+from recipe.favorites import services as favorite_services
 from recipe.domainmodel.user import User
 from recipe.recipe_detail.services import ReviewException, FavouriteException
 
@@ -211,3 +212,14 @@ def test_remove_favorite_recipe_missing_user_or_recipe_raises(repo, user, sample
     repo2.add_user(user)
     with pytest.raises(FavouriteException):
         recipe_services.remove_favorite_recipe(user.username, sample_recipe.id, repo2)
+
+
+# ----------------- favorite -----------------
+
+def test_get_favourite_recipes(user, repo,sample_recipe):
+    repo.add_user(user)
+    fav = Favourite(user.username, sample_recipe.id, sample_recipe.id)
+    user.add_favourite_recipe(fav)
+    recipes = favorite_services.get_favourite_recipes(user.username, repo)
+    assert len(recipes) == 1
+    assert recipes[0] == 38
