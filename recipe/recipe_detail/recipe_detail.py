@@ -30,6 +30,19 @@ def recipe_detail(recipe_id):
 
     form = ReviewForm()
 
+    # Determine if the current recipe is already in the user's favorites (if logged in)
+    is_favorited = False
+    if "user_name" in session:
+        try:
+            is_favorited = services.is_favorited(
+                username=session["user_name"],
+                recipe_id=recipe_id,
+                repo=repo.repo_instance,
+            )
+        except AttributeError:
+            # services may not have is_favorited yet; default to False
+            is_favorited = False
+
     # Store the recipe_id in the hidden field, so it persists across POSTs
     form.recipe_id.data = recipe_id
 
@@ -67,6 +80,41 @@ def recipe_detail(recipe_id):
         reviews=reviews,
         handler_url=url_for("recipe_bp.recipe_detail", recipe_id=recipe_id),
         nutrition=nutrition,
-        health_stars=health_stars
+        health_stars=health_stars,
+        is_favorited=is_favorited,
+        favorite_handler_url=url_for("recipe_bp.add_favorite", recipe_id=recipe_id),
     )
 
+
+@recipe_blueprint.post('/recipe/<int:recipe_id>/favorite')
+@login_required
+def add_favorite(recipe_id: int):
+    """
+    Add the given recipe to the logged-in user's favorites, then redirect back to the detail page.
+    """
+    try:
+        services.add_favorite_recipe(
+            username=session["user_name"],
+            recipe_id=recipe_id,
+            repo=repo.repo_instance,
+        )
+        flash("Recipe added to favorites!", "success")
+    except Exception as e:
+        # If already in favorites or other domain exceptions, surface an info message.
+        msg = str(e) if str(e) else "Already in favorites."
+        flash(msg, "info")
+    return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))
+
+@recipe_blueprint.post('/recipe/<int:recipe_id>/unfavorite')
+@login_required
+def remove_favorite(recipe_id: int):
+    try:
+        services.remove_favorite_recipe(
+            username=session["user_name"],
+            recipe_id=recipe_id,
+            repo=repo.repo_instance,
+        )
+        flash("Recipe removed from favorites.", "info")
+    except Exception as e:
+        flash(str(e), "error")
+    return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))

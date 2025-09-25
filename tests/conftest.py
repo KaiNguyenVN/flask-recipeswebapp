@@ -87,7 +87,12 @@ class AuthenticationManager:
         self.__client = client
 
     def login(self, user_name='thorke', password='cLQ^C#oFXloS'):
-        return self.__client.post(
+        # Register first
+        self.__client.post("/authentication/register", data={
+            "user_name": user_name,
+            "password": password
+        })
+        self.__client.post(
             'authentication/login',
             data={'user_name': user_name, 'password': password},
             follow_redirects=True

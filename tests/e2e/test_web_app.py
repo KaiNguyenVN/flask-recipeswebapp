@@ -66,26 +66,63 @@ def test_logout(client):
     assert b"HOME" in response.data
 
 # ----------------- post review -----------------
-def test_post_review(client, auth, sample_recipe):
-    # Login a user.
-    auth.login()
 
-    # Check that we can retrieve the comment page.
+RECIPE_ID = 38  # exists in tests/data/test_recipes.csv
+
+def test_post_review_success_shows_flash_and_review(client):
+    """Logged-in user posts a valid review:
+       - PRG (redirect) occurs
+       - flash message is shown
+       - review text appears on the recipe page
+    """
+    # log in a user (fixture should register + login)
+    client.post("/authentication/register", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    })
+    client.post("/authentication/login", data={
+        "user_name": "logoutuser",
+        "password": "Password123"
+    }, follow_redirects=True)
+
+    # post a review
     r = client.post(
-        f"/recipe/{sample_recipe.id}",
+        f"/recipe/{RECIPE_ID}",
         data={
-            "recipe_id": str(sample_recipe.id),
+            "recipe_id": str(RECIPE_ID),
             "review_text": "So refreshing and easy!",
             "rating": "5",
             "submit": "Post Review",
         },
         follow_redirects=True,  # follow PRG redirect back to detail page
     )
+
+    # landed back on the recipe page
     assert r.status_code == 200
-    # optional: flash text
-    assert b"Your review has been added!" in r.data
-    # 5) Confirm review rendered on recipe page
+    # the new review is rendered
     assert b"So refreshing and easy!" in r.data
+
+
+def test_post_review_requires_login_redirects_to_login(client):
+    """If not logged in:
+       - the user is sent to the login page
+       - a flash explains they must be logged in
+    """
+    r = client.post(
+        f"/recipe/{RECIPE_ID}",
+        data={
+            "recipe_id": str(RECIPE_ID),
+            "review_text": "I should not be able to post",
+            "rating": "5",
+            "submit": "Post Review",
+        },
+        follow_redirects=True,
+    )
+
+    # We ended up on the login page with an appropriate flash
+    assert r.status_code == 200
+    assert b"<title>Login</title>" in r.data
+    assert b"You must be logged in to post a review" in r.data
 
 
 
