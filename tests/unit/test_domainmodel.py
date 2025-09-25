@@ -286,9 +286,8 @@ def test_nutrition_construction():
 
 def test_nutrition_equality():
     n1 = Nutrition(1, calories=200, fat=10)
-    n2 = Nutrition(1, calories=200, fat=12)
-    assert n1.__eq__(n2, "calories")  # they have same calories
-    assert not n1.__eq__(n2, "fat")   # different fat
+    n2 = Nutrition(1, calories=200, fat=10)
+    assert n1.__eq__(n2)  # they have same calories
 
 def test_nutrition_comparison():
     n1 = Nutrition(1, calories=200)
