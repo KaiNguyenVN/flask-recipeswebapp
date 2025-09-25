@@ -211,13 +211,8 @@ class Recipe:
 
     def __update_rating(self) -> None:
         ratings = []
-
-        default_rating = self.nutrition.calculate_health_stars()
-        if default_rating is not None:
-            ratings.append(default_rating)
-
         if self.__reviews:
-            ratings += [r.rating for r in self.__reviews if
+            ratings = [r.rating for r in self.__reviews if
                        hasattr(r, "rating") and r.rating is not None]
         if ratings:
             average_rating = sum(ratings) / len(ratings)
