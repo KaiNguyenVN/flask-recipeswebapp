@@ -35,40 +35,16 @@
             <a href="{{ url_for('authentication_bp.login') }}" class="auth-link">Login</a>
             <a href="{{ url_for('authentication_bp.register') }}" class="auth-link secondary">Register</a>
           {% endif %}
-      <div class="search-section-inline">
-        <form id="searchForm" action="{{ url_for('search_bp.search') }}" method="get" class="search-form-inline">
-            <!-- Filter dropdown -->
-            <select name="filter_by" id="filterSelect" onchange="document.getElementById('searchForm').submit();">
-                <option value="">-- Select Filter --</option>
-                <option value="name" {% if filter_by == "name" %}selected{% endif %}>Name</option>
-                <option value="category" {% if filter_by == "category" %}selected{% endif %}>Category</option>
-                <option value="author" {% if filter_by == "author" %}selected{% endif %}>Author</option>
-                <option value="ingredients" {% if filter_by == "ingredients" %}selected{% endif %}>Ingredients</option>
-            </select>
-        <!-- Text input for search queries-->
-        <input type="text" name="q" value="{{ query }}" placeholder="Search..." list="suggestions" {% if not filter_by %}disabled{% endif %}>
 
-        <button type="submit" aria-label="Search">
-            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-                <circle cx="11" cy="11" r="7"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </button>
 
-        <!-- Dropdown Suggestion based on filter -->
-        <!-- datalist use for autocomplete suggestions -->
-        <datalist id="suggestions">
-            {% if filter_by == 'name' %}
-                {% for n in names %}<option value="{{ n }}"></option>{% endfor %}
-            {% elif filter_by == 'category' %}
-                {% for c in categories %}<option value="{{ c }}"></option>{% endfor %}
-            {% elif filter_by == 'author' %}
-                {% for a in authors %}<option value="{{ a }}"></option>{% endfor %}
-            {% elif filter_by == 'ingredients' %}
-                {% for i in ingredients %}<option value="{{ i }}"></option>{% endfor %}
-            {% endif %}
-        </datalist>
-        </form>
+      <div class="utils">
+        <a class="icon-btn" href="{{ url_for('search_bp.search') }}" aria-label="Search">
+        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        </a>
+      </div>
 
     </div>
       </div>

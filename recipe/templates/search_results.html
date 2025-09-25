@@ -15,7 +15,7 @@
 <div class="breadcrumb">
     <a href="{{ url_for('home_bp.home') }}">Home < </a>
     <a href="{{ url_for('browse_bp.browse') }}">Browse < </a>
-    <a href="{{ url_for('search_bp.search', filter_by=filter_by) }}">{{ filter_by }}</a>
+    <a href="{{ url_for('search_bp.search') }}">Search</a>
 </div>
 
 <!-- Search context -->
@@ -26,22 +26,37 @@
 
 <div class="search-container">
     <p>Search for a specific recipe. Or you can search for recipes by Name, Category, Author or Ingredients!</p>
-    <form action="{{ url_for('search_bp.search') }}" method="get" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+    <form id="searchForm" action="{{ url_for('search_bp.search') }}" method="get" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
         <!-- Dropdown filter -->
-        <select name="filter_by" style="padding: 10px; border-radius:6px; border:1px solid #aaa; font-size:16px; flex:1;">
-            <option value="name">Name</option>
-            <option value="category">Category</option>
-            <option value="author">Author</option>
-            <option value="ingredients">Ingredients</option>
+        <select name="filter_by" id="filterSelect" style="padding: 10px; border-radius:6px; border:1px solid #aaa; font-size:16px; flex:1;" onchange="document.getElementById('searchForm').submit();">
+            <option value="">-- Select Filter --</option>
+            <option value="name" {% if filter_by == "name" %}selected{% endif %}>Name</option>
+            <option value="category" {% if filter_by == "category" %}selected{% endif %}>Category</option>
+            <option value="author" {% if filter_by == "author" %}selected{% endif %}>Author</option>
+            <option value="ingredients" {% if filter_by == "ingredients" %}selected{% endif %}>Ingredients</option>
         </select>
 
         <!-- Search input -->
-        <input type="text" name="q" placeholder="Search recipes..." style="flex:2; padding: 10px 12px; border-radius:6px; border:1px solid #aaa; font-size:16px;" required>
+        <input type="text" name="q" value="{{ query }}" placeholder="Search recipes..." list="suggestions" {% if not filter_by %}disabled{% endif %} style="flex:2; padding: 10px 12px; border-radius:6px; border:1px solid #aaa; font-size:16px;" required>
 
         <!-- Submit button -->
         <button type="submit" style="padding: 10px 20px; background-color:#b8864b; border:none; border-radius:6px; color:#fff; font-weight:bold; cursor:pointer; transition:0.3s;">
             Search
         </button>
+
+        <!-- Dropdown Suggestion based on filter -->
+        <!-- datalist use for autocomplete suggestions -->
+        <datalist id="suggestions">
+            {% if filter_by == 'name' %}
+                {% for n in names %}<option value="{{ n }}"></option>{% endfor %}
+            {% elif filter_by == 'category' %}
+                {% for c in categories %}<option value="{{ c }}"></option>{% endfor %}
+            {% elif filter_by == 'author' %}
+                {% for a in authors %}<option value="{{ a }}"></option>{% endfor %}
+            {% elif filter_by == 'ingredients' %}
+                {% for i in ingredients %}<option value="{{ i }}"></option>{% endfor %}
+            {% endif %}
+        </datalist>
     </form>
 </div>
 
@@ -63,7 +78,7 @@
                     {% if health_stars[recipe.id] %}
                         {% set full_stars = health_stars[recipe.id]|int %}
                         {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
-                        {{ '★' * full_stars }}{{ '½' * half_star }} ({{ health_stars[recipe.id] }})
+                        {{ '★' * full_stars }}{{ '⯨' * half_star }} ({{ health_stars[recipe.id] }})
                     {% else %}
                         Health star rating unavailable
                     {% endif %}

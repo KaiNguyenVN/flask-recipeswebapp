@@ -12,6 +12,13 @@
     {% include 'header.html' %}
 </header>
 
+<div class="breadcrumb">
+    <a href="{{ url_for('home_bp.home') }}">Home < </a>
+    <a href="{{ url_for('browse_bp.browse') }}">Browse < </a>
+    <a href="{{ url_for('search_bp.search', filter_by=filter_by) }}">{{ recipe.category.name }} < </a>
+    <a href="{{ url_for('recipe_bp.recipe_detail', recipe_id = recipe.id) }}">{{ recipe.name }}</a>
+</div>
+
 <div class="recipe-detail">
     <!-- Recipe Title -->
     <h1 class="recipe-title">{{ recipe.name }}</h1>
@@ -47,7 +54,15 @@
     <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
 
     <!-- Rating -->
-    <p><strong>Average Rating:</strong> {{ recipe.rating |default("Not rated") }}</p>
+    <p><strong>Average Rating:</strong>
+        {% if recipe.rating %}
+            {% set full_stars = recipe.rating|int %}
+            {% set half_star = 1 if (recipe.rating - full_stars) >= 0.5 else 0 %}
+            {{ '★' * full_stars }}{{ '⯨' * half_star }} ({{ recipe.rating }})
+        {% else %}
+            Health star rating unavailable
+        {% endif %}
+    </p>
 
     <!-- Nutrition -->
     {% if recipe.nutrition %}
