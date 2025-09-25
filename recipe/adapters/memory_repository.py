@@ -20,6 +20,7 @@ class MemoryRepository(AbstractRepository):
 
         self.__users = {}  # Dictionary to store users by their usernames
         self.__reviews = []
+        self.__review_counter = 1
 
     def retrieve_csv_data(self, data_path: Path):
         csv_reader = CSVReader(data_path)
@@ -46,6 +47,9 @@ class MemoryRepository(AbstractRepository):
 
     def add_review(self, review: Review):
         """ Adds a review for a recipe. """
+        if review.review_id is None:
+            review.__Review__review_id = self.__review_counter
+            self.__review_counter += 1
         user = self.get_user(review.username)
         user.add_review(review)
         recipe = self.get_recipe_by_id(review.recipe_id)
@@ -97,9 +101,8 @@ class MemoryRepository(AbstractRepository):
         else:
             return None
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition | None:
-        for n in self.__nutrition:
-            if self.__nutrition[n].id == recipe_id:
-                return self.__nutrition[n]
+        if recipe_id in self.__nutrition:
+            return self.__nutrition[recipe_id]
         return None
 
 

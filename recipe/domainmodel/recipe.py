@@ -7,8 +7,7 @@ if TYPE_CHECKING:
     from .author import Author
     from .category import Category
     from .review import Review
-
-from recipe.domainmodel.nutrition import Nutrition
+    from .nutrition import Nutrition
 
 class Recipe:
     query = None
@@ -195,11 +194,9 @@ class Recipe:
         return self.__reviews
 
     def add_review(self, review: Review) -> None:
-        if isinstance(review, Review):
-            self.__reviews.append(review)
-            self.__update_rating()
-        else:
-            raise TypeError("Expected a Review instance")
+
+        self.__reviews.append(review)
+        self.__update_rating()
 
     def remove_review(self, review: Review) -> None:
         if review in self.__reviews:

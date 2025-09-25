@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, session, request, flash
 from flask_wtf import FlaskForm
+from sqlalchemy.testing.suite.test_reflection import users
 from wtforms import TextAreaField, IntegerField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from datetime import datetime
@@ -19,8 +20,8 @@ class ReviewForm(FlaskForm):
 
 
 @recipe_blueprint.route('/recipe/<int:recipe_id>', methods=['GET', 'POST'])
-@login_required
 def recipe_detail(recipe_id):
+
     recipe = repo.repo_instance.get_recipe_by_id(recipe_id)
     list_of_recipes = repo.repo_instance.get_recipes()
     if recipe is None:
@@ -43,7 +44,7 @@ def recipe_detail(recipe_id):
                 recipe_id=int(form.recipe_id.data),
                 review_text=form.review_text.data,
                 rating=form.rating.data,
-                date=datetime.utcnow(),
+                date=datetime.now(),
                 repo=repo.repo_instance,
             )
             flash("Your review has been added!", "success")

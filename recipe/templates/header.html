@@ -45,7 +45,6 @@
                 <option value="author" {% if filter_by == "author" %}selected{% endif %}>Author</option>
                 <option value="ingredients" {% if filter_by == "ingredients" %}selected{% endif %}>Ingredients</option>
             </select>
-
         <!-- Text input for search queries-->
         <input type="text" name="q" value="{{ query }}" placeholder="Search..." list="suggestions" {% if not filter_by %}disabled{% endif %}>
 
@@ -75,6 +74,7 @@
       </div>
 
     </div>
+
   </div>
 </header>
 </body>
