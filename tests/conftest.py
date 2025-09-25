@@ -28,7 +28,7 @@ def sample_user():
 
 @pytest.fixture
 def sample_recipe():
-    return Recipe(1, "Pizza", Author(1, "Chef John"))
+    return Recipe(38, "Low-Fat Berry Blue Frozen Dessert", Author(1533, "Dancer"))
 
 
 @pytest.fixture
@@ -89,7 +89,8 @@ class AuthenticationManager:
     def login(self, user_name='thorke', password='cLQ^C#oFXloS'):
         return self.__client.post(
             'authentication/login',
-            data={'user_name': user_name, 'password': password}
+            data={'user_name': user_name, 'password': password},
+            follow_redirects=True
         )
 
     def logout(self):
