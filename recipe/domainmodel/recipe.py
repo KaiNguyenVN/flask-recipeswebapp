@@ -149,7 +149,7 @@ class Recipe:
 
     @property
     def rating(self) -> float | None:
-        if self.__rating is not None:
+        if self.__rating is None:
             return None
         return self.__rating
 
@@ -223,5 +223,6 @@ class Recipe:
         if ratings:
             average_rating = sum(ratings) / len(ratings)
             self.__rating = round(average_rating, 1)
+            print(self.__rating)
         else:
             self.__rating = None
