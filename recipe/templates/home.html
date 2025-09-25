@@ -36,7 +36,7 @@
                         {% if stars %}
                             {% set full_stars = stars|int %}
                             {% set half_star = 1 if (stars - full_stars) >= 0.5 else 0 %}
-                            {{ '★' * full_stars }}{{ '½' * half_star }} ({{ stars }})
+                            {{ '★' * full_stars }}{{ '⯨' * half_star }} ({{ stars }})
                         {% else %}
                             Health star rating unavailable
                         {% endif %}
