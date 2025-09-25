@@ -1,63 +1,8 @@
 from datetime import datetime
-
+import tests.conftest
 import pytest
-from pathlib import Path
 
-from recipe.adapters.memory_repository import MemoryRepository
-from recipe.domainmodel.user import User
-from recipe.domainmodel.review import Review
-from recipe.domainmodel.recipe import Recipe
-from recipe.domainmodel.category import Category
-from recipe.domainmodel.author import Author
-from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.nutrition import Nutrition
-
-
-@pytest.fixture
-def repo():
-    return MemoryRepository()
-
-
-@pytest.fixture
-def sample_user():
-    return User("alice", "password123")
-
-
-@pytest.fixture
-def sample_recipe():
-    return Recipe(1, "Pizza", Author(1, "Chef John"))
-
-
-@pytest.fixture
-def sample_category():
-    return Category("Italian")
-
-
-@pytest.fixture
-def sample_author():
-    return Author(1, "Chef John")
-
-
-@pytest.fixture
-def sample_review(sample_user, sample_recipe):
-    # Make sure username and recipe_id align with repo expectations
-    return Review(
-        sample_user.username,
-        sample_recipe.id,
-        5,
-        "Great!",
-        datetime.now(),
-        1
-    )
-
-
-@pytest.fixture
-def sample_favourite(sample_user, sample_recipe):
-    return Favourite(
-        sample_user.username,
-        sample_recipe,
-        1
-    )
 
 
 # ----------------- Authentication -----------------
