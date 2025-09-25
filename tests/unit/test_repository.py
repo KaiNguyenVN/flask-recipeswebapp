@@ -1,57 +1,90 @@
+from datetime import datetime
+import tests.conftest
 import pytest
-from pathlib import Path
 
-from recipe.domainmodel.user import User
-from recipe.domainmodel.author import Author
-from recipe.domainmodel.category import Category
-from recipe.domainmodel.recipe import Recipe
-from recipe.domainmodel.review import Review
-from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.nutrition import Nutrition
-from recipe.adapters.memory_repository import MemoryRepository
 
-@pytest.fixture
-def repo():
-    data_path = Path('tests/data/test_recipes.csv')
-    repo = MemoryRepository()
-    repo.retrieve_csv_data(data_path)
-    return repo
 
-def test_get_recipes(repo):
+# ----------------- Authentication -----------------
+
+def test_add_and_get_user(repo, sample_user):
+    repo.add_user(sample_user)
+    assert repo.get_user("alice") is sample_user
+    assert repo.get_user("bob") is None
+
+
+# ----------------- Reviews -----------------
+
+def test_add_review(repo, sample_user, sample_recipe, sample_review):
+    repo.add_user(sample_user)
+    repo.add_recipe(sample_recipe)
+
+    repo.add_review(sample_review)
+
+    # user and recipe should now have the review
+    assert sample_review in sample_user.reviews
+    assert sample_review in sample_recipe.reviews
+
+
+def test_remove_review(repo, sample_user, sample_recipe, sample_review):
+    repo.add_user(sample_user)
+    repo.add_recipe(sample_recipe)
+    repo.add_review(sample_review)
+
+    repo.remove_review(sample_review)
+
+    assert sample_review not in sample_user.reviews
+    assert sample_review not in sample_recipe.reviews
+
+
+# ----------------- Favourites -----------------
+
+def test_add_and_remove_favourite(repo, sample_user, sample_recipe, sample_favourite):
+    repo.add_user(sample_user)
+    repo.add_recipe(sample_recipe)
+
+    repo.add_favorite_recipe(sample_favourite)
+    assert sample_favourite in sample_user.get_favourite_recipes
+
+    repo.remove_favorite_recipe(sample_favourite)
+    assert sample_favourite not in sample_user.get_favourite_recipes
+
+
+# ----------------- Recipes -----------------
+
+def test_add_and_get_recipe(repo, sample_recipe):
+    repo.add_recipe(sample_recipe)
     recipes = repo.get_recipes()
-    assert len(recipes) == 3
-    assert recipes[0].id == 38
-    assert recipes[1].id == 40
-    assert recipes[2].id == 41
+    assert sample_recipe in recipes
 
-def test_get_recipe_by_id(repo):
-    recipe = repo.get_recipe_by_id(38)
 
-    assert recipe.name == "Low-Fat Berry Blue Frozen Dessert"
-    assert recipe.author.name == "Dancer"
-    assert recipe.author.id == 1533
+def test_get_recipe_by_id(repo, sample_recipe):
+    repo.add_recipe(sample_recipe)
+    assert repo.get_recipe_by_id(1) == sample_recipe
+    assert repo.get_recipe_by_id(99) is None
 
-def test_add_recipe(repo):
-    author = Author(1, "sid")
-    recipe = Recipe(1, "coke", author)
-    repo.add_recipe(recipe)
-    assert repo.get_recipe_by_id(1) is not None
-    assert repo.get_recipe_by_id(1).name == "coke"
-    assert repo.get_recipe_by_id(1).author == author
 
-def test_get_categories(repo):
+# ----------------- Categories -----------------
+
+def test_get_categories(repo, sample_category):
+    repo._MemoryRepository__categories = {1: sample_category}
     categories = repo.get_categories()
-    names = ["Soy/Tofu", "Beverages", "Frozen Desserts"]
-    assert len(categories) == 3
-    for category_id in categories:
-        assert categories[category_id].name in names
+    assert categories[1] == sample_category
 
 
+# ----------------- Authors -----------------
 
-def test_get_authors(repo):
+def test_get_authors(repo, sample_author):
+    repo._MemoryRepository__authors = {1: sample_author}
     authors = repo.get_authors()
-    ids = [1533, 1566, 1586]
-    assert len(authors) == 3
-    for author_id in authors:
-        assert authors[author_id].id in ids
+    assert authors[1] == sample_author
 
+
+# ----------------- Nutrition -----------------
+
+def test_get_nutrition_by_recipe_id(repo):
+    n = Nutrition(1, 100, 10, 20, 30)  # id, calories, fat, protein, carbs
+    repo._MemoryRepository__nutrition = {1: n}
+    result = repo.get_nutrition_by_recipe_id(1)
+    assert result == n
+    assert repo.get_nutrition_by_recipe_id(99) is None

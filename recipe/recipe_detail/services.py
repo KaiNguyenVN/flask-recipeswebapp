@@ -54,7 +54,7 @@ def add_favorite_recipe(username: str, recipe_id: int, repo: AbstractRepository)
     if not user or not recipe:
         raise FavouriteException("User or recipe not found")
 
-    fav = Favourite(username=username, recipe=recipe)
+    fav = Favourite(username=username, recipe=recipe, favourite_id=user.id)
     repo.add_favorite_recipe(fav)
     return fav
 
@@ -66,5 +66,5 @@ def remove_favorite_recipe(username: str, recipe_id: int, repo: AbstractReposito
 
     if not user or not recipe:
         raise FavouriteException("User or recipe not found")
-    fav = Favourite(username=username, recipe=recipe)
+    fav = Favourite(username=username, recipe=recipe, favourite_id=user.id)
     repo.remove_favorite_recipe(fav)

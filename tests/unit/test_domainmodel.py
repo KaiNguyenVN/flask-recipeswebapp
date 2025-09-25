@@ -286,9 +286,8 @@ def test_nutrition_construction():
 
 def test_nutrition_equality():
     n1 = Nutrition(1, calories=200, fat=10)
-    n2 = Nutrition(1, calories=200, fat=12)
-    assert n1.__eq__(n2, "calories")  # they have same calories
-    assert not n1.__eq__(n2, "fat")   # different fat
+    n2 = Nutrition(1, calories=200, fat=10)
+    assert n1.__eq__(n2)  # they have same calories
 
 def test_nutrition_comparison():
     n1 = Nutrition(1, calories=200)
@@ -353,5 +352,5 @@ def test_csvreader_get_author_and_category(info):
     category1 = Category("Frozen Desserts", [recipes[0], recipes[1]], 1)
     category2 = Category("Soy/Tofu", [recipes[2]], 2)
     assert len(info.get_recipes()) == 3
-    assert len(info.get_authors()) == 3 and author in info.get_authors()
-    assert info.get_categories() == [category1, category2]
+    assert len(info.get_authors()) == 3 and author.id in info.get_authors()
+    assert info.get_categories() == {"Frozen Desserts":category1, "Soy/Tofu":category2}

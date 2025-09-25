@@ -11,9 +11,9 @@ class Nutrition:
     def __repr__(self):
         return str(self.__nutri_content)
 
-    def __eq__(self, other, nutri_type):
+    def __eq__(self, other):
         if isinstance(other, Nutrition):
-            return self.__nutri_content[nutri_type] == other.__nutri_content[nutri_type]
+            return self.__nutri_content == other.__nutri_content
         else:
             raise TypeError("Comparison must be between Nutrition instances")
 
