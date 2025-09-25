@@ -2,7 +2,7 @@ import pytest
 from recipe import create_app
 from flask import session
 
-
+# ----------------- Authentication -----------------
 def test_register_new_user(client):
     response = client.post("/authentication/register", data={
         "user_name": "testuser",
@@ -64,6 +64,38 @@ def test_logout(client):
     })
     response = client.get("/authentication/logout", follow_redirects=True)
     assert b"HOME" in response.data
+
+# ----------------- post review -----------------
+def test_post_review(client, auth, sample_recipe):
+    # Login a user.
+    auth.login()
+
+    # Check that we can retrieve the comment page.
+    r = client.post(
+        f"/recipe/{sample_recipe.id}",
+        data={
+            "recipe_id": str(sample_recipe.id),
+            "review_text": "So refreshing and easy!",
+            "rating": "5",
+            "submit": "Post Review",
+        },
+        follow_redirects=True,  # follow PRG redirect back to detail page
+    )
+    assert r.status_code == 200
+    # optional: flash text
+    assert b"Your review has been added!" in r.data
+    # 5) Confirm review rendered on recipe page
+    assert b"So refreshing and easy!" in r.data
+
+
+
+
+
+
+
+
+
+
 
 
 """

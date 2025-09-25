@@ -60,7 +60,7 @@ def test_add_and_get_recipe(repo, sample_recipe):
 
 def test_get_recipe_by_id(repo, sample_recipe):
     repo.add_recipe(sample_recipe)
-    assert repo.get_recipe_by_id(1) == sample_recipe
+    assert repo.get_recipe_by_id(38) == sample_recipe
     assert repo.get_recipe_by_id(99) is None
 
 
