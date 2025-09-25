@@ -23,7 +23,22 @@
             {{ recipe.created_date.utctime('%B %d, %Y') if recipe.created_date else "" }}
         </span>
     </div>
-
+    <!-- Favorite button -->
+{% if 'user_name' in session %}
+    {% if is_favorited %}
+        <!-- Show remove button -->
+        <form method="POST" action="{{ url_for('recipe_bp.remove_favorite', recipe_id=recipe.id) }}">
+            <button type="submit" class="favorite-btn remove-btn">Favorite (Click to remove)</button>
+        </form>
+    {% else %}
+        <!-- Show add button -->
+        <form method="POST" action="{{ favorite_handler_url }}">
+            <button type="submit" class="favorite-btn">Add to favorite</button>
+        </form>
+    {% endif %}
+{% else %}
+    <p><a href="{{ url_for('authentication_bp.login') }}">Login</a> to add to favorites.</p>
+{% endif %}
     <!-- Image -->
     <div class="recipe-image">
         <img src="{{ recipe.images[0] if recipe.images else 'https://via.placeholder.com/600x400?text=No+Image' }}"
