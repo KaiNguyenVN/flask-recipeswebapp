@@ -97,6 +97,9 @@ def test_add_review_happy_path(repo, user, sample_recipe):
     assert review.recipe_id == sample_recipe.id
     assert review.rating == 5
     assert review.review == "Great!"
+    assert  sample_recipe.reviews[0].review == "Great!"
+    assert sample_recipe.reviews[0].rating == 5
+    assert sample_recipe.rating == 5.0
 
 
 def test_add_review_missing_user_or_recipe_raises(repo, user, sample_recipe):
