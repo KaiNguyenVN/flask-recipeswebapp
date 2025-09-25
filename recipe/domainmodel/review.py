@@ -5,8 +5,6 @@ class Review:
     def __init__(self, username:str, recipe_id:int, rating: int, review: str, date: datetime, review_id = None) -> None:
         if not isinstance(rating, int) or rating <= 0 or rating > 5:
             raise ValueError("rating must be a positive value and less than 5.")
-        if not isinstance(review_id, int) or review_id <= 0:
-            raise ValueError("review_id must be a positive value.")
 
         self.__review_id = review_id
         self.__username = username
