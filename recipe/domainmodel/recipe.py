@@ -149,8 +149,6 @@ class Recipe:
 
     @property
     def rating(self) -> float | None:
-        if self.__rating is not None:
-            return None
         return self.__rating
 
     @rating.setter
@@ -216,12 +214,8 @@ class Recipe:
             raise ValueError("Review not found in recipe's reviews")
 
     def __update_rating(self) -> None:
-        ratings = []
         if self.__reviews:
-            ratings = [r.rating for r in self.__reviews if
-                       hasattr(r, "rating") and r.rating is not None]
-        if ratings:
-            average_rating = sum(ratings) / len(ratings)
-            self.__rating = round(average_rating, 1)
-        else:
-            self.__rating = None
+            ratings = [r.rating for r in self.__reviews if r.rating is not None]
+            if ratings:
+                return round(sum(ratings) / len(ratings), 1)
+        return None

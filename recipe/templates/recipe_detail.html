@@ -69,7 +69,7 @@
     <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
 
     <!-- Rating -->
-    <p><strong>Average Rating:</strong> {{ recipe.rating }}</p>
+    <p><strong>Average Rating:</strong> {{ recipe.rating|default("Not rated") }}</p>
 
     <!-- Health Star Rating -->
     <p><strong>Nutrition Rating:</strong>
