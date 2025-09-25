@@ -47,10 +47,12 @@ class Recipe:
         self.__ingredients = ingredients if ingredients else []
         self.__rating = rating
         self.__nutrition = nutrition
+        self.__nutrition_rating = None
         self.__servings = servings if servings else "Not specified"
         self.__recipe_yield = recipe_yield if recipe_yield else "Not specified"
         self.__instructions = instructions if instructions else []
         self.__reviews = []
+
 
     def __repr__(self) -> str:
         return (f"<Recipe {self.__name} with id: {self.id} was created by {self.__author.name} "
@@ -148,10 +150,8 @@ class Recipe:
     @property
     def rating(self) -> float | None:
         if self.__rating is not None:
-            return self.__rating
-        if hasattr(self, "nutrition") and self.nutrition:
-            return self.nutrition.calculate_health_stars()
-        return None
+            return None
+        return self.__rating
 
     @rating.setter
     def rating(self, value: float):
@@ -166,6 +166,12 @@ class Recipe:
     @nutrition.setter
     def nutrition(self, value: "Nutrition"):
         self.__nutrition = value
+
+    @property
+    def nutrition_rating(self) -> float | None:
+        if self.__nutrition is not None:
+            return self.__nutrition.calculate_health_stars()
+        return None
 
     @property
     def servings(self) -> str:
@@ -211,13 +217,8 @@ class Recipe:
 
     def __update_rating(self) -> None:
         ratings = []
-
-        default_rating = self.nutrition.calculate_health_stars()
-        if default_rating is not None:
-            ratings.append(default_rating)
-
         if self.__reviews:
-            ratings += [r.rating for r in self.__reviews if
+            ratings = [r.rating for r in self.__reviews if
                        hasattr(r, "rating") and r.rating is not None]
         if ratings:
             average_rating = sum(ratings) / len(ratings)

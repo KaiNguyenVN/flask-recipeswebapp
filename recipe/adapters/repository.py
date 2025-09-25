@@ -78,4 +78,12 @@ class AbstractRepository(abc.ABC):
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+        raise NotImplementedError
+
 

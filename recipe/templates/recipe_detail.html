@@ -69,11 +69,14 @@
     <p><strong>Yield:</strong> {{ recipe.recipe_yield or "-" }}</p>
 
     <!-- Rating -->
-    <p><strong>Average Rating:</strong>
-        {% if recipe.rating %}
-            {% set full_stars = recipe.rating|int %}
-            {% set half_star = 1 if (recipe.rating - full_stars) >= 0.5 else 0 %}
-            {{ '★' * full_stars }}{{ '⯨' * half_star }} ({{ recipe.rating }})
+    <p><strong>Average Rating:</strong> {{ recipe.rating }}</p>
+
+    <!-- Health Star Rating -->
+    <p><strong>Nutrition Rating:</strong>
+        {% if health_stars[recipe.id] %}
+            {% set full_stars = health_stars[recipe.id]|int %}
+            {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
+            {{ '★' * full_stars }}{{ '⯪' * half_star }} ({{ health_stars[recipe.id] }})
         {% else %}
             Health star rating unavailable
         {% endif %}

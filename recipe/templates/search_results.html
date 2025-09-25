@@ -74,11 +74,11 @@
                     <img src="{{ recipe.images[0] }}" alt="{{ recipe.name }}">
                 </div>
                 <p class="browse-name">{{ recipe.name }}</p>
-                <p class="desc"><strong>Rating:</strong>
+                <p class="desc"><strong>Nutrition Rating:</strong>
                     {% if health_stars[recipe.id] %}
                         {% set full_stars = health_stars[recipe.id]|int %}
                         {% set half_star = 1 if (health_stars[recipe.id] - full_stars) >= 0.5 else 0 %}
-                        {{ '★' * full_stars }}{{ '⯨' * half_star }} ({{ health_stars[recipe.id] }})
+                        {{ '★' * full_stars }}{{ '⯪' * half_star }} ({{ health_stars[recipe.id] }})
                     {% else %}
                         Health star rating unavailable
                     {% endif %}

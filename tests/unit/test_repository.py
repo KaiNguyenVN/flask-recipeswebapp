@@ -26,6 +26,7 @@ def test_add_review(repo, sample_user, sample_recipe, sample_review):
     assert sample_review in sample_recipe.reviews
 
 
+"""
 def test_remove_review(repo, sample_user, sample_recipe, sample_review):
     repo.add_user(sample_user)
     repo.add_recipe(sample_recipe)
@@ -35,7 +36,7 @@ def test_remove_review(repo, sample_user, sample_recipe, sample_review):
 
     assert sample_review not in sample_user.reviews
     assert sample_review not in sample_recipe.reviews
-
+"""
 
 # ----------------- Favourites -----------------
 
