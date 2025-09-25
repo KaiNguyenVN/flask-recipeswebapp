@@ -9,6 +9,7 @@ from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.review import Review
 from recipe.recipe_detail import services as recipe_services
 from recipe.favorites import services as favorite_services
+from recipe.search_function.services import SearchService
 from recipe.domainmodel.user import User
 from recipe.recipe_detail.services import ReviewException, FavouriteException
 
@@ -224,3 +225,55 @@ def test_get_favourite_recipes(user, repo,sample_recipe):
     recipes = favorite_services.get_favourite_recipes(user.username, repo)
     assert len(recipes) == 1
     assert recipes[0] == 38
+
+
+# ----------------- search_function -----------------
+
+def test_search_by_name_filter(search_service):
+    out = search_service.search_recipes(query="Chocolate", filter_by="name")
+    names = [r.name for r in out["recipes"]]
+    assert names == ["Chocolate Cake"]
+    assert out["total_recipes"] == 1
+    assert "names" in out["suggestions"]
+    assert "Chocolate Cake" in out["suggestions"]["names"]
+
+
+def test_search_by_ingredients_default(search_service):
+    out = search_service.search_recipes(query="lettuce", filter_by="")
+    ids = [r.id for r in out["recipes"]]
+    assert ids == [3]
+    assert out["total_recipes"] == 1
+
+
+def test_search_with_filter_category(search_service):
+    out = search_service.search_recipes(query="Main Course", filter_by="category")
+    names = [r.name for r in out["recipes"]]
+    assert set(names) == {"Beef Stew", "Salad Bowl"}
+    assert names == sorted(names)
+
+
+def test_pagination_fields_and_counts(search_service):
+    out = search_service.search_recipes(query="", filter_by="", page=2, per_page=2)
+    p = out["pagination"]
+    assert p["page"] == 2
+    assert p["has_prev"] is True
+    assert p["has_next"] is False
+    assert p["prev_page"] == 1
+    assert p.get("next_page") in (None, 2)
+    assert len(out["recipes"]) == 1
+
+
+def test_suggestions_structure(search_service):
+    out = search_service.search_recipes(query="", filter_by="")
+    s = out["suggestions"]
+    assert set(s.keys()) >= {"names", "authors", "categories", "ingredients"}
+    assert "Chocolate Cake" in s["names"]
+    assert "Chef John" in s["authors"]
+    assert "Main Course" in s["categories"]
+    assert "lettuce" in s["ingredients"]
+
+
+def test_empty_query_returns_all(search_service):
+    out = search_service.search_recipes(query="", filter_by="")
+    assert out["total_recipes"] == 3
+    assert {r.name for r in out["recipes"]} == {"Chocolate Cake", "Beef Stew", "Salad Bowl"}
