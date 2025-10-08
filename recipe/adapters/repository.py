@@ -15,10 +15,6 @@ repo_instance = None
 
 class AbstractRepository(abc.ABC):
 
-    @abc.abstractmethod
-    def retrieve_csv_data(self, data_path:Path):
-        # Retrieve all data from csv file
-        raise NotImplementedError
     """-----------------------Authentication-------------------"""
     @abc.abstractmethod
     def add_user(self, user: User):
@@ -86,4 +82,15 @@ class AbstractRepository(abc.ABC):
     def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
         raise NotImplementedError
 
+    """-----------------------population-------------------"""
+
+    @abc.abstractmethod
+    def add_category(self, id: str,category: Category) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_nutrition(self, id:int, nutri: Nutrition) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_author(self, id:int, author: Author) -> None:
+        raise NotImplementedError
 

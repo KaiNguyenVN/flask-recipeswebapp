@@ -22,13 +22,6 @@ class MemoryRepository(AbstractRepository):
         self.__reviews = []
         self.__review_counter = 1
 
-    def retrieve_csv_data(self, data_path: Path):
-        csv_reader = CSVReader(data_path)
-        csv_reader.extract_data()
-        self.__recipes = csv_reader.get_recipes()
-        self.__categories = csv_reader.get_categories()
-        self.__nutrition = csv_reader.get_nutrition()
-        self.__authors = csv_reader.get_authors()
 
     """-----------------------Authentication actions-------------------"""
 
@@ -113,4 +106,14 @@ class MemoryRepository(AbstractRepository):
     def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
         return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
 
-#data_path = Path('recipe/adapters/data/recipes.csv')
+    """-----------------------population-------------------"""
+
+    def add_category(self, id: str, category: Category) -> None:
+        self.__categories[id] = category
+
+    def add_author(self, id: str, author: Author) -> None:
+        self.__authors[id] = author
+
+    def add_nutrition(self, id: str, nutrition: Nutrition) -> None:
+        self.__nutrition[id] = nutrition
+

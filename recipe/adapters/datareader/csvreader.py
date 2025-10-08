@@ -11,6 +11,9 @@ from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.category import Category
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 
 
 class CSVReader:
@@ -20,6 +23,9 @@ class CSVReader:
         self.__authors: dict[int, Author] = {}
         self.__categories: dict[str, Category] = {}
         self.__nutrition: dict[int, Nutrition] = {}
+        self.__images: list[RecipeImage] = []
+        self.__ingredients: list[RecipeIngredient] = []
+        self.__instructions: list[RecipeInstruction] = []
 
     def extract_data(self) -> None:
         """Reads the CSV and creates domain model objects."""
@@ -100,6 +106,21 @@ class CSVReader:
                 self.__authors[author_id].add_recipe(recipe)
                 self.__categories[category_type].add_recipe(recipe)
 
+                id = int(row["RecipeId"])
+                image_urls = parse_list(row.get("Images"))
+                for i in range(len(image_urls)):
+                    self.__images.append(RecipeImage(id, image_urls[i], i))
+
+                ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
+                ingredients = parse_list(row.get("RecipeIngredientParts"))
+                for i in range(len(ingredient_quantities)):
+                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredients[i], i))
+
+                instructions = parse_list(row.get("RecipeInstructions"))
+                for i in range(len(instructions)):
+                    self.__instructions.append(RecipeInstruction(id, instructions[i], i))
+
+
     # --- Accessors ---
     def get_recipes(self) -> List[Recipe]:
         return self.__recipes
@@ -112,3 +133,12 @@ class CSVReader:
 
     def get_nutrition(self) -> dict[int, Nutrition]:
         return self.__nutrition
+
+    def get_recipe_ingredients(self) -> list[RecipeIngredient]:
+        return self.__ingredients
+
+    def get_instructions(self) -> list[RecipeInstruction]:
+        return self.__instructions
+
+    def get_images(self) -> list[RecipeImage]:
+        return self.__images
