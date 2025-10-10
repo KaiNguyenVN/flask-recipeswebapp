@@ -8,6 +8,9 @@ from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 import abc
 
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 from recipe.domainmodel.review import Review
 from recipe.domainmodel.user import User
 
@@ -74,13 +77,13 @@ class AbstractRepository(abc.ABC):
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
-        raise NotImplementedError
+#    @abc.abstractmethod
+#    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+#        raise NotImplementedError
 
-    @abc.abstractmethod
-    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
-        raise NotImplementedError
+#    @abc.abstractmethod
+#    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+#        raise NotImplementedError
 
     """-----------------------population-------------------"""
 
@@ -92,5 +95,14 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
     @abc.abstractmethod
     def add_author(self, id:int, author: Author) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_instruction(self, instruction: RecipeInstruction) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_image(self, image: RecipeImage) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_ingredient(self, ingredient: RecipeIngredient) -> None:
         raise NotImplementedError
 

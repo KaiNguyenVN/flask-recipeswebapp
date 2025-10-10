@@ -51,6 +51,9 @@ class SessionContextManager:
         if not self.__session is None:
             self.__session.close()
 
+
+
+
 class SqlAlchemyRepository(AbstractRepository):
 
     def __init__(self, session_factory):
@@ -94,45 +97,112 @@ class SqlAlchemyRepository(AbstractRepository):
                     Review._Review__id == review.review_id
                 )
                 if review not in query.all():
-                    scm.session.add(review)
+                    scm.session.merge(review)
                     scm.commit()
 
     def remove_review(self, review: Review):
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Review).filter(
+                    Review._Review__id == review.review_id
+                )
+                if review in query.all():
+                    scm.session.delete(review)
+                    scm.commit()
 
-    def add_favorite_recipe(self, favorite: Favourite):
-        pass
 
-    def remove_favorite_recipe(self, favorite: Favourite):
-        pass
+    def add_favorite_recipe(self, favourite: Favourite):
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Favourite).filter(
+                    Favourite._Favourite__id == favourite.id
+                )
+                if favourite not in query.all():
+                    scm.session.merge(favourite)
+                    scm.commit()
+
+    def remove_favorite_recipe(self, favourite: Favourite):
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Favourite).filter(
+                    Favourite._Favourite__id == favourite.id
+                )
+                if favourite in query.all():
+                    scm.session.delete(favourite)
+                    scm.commit()
 
     def get_user_favorites(self, user_name: str) -> List[Favourite]:
-        pass
+        favourites = None
+        try:
+            query = self._session_cm.session.query(Favourite).filter(
+                Favourite._Favourate__username == user_name
+            )
+            favourites = query.all()
+            # Populate the related data for consistent domain model interface
+            for favourite in favourites:
+                self._populate_favourite_data(favourite)
+        except NoResultFound:
+            print(f'{user_name} Favorites was not found')
+        return favourites
 
     """----------------------Recipe actions----------------------"""
     def get_recipes(self) -> List[Recipe]:
-        pass
+        query = self._session_cm.session.query(Recipe)
+        recipes: list[Recipe] = query.all()
+        # Populate the related data for consistent domain model interface
+        for recipe in recipes:
+            self._populate_recipe_data(recipe)
+        return recipes
 
     def get_authors(self) -> dict[int, Author]:
-        pass
+        query = self._session_cm.session.query(Author)
+        authors: list[Author] = query.all()
+        # Populate the related data for consistent domain model interface
+        for author in authors:
+            self._populate_author_data(author)
+        return authors
 
     def get_categories(self) -> dict[str, Category]:
-        pass
+        query = self._session_cm.session.query(Category)
+        categories: list[Category] = query.all()
+        # Populate the related data for consistent domain model interface
+        for category in categories:
+            self._populate_category_data(category)
+        return categories
 
     def add_recipe(self, recipe: Recipe) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Recipe).filter(
+                    Recipe._Recipe__id == recipe.id
+                )
+                if recipe not in query.all():
+                    scm.session.merge(recipe)
+                    scm.commit()
 
     def get_recipe_by_id(self, recipe_id: int) -> Recipe:
-        pass
+        recipe = None
+        try:
+            query = self._session_cm.session.query(Recipe).filter(
+                Recipe._Recipe__id == recipe.id
+            )
+            recipe = query.one()
+            # Populate the related data for consistent domain model interface
+            self._populate_recipe_data(recipe)
+        except NoResultFound:
+            print(f'Recipe {recipe_id} was not found')
+        return recipe
 
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
-        pass
+        query = self._session_cm.session.query(Nutrition).filter(
+            Nutrition._Nutrition__recipe_id == recipe_id
+        )
+        nutri = query.one()
+        self._populate_nutrition_data(nutri)
+        return nutri
 
-    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
-        pass
 
-    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
-        pass
+
 
     """-----------------------population-------------------"""
     def add_category(self, id: str,category: Category) -> None:
@@ -151,4 +221,19 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
 
     def add_ingredient(self, ingredient: RecipeIngredient) -> None:
+        pass
+
+    def _populate_favourite_data(self, favourite: Favourite) -> None:
+        pass
+
+    def _populate_recipe_data(self, recipe: Recipe) -> None:
+        pass
+
+    def _populate_author_data(self, author: Author) -> None:
+        pass
+
+    def _populate_nutrition_data(self, nutri: Nutrition) -> None:
+        pass
+
+    def _populate_category_data(self, category : Category) -> None:
         pass

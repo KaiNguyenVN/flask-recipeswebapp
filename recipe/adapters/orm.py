@@ -39,7 +39,7 @@ favorite_table = Table(
     'favorite', mapper_registry.metadata,
     Column('id', Integer,primary_key=True),
     Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
-    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
+    Column('username', Integer, ForeignKey('user.username'), nullable=False),
 )
 
 # Nutrition table
@@ -107,7 +107,7 @@ review_table = Table(
     'review', mapper_registry.metadata,
     Column('id', Integer, primary_key=True),
     Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
-    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
+    Column('username', Integer, ForeignKey('user.username'), nullable=False),
     Column('rating', Integer, nullable=False),
     Column('review', Text, nullable=False),
     Column('date', DateTime, nullable=False),
@@ -138,7 +138,7 @@ def map_model_to_tables():
     # Favorite mapping
     mapper_registry.map_imperatively(Favourite, favorite_table, properties={
         '_Favourite__id': favorite_table.c.id,
-        '_Favorite__user': relationship(User, back_populates='_User__favourite_recipes', foreign_keys=[favorite_table.c.user_id], uselist=False),
+        '_Favourite__username': relationship(User, back_populates='_User__favourite_recipes', foreign_keys=[favorite_table.c.username], uselist=False),
         '_Favorite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.recipe_id], uselist=False),
     })
     # Recipe mapping
@@ -197,7 +197,7 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(Review, review_table, properties={
         '_Review__id': review_table.c.id,
         '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False),
-        '_Review__user': relationship(User, back_populates='_User__reviews', foreign_keys=[review_table.c.user_id], uselist=False),
+        '_Review__user': relationship(User, back_populates='_User__reviews', foreign_keys=[review_table.c.username], uselist=False),
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,

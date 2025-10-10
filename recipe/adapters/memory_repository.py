@@ -7,6 +7,9 @@ from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 from recipe.domainmodel.user import User
 from recipe.domainmodel.review import Review
 
@@ -97,14 +100,14 @@ class MemoryRepository(AbstractRepository):
         if recipe_id in self.__nutrition:
             return self.__nutrition[recipe_id]
         return None
-    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
-        return sorted(
-            self.__recipes,
-            key=lambda r: r.nutrition_rating or 0,
-            reverse=descending
-        )
-    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
-        return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
+#    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+#        return sorted(
+#            self.__recipes,
+#            key=lambda r: r.nutrition_rating or 0,
+#            reverse=descending
+#        )
+#    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+#        return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
 
     """-----------------------population-------------------"""
 
@@ -116,4 +119,11 @@ class MemoryRepository(AbstractRepository):
 
     def add_nutrition(self, id: str, nutrition: Nutrition) -> None:
         self.__nutrition[id] = nutrition
+
+    def add_instruction(self, instruction: RecipeInstruction) -> None:
+        pass
+    def add_ingredient(self, ingredient: RecipeIngredient) -> None:
+        pass
+    def add_image(self, image: RecipeImage) -> None:
+        pass
 
