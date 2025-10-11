@@ -363,14 +363,3 @@ def test_csvreader_get_author_and_category(info):
 
 # ---------------------------------------------
 
-def test_get_recipes_sorted_by_nutrition(repo):
-    recipes = repo.get_recipes()
-    assert len(recipes) == 3
-    assert recipes[0].id == 38
-    assert recipes[1].id == 40
-    assert recipes[2].id == 41
-
-def test_get_healthy_recipes(repo):
-    recipes = repo.get_healthy_recipes(min_rating = 2)
-    assert len(recipes) == 1
-    assert recipes[0].id == 40

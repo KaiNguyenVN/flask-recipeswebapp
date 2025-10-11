@@ -9,7 +9,7 @@ from recipe.adapters.repository_populate import populate
 from recipe.authentication.authentication import authentication_blueprint
 
 # imports from SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from sqlalchemy.pool import NullPool
 
@@ -48,12 +48,7 @@ def create_app(test_config=None):
         # Configure database.
         database_uri = app.config['SQLALCHEMY_DATABASE_URI']
 
-        # We create a comparatively simple SQLite database, which is based on a single file (see .env for URI).
-        # For example the file database could be located locally and relative to the application in covid-19.db,
-        # leading to a URI of "sqlite:///covid-19.db".
-        # Note that create_engine does not establish any actual DB connection directly!
         database_echo = app.config['SQLALCHEMY_ECHO']
-        # Please do not change the settings for connect_args and poolclass!
         database_engine = create_engine(database_uri, connect_args={"check_same_thread": False}, poolclass=NullPool,
                                         echo=database_echo)
 

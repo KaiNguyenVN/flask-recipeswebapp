@@ -1,5 +1,4 @@
-from dis import Instruction
-from tkinter import Listbox
+
 
 from sqlalchemy import (
     Table, Column, Integer, Float, String, DateTime, ForeignKey, Text, UniqueConstraint, MetaData
@@ -29,7 +28,7 @@ authors_table = Table(
 
 # Category table
 categories_table = Table(
-    'categories', mapper_registry.metadata,
+    'category', mapper_registry.metadata,
     Column('id', Integer, primary_key=True),
     Column('name', String(255), nullable=False)
 )
@@ -39,7 +38,7 @@ favorite_table = Table(
     'favorite', mapper_registry.metadata,
     Column('id', Integer,primary_key=True),
     Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
-    Column('username', Integer, ForeignKey('user.username'), nullable=False),
+    Column('username', String(255), ForeignKey('user.username'), nullable=False),
 )
 
 # Nutrition table
@@ -54,7 +53,7 @@ nutrition_table = Table(
     Column('sodium', Float, nullable=False),
     Column('carbohydrates', Float, nullable=False),
     Column('fiber', Float, nullable=False),
-    Column('sugar', Float, nullable=False),
+    Column('suger', Float, nullable=False),
     Column('protein', Float, nullable=False),
 )
 
@@ -107,7 +106,7 @@ review_table = Table(
     'review', mapper_registry.metadata,
     Column('id', Integer, primary_key=True),
     Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
-    Column('username', Integer, ForeignKey('user.username'), nullable=False),
+    Column('username', String(255), ForeignKey('user.username'), nullable=False),
     Column('rating', Integer, nullable=False),
     Column('review', Text, nullable=False),
     Column('date', DateTime, nullable=False),
@@ -139,7 +138,7 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(Favourite, favorite_table, properties={
         '_Favourite__id': favorite_table.c.id,
         '_Favourite__username': relationship(User, back_populates='_User__favourite_recipes', foreign_keys=[favorite_table.c.username], uselist=False),
-        '_Favorite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.recipe_id], uselist=False),
+        '_Favourite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.recipe_id], uselist=False),
     })
     # Recipe mapping
     mapper_registry.map_imperatively(Recipe, recipe_table, properties={
@@ -151,19 +150,18 @@ def map_model_to_tables():
         '_Recipe__date': recipe_table.c.date,
         '_Recipe__description': recipe_table.c.description,
         '_Recipe__category': relationship(Category, back_populates='_Category__recipes',foreign_keys=[recipe_table.c.category_id], uselist=False),
-        '_Recipe__ingredients': relationship(RecipeIngredient, foreign_keys=[ingredient_table.c.recipe_id]),
-        '_Recipe__instructions': relationship(Instruction, foreign_keys=[instruction_table.c.recipe_id]),
+        '_Recipe__instructions': relationship(RecipeInstruction, back_populates='_RecipeInstruction__recipe', foreign_keys=[instruction_table.c.recipe_id]),
         '_Recipe__rating': recipe_table.c.rating,
-        '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe', uselist=False),
+        '_Recipe__ingredients': relationship(RecipeIngredient, back_populates='_RecipeIngredient__recipe',foreign_keys=[ingredient_table.c.recipe_id]),
         '_Recipe__servings': recipe_table.c.servings,
         '_Recipe__recipe_yield': recipe_table.c.recipe_yield,
         '_Recipe__images': relationship(RecipeImage, foreign_keys=[image_table.c.recipe_id]),
         '_Recipe__reviews': relationship(Review, back_populates='_Review__recipe'),
+        '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe')
     })
     # Nutrition mapping
     mapper_registry.map_imperatively(Nutrition, nutrition_table, properties={
         '_Nutrition__id': nutrition_table.c.id,
-        '_Nutrition__recipe': relationship(Recipe, back_populates='_Recipe__nutrition', uselist=False),
         '_Nutrition__calories': nutrition_table.c.calories,
         '_Nutrition__fat': nutrition_table.c.fat,
         '_Nutrition__saturated_fat': nutrition_table.c.saturated_fat,
@@ -173,6 +171,7 @@ def map_model_to_tables():
         '_Nutrition__fiber': nutrition_table.c.fiber,
         '_Nutrition__suger': nutrition_table.c.suger,
         '_Nutrition__protein': nutrition_table.c.protein,
+        '_Nutrition__recipe': relationship(Recipe, back_populates='_Recipe__nutrition', uselist=False)
     })
     # Ingredient mapping
     mapper_registry.map_imperatively(RecipeIngredient, ingredient_table, properties={
@@ -180,12 +179,14 @@ def map_model_to_tables():
         '_RecipeIngredient__ingredient': ingredient_table.c.ingredient,
         '_RecipeIngredient__quantity': ingredient_table.c.quantity,
         '_RecipeIngredient__position': ingredient_table.c.position,
+        '_RecipeIngredient__recipe': relationship(Recipe, back_populates='_Recipe__ingredients', uselist=False),
     })
     # Instruction mapping
     mapper_registry.map_imperatively(RecipeInstruction, instruction_table, properties={
         '_RecipeInstruction__recipe_id': instruction_table.c.recipe_id,
         '_RecipeInstruction__step': instruction_table.c.step,
         '_RecipeInstruction__position': instruction_table.c.position,
+        '_RecipeInstruction__recipe': relationship(Recipe, back_populates='_Recipe__instructions', uselist=False),
     })
     # Image mapping
     mapper_registry.map_imperatively(RecipeImage, image_table, properties={
@@ -206,6 +207,6 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(User, user_table, properties={
         '_User__id': user_table.c.id,
         '_User__username': user_table.c.username,
-        '_User__favourite_recipes': relationship(Favourite, back_populates='_Favorite__user'),
+        '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
         '_User__reviews': relationship(Review, back_populates='_Review__user'),
     })

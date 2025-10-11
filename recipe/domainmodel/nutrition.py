@@ -1,25 +1,36 @@
+from recipe.domainmodel.recipe import Recipe
+
+
 class Nutrition:
 # TODO: Complete the implementation of the Nutrition class.
 #nutrition id is basically recipes id
-    def __init__(self, recipe_id: int, calories: float = None, fat: float = None,
+    def __init__(self, id: int, calories: float = None, fat: float = None,
                  saturated_fat: float = None, cholesterol:float = None,
                  sodium: float = None, carbohydrates: float = None,
                  fiber: float = None, sugar:float = None, protein:float = None) -> None:
-        self.__recipe_id = recipe_id
-        self.__nutri_content = {"calories": calories, "fat": fat, "saturated_fat": saturated_fat, "cholesterol": cholesterol, "sodium": sodium, "carbohydrates": carbohydrates, "fiber": fiber , "sugar": sugar, "protein": protein}
+        self.__id = id
+        self.__calories = calories
+        self.__fat = fat
+        self.__saturated_fat = saturated_fat
+        self.__cholesterol = cholesterol
+        self.__sodium = sodium
+        self.__carbohydrates = carbohydrates
+        self.__fiber = fiber
+        self.__sugar = sugar
+        self.__protein = protein
 
     def __repr__(self):
-        return str(self.__nutri_content)
+        return f"calories:{self.__calories}, fat:{self.__fat}, saturated_fat:{self.__saturated_fat}, cholesterol:{self.__cholesterol}, sodium:{self.__sodium}, protein:{self.__protein}, fiber:{self.__fiber}, sugar:{self.__sugar}, carbohydrates:{self.__carbohydrates}"
 
     def __eq__(self, other):
         if isinstance(other, Nutrition):
-            return self.__nutri_content == other.__nutri_content
+            return self.__id == other.__id
         else:
             raise TypeError("Comparison must be between Nutrition instances")
 
-    def __lt__(self, other, nutri):
+    def __lt__(self, other):
         if isinstance(other, Nutrition):
-            return self.__nutri_content[nutri] < other.__nutri_content[nutri]
+            return self.id < other.id
         else:
             raise TypeError("Comparison must be between Nutrition instances")
 
@@ -28,49 +39,57 @@ class Nutrition:
 
 
 
+
     @property
     def id(self) -> int:
-        return self.__recipe_id
+        return self.__id
+
 
     @property
     def calories(self) -> float:
-        return self.__nutri_content["calories"]
+        return self.__calories
+
 
     @property
     def fat(self) -> float:
-        return self.__nutri_content["fat"]
+        return self.__fat
+
 
     @property
     def saturated_fat(self) -> float:
-        return self.__nutri_content["saturated_fat"]
+        return self.__saturated_fat
+
 
     @property
     def cholesterol(self) -> float:
-        return self.__nutri_content["cholesterol"]
+        return self.__cholesterol
+
 
     @property
     def sodium(self) -> float:
-        return self.__nutri_content["sodium"]
+        return self.__sodium
+
 
     @property
     def carbohydrates(self) -> float:
-        return self.__nutri_content["carbohydrates"]
+        return self.__carbohydrates
+
 
     @property
     def fiber(self) -> float:
-        return self.__nutri_content["fiber"]
+        return self.__fiber
+
 
     @property
     def sugar(self) -> float:
-        return self.__nutri_content["sugar"]
+        return self.__sugar
+
 
     @property
     def protein(self) -> float:
-        return self.__nutri_content["protein"]
+        return self.__protein
 
-    def calculate_health_stars(self) -> int|None:
-        if self.__nutri_content is None:
-            return None
+    def calculate_health_stars(self) -> float|None:
 
         # Baseline points (negative)
         baseline = 0

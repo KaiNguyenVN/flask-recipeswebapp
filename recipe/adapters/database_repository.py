@@ -206,33 +206,171 @@ class SqlAlchemyRepository(AbstractRepository):
 
     """-----------------------population-------------------"""
     def add_category(self, id: str,category: Category) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Category).filter(
+                    Category._Category__id == category.id
+                )
+                if category not in query.all():
+                    scm.session.add(category)
+                    scm.commit()
 
     def add_nutrition(self, id: str, nutri: Nutrition) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Nutrition).filter(
+                    Nutrition._Nutrition__id == nutri.id
+                )
+                if nutri not in query.all():
+                    scm.session.add(nutri)
+                    scm.commit()
 
     def add_author(self, id:int, author: Author) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(Author).filter(
+                    Author._Author__id == author.id
+                )
+                if author not in query.all():
+                    scm.session.add(author)
+                    scm.commit()
 
     def add_instruction(self, instruction: RecipeInstruction) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(RecipeInstruction).filter(
+                    RecipeInstruction._RecipeInstruction__id == instruction.id
+                )
+                if instruction not in query.all():
+                    scm.session.add(instruction)
+                    scm.commit()
 
     def add_image(self, image: RecipeImage) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(RecipeImage).filter(
+                    RecipeImage._RecipeImage__id == image.id
+                )
+                if image not in query.all():
+                    scm.session.add(image)
+                    scm.commit()
 
     def add_ingredient(self, ingredient: RecipeIngredient) -> None:
-        pass
+        with self._session_cm as scm:
+            with scm.session.no_autoflush:
+                query = scm.session.query(RecipeIngredient).filter(
+                    RecipeIngredient._RecipeIngredient__id == ingredient.id
+                )
+                if ingredient not in query.all():
+                    scm.session.add(ingredient)
+                    scm.commit()
 
     def _populate_favourite_data(self, favourite: Favourite) -> None:
-        pass
+        if favourite is None:
+            return
+
+            # Use the same session context
+        with self._session_cm as scm:
+            self._populate_favorite_data_in_session(favourite, scm.session)
+
+    def _populate_favorite_data_in_session(self, favourite: Favourite, session) -> None:
+        if favourite is None:
+            return
+
+        recipe = session.query(Recipe).filter(
+            Recipe._Recipe__id == favourite.recipe.id
+        ).one()
+        favourite.__Favourite__recipe = recipe
 
     def _populate_recipe_data(self, recipe: Recipe) -> None:
-        pass
+        if recipe is None:
+            return
+
+            # Use the same session context
+        with self._session_cm as scm:
+            self._populate_recipe_data_in_session(recipe, scm.session)
+
+    def _populate_recipe_data_in_session(self, recipe: Recipe, session):
+        if recipe is None:
+            return
+
+            # Load and populate images
+        recipe_images = session.query(RecipeImage).filter(
+            RecipeImage._RecipeImage__recipe_id == recipe.id
+        ).order_by(RecipeImage._RecipeImage__position).all()
+
+        if recipe_images:
+            image_urls = [img.url for img in recipe_images]
+            recipe._Recipe__images = image_urls
+        else:
+            print(f"DEBUG: No images found for recipe {recipe.id}")
+
+        recipe_ingredients = session.query(RecipeIngredient).filter(
+            RecipeIngredient._RecipeIngredient__recipe_id == recipe.id
+        ).order_by(RecipeIngredient._RecipeIngredient__position).all()
+
+        if recipe_ingredients:
+            recipe._Recipe__ingredients = recipe_ingredients
+
+        recipe_nutrition = session.query(Nutrition).filter(
+            Nutrition._Nutrition__recipe_id == recipe.id
+        ).one()
+        if recipe_nutrition:
+            recipe._Recipe__nutrition = recipe_nutrition
+
+        recipe_instructions = session.query(RecipeInstruction).filter(
+            RecipeInstruction._RecipeInstruction__recipe_id == recipe.id
+        ).order_by(RecipeInstruction._RecipeInstruction__position).all()
+        if recipe_instructions:
+            recipe._Recipe__instructions = recipe_instructions
+
+        recipe_category = session.query(Category).filter(
+            Category._Category__id == recipe.category_id
+        ).one()
+        if recipe_category:
+            recipe._Recipe__category = recipe_category
+
+        recipe_author = session.query(Author).filter(
+            Author._Author__id == recipe.author_id
+        ).one()
+        if recipe_author:
+            recipe._Recipe__author = recipe_author
+
+        recipe_reviews = session.query(Review).filter(
+            Review._Review__recipe_id == recipe.id
+        ).all()
+        if recipe_reviews:
+            recipe._Recipe__reviews = recipe_reviews
 
     def _populate_author_data(self, author: Author) -> None:
-        pass
+        if author is None:
+            return
+
+            # Use the same session context
+        with self._session_cm as scm:
+            self._populate_author_data_in_session(author, scm.session)
+
+    def _populate_author_data_in_session(self, author: Author, session) -> None:
+        if author is None:
+            return
+
+        recipe = session.query(Recipe).filter(
+            Recipe._Recipe__author_id == author.id
+        ).one()
+        author._Author__recipe = recipe
 
     def _populate_nutrition_data(self, nutri: Nutrition) -> None:
+        if nutri is None:
+            return
+
+            # Use the same session context
+        with self._session_cm as scm:
+            self._populate_nutrition_data_in_session(nutri, scm.session)
+
+    def _populate_nutrition_data_in_session(self, nutri: Nutrition, session) -> None:
+        if nutri is None:
+            return
+
         pass
 
     def _populate_category_data(self, category : Category) -> None:

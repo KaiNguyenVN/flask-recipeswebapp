@@ -69,7 +69,7 @@ class CSVReader:
 
                 # --- Nutrition ---
                 nutrition = Nutrition(
-                    recipe_id = int(row["RecipeId"]),
+                    id = int(row["RecipeId"]),
                     calories = float(row["Calories"]) if row["Calories"] else None,
                     fat = float(row["FatContent"]) if row["FatContent"] else None,
                     saturated_fat = float(row["SaturatedFatContent"]) if row["SaturatedFatContent"] else None,
@@ -113,7 +113,7 @@ class CSVReader:
 
                 ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
                 ingredients = parse_list(row.get("RecipeIngredientParts"))
-                for i in range(len(ingredient_quantities)):
+                for i in range(min(len(ingredient_quantities), len(ingredients))):
                     self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredients[i], i))
 
                 instructions = parse_list(row.get("RecipeInstructions"))
