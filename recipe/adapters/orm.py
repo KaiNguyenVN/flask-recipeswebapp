@@ -150,12 +150,9 @@ def map_model_to_tables():
         '_Recipe__date': recipe_table.c.date,
         '_Recipe__description': recipe_table.c.description,
         '_Recipe__category': relationship(Category, back_populates='_Category__recipes',foreign_keys=[recipe_table.c.category_id], uselist=False),
-        '_Recipe__instructions': relationship(RecipeInstruction, back_populates='_RecipeInstruction__recipe', foreign_keys=[instruction_table.c.recipe_id]),
         '_Recipe__rating': recipe_table.c.rating,
-        '_Recipe__ingredients': relationship(RecipeIngredient, back_populates='_RecipeIngredient__recipe',foreign_keys=[ingredient_table.c.recipe_id]),
         '_Recipe__servings': recipe_table.c.servings,
         '_Recipe__recipe_yield': recipe_table.c.recipe_yield,
-        '_Recipe__images': relationship(RecipeImage, foreign_keys=[image_table.c.recipe_id]),
         '_Recipe__reviews': relationship(Review, back_populates='_Review__recipe'),
         '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe')
     })
@@ -179,14 +176,12 @@ def map_model_to_tables():
         '_RecipeIngredient__ingredient': ingredient_table.c.ingredient,
         '_RecipeIngredient__quantity': ingredient_table.c.quantity,
         '_RecipeIngredient__position': ingredient_table.c.position,
-        '_RecipeIngredient__recipe': relationship(Recipe, back_populates='_Recipe__ingredients', uselist=False),
     })
     # Instruction mapping
     mapper_registry.map_imperatively(RecipeInstruction, instruction_table, properties={
         '_RecipeInstruction__recipe_id': instruction_table.c.recipe_id,
         '_RecipeInstruction__step': instruction_table.c.step,
         '_RecipeInstruction__position': instruction_table.c.position,
-        '_RecipeInstruction__recipe': relationship(Recipe, back_populates='_Recipe__instructions', uselist=False),
     })
     # Image mapping
     mapper_registry.map_imperatively(RecipeImage, image_table, properties={
@@ -198,7 +193,6 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(Review, review_table, properties={
         '_Review__id': review_table.c.id,
         '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False),
-        '_Review__user': relationship(User, back_populates='_User__reviews', foreign_keys=[review_table.c.username], uselist=False),
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
@@ -207,6 +201,4 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(User, user_table, properties={
         '_User__id': user_table.c.id,
         '_User__username': user_table.c.username,
-        '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
-        '_User__reviews': relationship(Review, back_populates='_Review__user'),
     })

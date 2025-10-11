@@ -4,6 +4,7 @@ import csv
 from ast import literal_eval
 from datetime import datetime
 from pathlib import Path
+from tkinter import Image
 from typing import List
 from dateutil import parser as date_parser
 
@@ -108,17 +109,23 @@ class CSVReader:
 
                 id = int(row["RecipeId"])
                 image_urls = parse_list(row.get("Images"))
+                images = []
                 for i in range(len(image_urls)):
+                    images.append(RecipeImage(id, image_urls[i], i))
                     self.__images.append(RecipeImage(id, image_urls[i], i))
 
                 ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
-                ingredients = parse_list(row.get("RecipeIngredientParts"))
-                for i in range(min(len(ingredient_quantities), len(ingredients))):
-                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredients[i], i))
+                ingredient_part = parse_list(row.get("RecipeIngredientParts"))
+                ingredients = []
+                for i in range(min(len(ingredient_quantities), len(ingredient_part))):
+                    ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
+                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
 
-                instructions = parse_list(row.get("RecipeInstructions"))
-                for i in range(len(instructions)):
-                    self.__instructions.append(RecipeInstruction(id, instructions[i], i))
+                instruction = parse_list(row.get("RecipeInstructions"))
+                instructions = []
+                for i in range(len(instruction)):
+                    instructions.append(RecipeInstruction(id, instruction[i], i))
+                    self.__instructions.append(RecipeInstruction(id, instruction[i], i))
 
 
     # --- Accessors ---
