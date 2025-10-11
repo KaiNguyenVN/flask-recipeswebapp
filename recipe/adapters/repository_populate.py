@@ -16,19 +16,12 @@ def populate(data_path: Path, repo: AbstractRepository, database_mode: bool):
     images = csv_reader.get_images()
     ingredients = csv_reader.get_recipe_ingredients()
 
-    for recipe in recipes:
-        repo.add_recipe(recipe)
-    for id in categories:
-        repo.add_category(id, categories[id])
-    for id in nutrition:
-        repo.add_nutrition(id, nutrition[id])
-    for id in authors:
-        repo.add_author(id, authors[id])
+    repo.add_multiple_recipe(recipes)
+    repo.add_multiple_category(categories)
+    repo.add_multiple_nutrition(nutrition)
+    repo.add_multiple_author(authors)
 
     if database_mode:
-        for instruction in instructions:
-            repo.add_instruction(instruction)
-        for image in images:
-            repo.add_image(image)
-        for ingredient in ingredients:
-            repo.add_ingredient(ingredient)
+        repo.add_multiple_instruction(instructions)
+        repo.add_multiple_image(images)
+        repo.add_multiple_ingredient(ingredients)

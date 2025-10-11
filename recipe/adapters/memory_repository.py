@@ -127,3 +127,24 @@ class MemoryRepository(AbstractRepository):
     def add_image(self, image: RecipeImage) -> None:
         pass
 
+    def add_multiple_author(self, authors: dict[int, Author]) -> None:
+        self.__authors = authors
+
+    def add_multiple_nutrition(self, nutrition: dict[int, Nutrition]) -> None:
+        self.__nutrition = nutrition
+
+    def add_multiple_recipe(self, recipes) -> None:
+        self.__recipes = recipes
+
+    def add_multiple_category(self, category: dict[str, Category]) -> None:
+        self.__categories = category
+
+    def add_multiple_instruction(self, instructions: list[RecipeInstruction]) -> None:
+        pass
+
+    def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
+        pass
+
+    def add_multiple_image(self, images: list[RecipeImage]) -> None:
+        pass
+

@@ -82,6 +82,27 @@ class CSVReader:
                 )
                 self.__nutrition[int(row["RecipeId"])] = nutrition
 
+                # --- image, instruction, ingredients ---
+                id = int(row["RecipeId"])
+                image_urls = parse_list(row.get("Images"))
+                images = []
+                for i in range(len(image_urls)):
+                    images.append(RecipeImage(id, image_urls[i], i))
+                    self.__images.append(RecipeImage(id, image_urls[i], i))
+
+                ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
+                ingredient_parts = parse_list(row.get("RecipeIngredientParts"))
+                ingredients = []
+                for i in range(min(len(ingredient_quantities), len(ingredient_parts))):
+                    ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_parts[i], i))
+                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_parts[i], i))
+
+                instruction_step = parse_list(row.get("RecipeInstructions"))
+                instructions = []
+                for i in range(len(instruction_step)):
+                    instructions.append(RecipeInstruction(id, instruction_step[i], i))
+                    self.__instructions.append(RecipeInstruction(id, instruction_step[i], i))
+
                 # --- Recipe ---
                 recipe = Recipe(
                     recipe_id = int(row["RecipeId"]),
@@ -91,34 +112,20 @@ class CSVReader:
                     preparation_time = int(row["PrepTime"]) if row["PrepTime"] else 0,
                     created_date = created_date,
                     description = row.get("Description", ""),
-                    images = parse_list(row.get("Images")),
+                    images = images,
                     category = self.__categories[category_type],
-                    ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities")),
-                    ingredients = parse_list(row.get("RecipeIngredientParts")),
+                    ingredients = ingredients,
                     nutrition = nutrition,
                     servings = row.get("RecipeServings"),
                     recipe_yield = row.get("RecipeYield"),
-                    instructions = parse_list(row.get("RecipeInstructions"))
+                    instructions = instructions
                 )
 
                 self.__recipes.append(recipe)
                 # connect author & category relationships
-                self.__authors[author_id].add_recipe(recipe)
+#                self.__authors[author_id].add_recipe(recipe)
                 self.__categories[category_type].add_recipe(recipe)
 
-                id = int(row["RecipeId"])
-                image_urls = parse_list(row.get("Images"))
-                for i in range(len(image_urls)):
-                    self.__images.append(RecipeImage(id, image_urls[i], i))
-
-                ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
-                ingredients = parse_list(row.get("RecipeIngredientParts"))
-                for i in range(min(len(ingredient_quantities), len(ingredients))):
-                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredients[i], i))
-
-                instructions = parse_list(row.get("RecipeInstructions"))
-                for i in range(len(instructions)):
-                    self.__instructions.append(RecipeInstruction(id, instructions[i], i))
 
 
     # --- Accessors ---

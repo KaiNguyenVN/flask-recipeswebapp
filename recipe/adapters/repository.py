@@ -106,3 +106,24 @@ class AbstractRepository(abc.ABC):
     def add_ingredient(self, ingredient: RecipeIngredient) -> None:
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_category(self, categories: dict[str, Category]) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_nutrition(self, nutrition: dict) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_author(self, authors: dict[int, Author]) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_instruction(self, instructions: list[RecipeInstruction]) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_image(self, images: list[RecipeImage]) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
+        raise NotImplementedError

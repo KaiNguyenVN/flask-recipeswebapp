@@ -238,33 +238,72 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_instruction(self, instruction: RecipeInstruction) -> None:
         with self._session_cm as scm:
             with scm.session.no_autoflush:
-                query = scm.session.query(RecipeInstruction).filter(
-                    RecipeInstruction._RecipeInstruction__id == instruction.id
-                )
-                if instruction not in query.all():
-                    scm.session.add(instruction)
-                    scm.commit()
+                scm.session.add(instruction)
+                scm.commit()
 
     def add_image(self, image: RecipeImage) -> None:
         with self._session_cm as scm:
             with scm.session.no_autoflush:
-                query = scm.session.query(RecipeImage).filter(
-                    RecipeImage._RecipeImage__id == image.id
-                )
-                if image not in query.all():
-                    scm.session.add(image)
-                    scm.commit()
+#                query = scm.session.query(RecipeImage).filter(
+#                    RecipeImage._RecipeImage__id == image.id
+#                )
+#                if image not in query.all():
+                scm.session.add(image)
+                scm.commit()
 
     def add_ingredient(self, ingredient: RecipeIngredient) -> None:
         with self._session_cm as scm:
             with scm.session.no_autoflush:
-                query = scm.session.query(RecipeIngredient).filter(
-                    RecipeIngredient._RecipeIngredient__id == ingredient.id
-                )
-                if ingredient not in query.all():
-                    scm.session.add(ingredient)
-                    scm.commit()
+#                query = scm.session.query(RecipeIngredient).filter(
+#                    RecipeIngredient._RecipeIngredient__id == ingredient.id
+#                )
+#                if ingredient not in query.all():
+                scm.session.add(ingredient)
+                scm.commit()
 
+    def add_multiple_instruction(self, instruction: list[RecipeInstruction]) -> None:
+        with self._session_cm as scm:
+            for i in instruction:
+                scm.session.add(i)
+            scm.commit()
+
+    def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
+        with self._session_cm as scm:
+            for i in ingredients:
+                scm.session.add(i)
+            scm.commit()
+
+    def add_multiple_category(self, category: dict[str, Category]) -> None:
+        with self._session_cm as scm:
+            for i in category:
+                scm.session.add(category[i])
+            scm.commit()
+
+    def add_multiple_nutrition(self, nutri: dict[int, Nutrition]) -> None:
+        with self._session_cm as scm:
+            for i in nutri:
+                scm.session.add(nutri[i])
+            scm.commit()
+
+    def add_multiple_author(self, author: dict[int, Author]) -> None:
+        with self._session_cm as scm:
+            for i in author:
+                scm.session.add(author[i])
+            scm.commit()
+
+    def add_multiple_image(self, image: list[RecipeImage]) -> None:
+        with self._session_cm as scm:
+            for i in image:
+                scm.session.add(i)
+            scm.commit()
+
+    def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
+        with self._session_cm as scm:
+            for i in recipes:
+                scm.session.add(i)
+            scm.commit()
+
+    """-----------------------populate data-------------------"""
     def _populate_favourite_data(self, favourite: Favourite) -> None:
         if favourite is None:
             return
@@ -375,3 +414,4 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def _populate_category_data(self, category : Category) -> None:
         pass
+
