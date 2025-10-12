@@ -200,7 +200,6 @@ def map_model_to_tables():
     })
     # User mapping
     mapper_registry.map_imperatively(User, user_table, properties={
-        '_User__id': user_table.c.id,
         '_User__username': user_table.c.username,
         '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
         '_User__reviews': relationship(Review, back_populates='_Review__username')

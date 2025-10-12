@@ -12,7 +12,7 @@ browse_blueprint = Blueprint('browse_bp', __name__)
 def browse():
     category_images = {}
 
-    list_of_recipes = services.get_recipes(2, 3, "s", repo.repo_instance)
+    list_of_recipes = services.get_recipes(2, 30, "s", repo.repo_instance)
     list_of_categories = list(services.get_categories(repo.repo_instance).values())
     # sort recipes by name
     sorted_recipes = sorted(list_of_recipes, key=lambda r: r.name.lower())

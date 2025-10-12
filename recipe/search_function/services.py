@@ -10,7 +10,7 @@ class SearchService:
 
     def search_recipes(self, query: str = "", filter_by: str = "", page: int = 1, per_page: int = 12) -> Dict[str, Any]:
         """Search recipes with filtering and pagination"""
-        all_recipes = self.repo.get_recipes()
+        all_recipes = self.repo.get_all_recipes()
 
         # Filter recipes
         matched_recipes = self._filter_recipes(all_recipes, query, filter_by)
