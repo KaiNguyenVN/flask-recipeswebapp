@@ -53,7 +53,7 @@ nutrition_table = Table(
     Column('sodium', Float, nullable=False),
     Column('carbohydrates', Float, nullable=False),
     Column('fiber', Float, nullable=False),
-    Column('suger', Float, nullable=False),
+    Column('sugar', Float, nullable=False),
     Column('protein', Float, nullable=False),
 )
 
@@ -154,7 +154,7 @@ def map_model_to_tables():
         '_Recipe__servings': recipe_table.c.servings,
         '_Recipe__recipe_yield': recipe_table.c.recipe_yield,
         '_Recipe__reviews': relationship(Review, back_populates='_Review__recipe'),
-        '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe')
+        '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe', uselist=False)
     })
     # Nutrition mapping
     mapper_registry.map_imperatively(Nutrition, nutrition_table, properties={
@@ -166,7 +166,7 @@ def map_model_to_tables():
         '_Nutrition__sodium': nutrition_table.c.sodium,
         '_Nutrition__carbohydrates': nutrition_table.c.carbohydrates,
         '_Nutrition__fiber': nutrition_table.c.fiber,
-        '_Nutrition__suger': nutrition_table.c.suger,
+        '_Nutrition__sugar': nutrition_table.c.sugar,
         '_Nutrition__protein': nutrition_table.c.protein,
         '_Nutrition__recipe': relationship(Recipe, back_populates='_Recipe__nutrition', uselist=False)
     })
@@ -196,9 +196,12 @@ def map_model_to_tables():
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
+        '_Review__username': relationship(User, back_populates='_User__reviews', foreign_keys=[review_table.c.username], uselist=False),
     })
     # User mapping
     mapper_registry.map_imperatively(User, user_table, properties={
         '_User__id': user_table.c.id,
         '_User__username': user_table.c.username,
+        '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
+        '_User__reviews': relationship(Review, back_populates='_Review__username')
     })

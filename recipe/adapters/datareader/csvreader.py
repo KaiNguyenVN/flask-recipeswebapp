@@ -104,7 +104,7 @@ class CSVReader:
 
                 self.__recipes.append(recipe)
                 # connect author & category relationships
-                self.__authors[author_id].add_recipe(recipe)
+#                self.__authors[author_id].add_recipe(recipe)
                 self.__categories[category_type].add_recipe(recipe)
 
                 id = int(row["RecipeId"])
