@@ -143,12 +143,11 @@ class SqlAlchemyRepository(AbstractRepository):
 
     """----------------------Recipe actions----------------------"""
     def get_all_recipes(self) -> List[Recipe]:
-        query = self._session_cm.session.query(Recipe)
-        recipes: list[Recipe] = query.all()
-        # Populate the related data for consistent domain model interface
-        for recipe in recipes:
-            self._populate_recipe_data(recipe)
-        return recipes
+        with self._session_cm as scm:
+            recipes: list[Recipe] = scm.session.query(Recipe).all()
+            for recipe in recipes:
+                self._populate_recipe_data_in_session(recipe, scm.session)
+            return recipes
 
     def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
         # Sanitize pagination inputs
