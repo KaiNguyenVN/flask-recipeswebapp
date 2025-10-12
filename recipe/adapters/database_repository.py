@@ -133,16 +133,16 @@ class SqlAlchemyRepository(AbstractRepository):
         favourites = None
         try:
             query = self._session_cm.session.query(Favourite).filter(
-                Favourite._Favourate__username == user_name
+                Favourite._Favourite__username == user_name
             )
             favourites = query.all()
             # Populate the related data for consistent domain model interface
         except NoResultFound:
-            print(f'{user_name} Favorites was not found')
+            print(f'{user_name} Favourites was not found')
         return favourites
 
     """----------------------Recipe actions----------------------"""
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
         query = self._session_cm.session.query(Recipe)
         recipes: list[Recipe] = query.all()
         # Populate the related data for consistent domain model interface
@@ -150,17 +150,52 @@ class SqlAlchemyRepository(AbstractRepository):
             self._populate_recipe_data(recipe)
         return recipes
 
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
+        # Sanitize pagination inputs
+        if page is None or page < 1:
+            page = 1
+        if page_size is None or page_size < 1:
+            page_size = 10
+        offset = (page - 1) * page_size
+
+        with self._session_cm as scm:
+            q = scm.session.query(Recipe)
+
+            # Basic sort options supported by current schema
+            sort_method = (sort_method or 'name').lower()
+            if sort_method in ('name', 'name_asc'):
+                q = q.order_by(Recipe._Recipe__name.asc(), Recipe._Recipe__id.asc())
+            elif sort_method in ('name_desc', 'desc_name'):
+                q = q.order_by(Recipe._Recipe__name.desc(), Recipe._Recipe__id.asc())
+            elif sort_method in ('id', 'id_asc'):
+                q = q.order_by(Recipe._Recipe__id.asc())
+            elif sort_method in ('id_desc', 'desc_id'):
+                q = q.order_by(Recipe._Recipe__id.desc())
+            else:
+                # Fallback to name ascending if unknown
+                q = q.order_by(Recipe._Recipe__name.asc(), Recipe._Recipe__id.asc())
+
+            recipes: List[Recipe] = q.offset(offset).limit(page_size).all()
+
+            # Populate related data (images, ingredients, instructions, etc.)
+            for r in recipes:
+                self._populate_recipe_data_in_session(r, scm.session)
+
+            return recipes
+
     def get_authors(self) -> dict[int, Author]:
         query = self._session_cm.session.query(Author)
         authors: list[Author] = query.all()
+        dic = {i.id: i for i in authors}
         # Populate the related data for consistent domain model interface
-        return authors
+        return dic
 
     def get_categories(self) -> dict[str, Category]:
         query = self._session_cm.session.query(Category)
         categories: list[Category] = query.all()
+        dic = {i.name: i for i in categories}
         # Populate the related data for consistent domain model interface
-        return categories
+        return dic
 
     def add_recipe(self, recipe: Recipe) -> None:
         with self._session_cm as scm:
@@ -176,7 +211,7 @@ class SqlAlchemyRepository(AbstractRepository):
         recipe = None
         try:
             query = self._session_cm.session.query(Recipe).filter(
-                Recipe._Recipe__id == recipe.id
+                Recipe._Recipe__id == recipe_id
             )
             recipe = query.one()
             # Populate the related data for consistent domain model interface
@@ -187,7 +222,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
         query = self._session_cm.session.query(Nutrition).filter(
-            Nutrition._Nutrition__recipe_id == recipe_id
+            Nutrition._Nutrition__id == recipe_id
         )
         nutri = query.one()
         return nutri

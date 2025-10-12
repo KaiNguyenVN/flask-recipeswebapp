@@ -54,7 +54,11 @@ class AbstractRepository(abc.ABC):
 
     """----------------------Recipe actions----------------------"""
     @abc.abstractmethod
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
         raise NotImplementedError
 
     @abc.abstractmethod

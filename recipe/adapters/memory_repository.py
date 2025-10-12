@@ -82,8 +82,10 @@ class MemoryRepository(AbstractRepository):
 
 
     """----------------------Recipe actions----------------------"""
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
         return self.__recipes
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
+        return self.__recipes[0:page * page_size]
     def get_categories(self) -> dict[int, Category]:
         return self.__categories
     def get_authors(self) -> dict[int, Author]:

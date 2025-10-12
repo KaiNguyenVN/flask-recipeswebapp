@@ -3,9 +3,8 @@ from urllib import request
 from flask import render_template, Blueprint, request
 
 import recipe.adapters.repository as repo
+from recipe.browse import services
 
-list_of_recipes = repo.repo_instance.get_recipes()
-list_of_categories = list(repo.repo_instance.get_categories().values())
 
 browse_blueprint = Blueprint('browse_bp', __name__)
 
@@ -13,6 +12,8 @@ browse_blueprint = Blueprint('browse_bp', __name__)
 def browse():
     category_images = {}
 
+    list_of_recipes = services.get_recipes(2, 3, "s", repo.repo_instance)
+    list_of_categories = list(services.get_categories(repo.repo_instance).values())
     # sort recipes by name
     sorted_recipes = sorted(list_of_recipes, key=lambda r: r.name.lower())
 

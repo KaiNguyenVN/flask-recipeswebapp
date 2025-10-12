@@ -68,7 +68,7 @@ recipe_table = Table(
     Column('date', DateTime, nullable=False),
     Column('description', Text, nullable=False),
     Column('category_id', Integer, ForeignKey('category.id'), nullable=False),
-    Column('rating', Float, nullable=False),
+    Column('rating', Float, nullable=True),
     Column('servings', String(255), nullable=False),
     Column('recipe_yield', String(255), nullable=False),
 )
