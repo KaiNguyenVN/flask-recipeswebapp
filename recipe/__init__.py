@@ -109,7 +109,7 @@ def create_app(test_config=None):
         # Provides full lists of recipes for search suggestions
         @app.context_processor
         def inject_search_data():
-            recipes = repo.repo_instance.get_recipes()
+            recipes = repo.repo_instance.get_recipes(2, 3, "s")
             categories = sorted({r.category.name for r in recipes})
             names = sorted({r.name for r in recipes})
             authors = sorted({r.author.name for r in recipes})

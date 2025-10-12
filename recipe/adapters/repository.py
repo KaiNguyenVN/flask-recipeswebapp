@@ -54,7 +54,11 @@ class AbstractRepository(abc.ABC):
 
     """----------------------Recipe actions----------------------"""
     @abc.abstractmethod
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -109,21 +113,27 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_category(self, categories: dict[str, Category]) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_nutrition(self, nutrition: dict) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_author(self, authors: dict[int, Author]) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_instruction(self, instructions: list[RecipeInstruction]) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_image(self, images: list[RecipeImage]) -> None:
         raise NotImplementedError
+
     @abc.abstractmethod
     def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
         raise NotImplementedError

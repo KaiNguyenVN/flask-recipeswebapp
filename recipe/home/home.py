@@ -1,9 +1,7 @@
 from flask import render_template, Blueprint
 
 import recipe.adapters.repository as repo
-
-list_of_recipes = repo.repo_instance.get_recipes()
-list_of_categories = list(repo.repo_instance.get_categories().values())
+from recipe.home import services
 
 home_blueprint = Blueprint('home_bp', __name__)
 
@@ -11,8 +9,10 @@ home_blueprint = Blueprint('home_bp', __name__)
 def home():
     # Find Nutrition for this recipe
     health_stars = {}
+    list_of_recipes = services.get_recipes(2,6, "s", repo.repo_instance)
+    list_of_categories = list(services.get_categories(repo.repo_instance).values())
     for recipe in list_of_recipes[:6]:  # only first 6 for home page
-        nutrition = repo.repo_instance.get_nutrition_by_recipe_id(recipe.id)
+        nutrition = services.get_nutrition_by_recipe_id(recipe.id, repo.repo_instance)
         if nutrition:
             health_stars[recipe.id] = nutrition.calculate_health_stars()
         else:
