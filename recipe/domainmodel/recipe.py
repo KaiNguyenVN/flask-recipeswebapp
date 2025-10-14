@@ -21,14 +21,15 @@ class Recipe:
                  preparation_time: int = 0,
                  created_date: datetime = None,
                  description: str = "",
-                 images: list[RecipeImage] = None,
+                 images: list[str] = None,
                  category: "Category" = None,
-                 ingredients: list[RecipeIngredient] = None,
+                 ingredient_quantities: list[str] = None,
+                 ingredients: list[str] = None,
                  rating: float | None = None,
                  nutrition: "Nutrition" = None,
                  servings: str | None = None,
                  recipe_yield: str | None = None,
-                 instructions: list[RecipeInstruction] = None):
+                 instructions: list[str] = None):
 
         if not isinstance(recipe_id, int) or recipe_id <= 0:
             raise ValueError("id must be a positive int.")
@@ -124,13 +125,13 @@ class Recipe:
         self.__description = text.strip()
 
     @property
-    def images(self) -> list[RecipeImage]:
+    def images(self) -> list[str]:
         return self.__images
 
     @images.setter
-    def images(self, value: list[RecipeImage]):
-        if not isinstance(value, list) or not all(isinstance(x, RecipeImage) for x in value):
-            raise TypeError("images must be a list of RecipeImage.")
+    def images(self, value: list[str]):
+        if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
+            raise TypeError("images must be a list of strings.")
         self.__images = value
 
     @property
@@ -141,9 +142,12 @@ class Recipe:
     def category(self, value: "Category"):
         self.__category = value
 
+    @property
+    def ingredient_quantities(self) -> list[str]:
+        return self.__ingredient_quantities
 
     @property
-    def ingredients(self) -> list[RecipeIngredient]:
+    def ingredients(self) -> list[str]:
         return self.__ingredients
 
     @property
@@ -189,11 +193,11 @@ class Recipe:
         self.__recipe_yield = value if value else "Not specified"
 
     @property
-    def instructions(self) -> list[RecipeInstruction]:
+    def instructions(self) -> list[str]:
         return self.__instructions
 
     @instructions.setter
-    def instructions(self, steps: list[RecipeInstruction]):
+    def instructions(self, steps: list[str]):
         if not isinstance(steps, list):
             raise ValueError("Instructions must be provided as a list of strings.")
         self.__instructions = steps
