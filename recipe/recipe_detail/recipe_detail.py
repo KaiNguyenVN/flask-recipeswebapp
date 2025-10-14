@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, session, request, flash
 from flask_wtf import FlaskForm
-from sqlalchemy.testing.suite.test_reflection import users
+#from sqlalchemy.testing.suite.test_reflection import users
 from wtforms import TextAreaField, IntegerField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from datetime import datetime
@@ -23,7 +23,7 @@ class ReviewForm(FlaskForm):
 def recipe_detail(recipe_id):
 
     recipe = repo.repo_instance.get_recipe_by_id(recipe_id)
-    list_of_recipes = repo.repo_instance.get_recipes()
+    list_of_recipes = repo.repo_instance.get_recipes(1, 100, "s")
     if recipe is None:
         # simple 404 fallback
         return render_template('404.html', message="Recipe not found"), 404

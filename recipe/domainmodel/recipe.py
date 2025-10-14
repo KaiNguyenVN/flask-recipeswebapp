@@ -1,6 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from datetime import datetime
+
+from .recipe_image import RecipeImage
+from .recipe_ingredient import RecipeIngredient
+from .recipe_instruction import RecipeInstruction
 from .review import Review
 
 if TYPE_CHECKING:
@@ -17,15 +21,14 @@ class Recipe:
                  preparation_time: int = 0,
                  created_date: datetime = None,
                  description: str = "",
-                 images: list[str] = None,
+                 images: list[RecipeImage] = None,
                  category: "Category" = None,
-                 ingredient_quantities: list[str] = None,
-                 ingredients: list[str] = None,
+                 ingredients: list[RecipeIngredient] = None,
                  rating: float | None = None,
                  nutrition: "Nutrition" = None,
                  servings: str | None = None,
                  recipe_yield: str | None = None,
-                 instructions: list[str] = None):
+                 instructions: list[RecipeInstruction] = None):
 
         if not isinstance(recipe_id, int) or recipe_id <= 0:
             raise ValueError("id must be a positive int.")
@@ -43,7 +46,6 @@ class Recipe:
         self.__description = description
         self.__images = images if images else []
         self.__category = category
-        self.__ingredient_quantities = ingredient_quantities if ingredient_quantities else []
         self.__ingredients = ingredients if ingredients else []
         self.__rating = rating
         self.__nutrition = nutrition
@@ -122,13 +124,13 @@ class Recipe:
         self.__description = text.strip()
 
     @property
-    def images(self) -> list[str]:
+    def images(self) -> list[RecipeImage]:
         return self.__images
 
     @images.setter
-    def images(self, value: list[str]):
-        if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
-            raise TypeError("images must be a list of strings.")
+    def images(self, value: list[RecipeImage]):
+        if not isinstance(value, list) or not all(isinstance(x, RecipeImage) for x in value):
+            raise TypeError("images must be a list of RecipeImage.")
         self.__images = value
 
     @property
@@ -139,12 +141,9 @@ class Recipe:
     def category(self, value: "Category"):
         self.__category = value
 
-    @property
-    def ingredient_quantities(self) -> list[str]:
-        return self.__ingredient_quantities
 
     @property
-    def ingredients(self) -> list[str]:
+    def ingredients(self) -> list[RecipeIngredient]:
         return self.__ingredients
 
     @property
@@ -190,11 +189,11 @@ class Recipe:
         self.__recipe_yield = value if value else "Not specified"
 
     @property
-    def instructions(self) -> list[str]:
+    def instructions(self) -> list[RecipeInstruction]:
         return self.__instructions
 
     @instructions.setter
-    def instructions(self, steps: list[str]):
+    def instructions(self, steps: list[RecipeInstruction]):
         if not isinstance(steps, list):
             raise ValueError("Instructions must be provided as a list of strings.")
         self.__instructions = steps

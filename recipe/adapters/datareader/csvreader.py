@@ -4,6 +4,7 @@ import csv
 from ast import literal_eval
 from datetime import datetime
 from pathlib import Path
+from tkinter import Image
 from typing import List
 from dateutil import parser as date_parser
 
@@ -11,6 +12,9 @@ from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.category import Category
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 
 
 class CSVReader:
@@ -20,6 +24,9 @@ class CSVReader:
         self.__authors: dict[int, Author] = {}
         self.__categories: dict[str, Category] = {}
         self.__nutrition: dict[int, Nutrition] = {}
+        self.__images: list[RecipeImage] = []
+        self.__ingredients: list[RecipeIngredient] = []
+        self.__instructions: list[RecipeInstruction] = []
 
     def extract_data(self) -> None:
         """Reads the CSV and creates domain model objects."""
@@ -63,7 +70,7 @@ class CSVReader:
 
                 # --- Nutrition ---
                 nutrition = Nutrition(
-                    recipe_id = int(row["RecipeId"]),
+                    id = int(row["RecipeId"]),
                     calories = float(row["Calories"]) if row["Calories"] else None,
                     fat = float(row["FatContent"]) if row["FatContent"] else None,
                     saturated_fat = float(row["SaturatedFatContent"]) if row["SaturatedFatContent"] else None,
@@ -97,8 +104,29 @@ class CSVReader:
 
                 self.__recipes.append(recipe)
                 # connect author & category relationships
-                self.__authors[author_id].add_recipe(recipe)
+#                self.__authors[author_id].add_recipe(recipe)
                 self.__categories[category_type].add_recipe(recipe)
+
+                id = int(row["RecipeId"])
+                image_urls = parse_list(row.get("Images"))
+                images = []
+                for i in range(len(image_urls)):
+                    images.append(RecipeImage(id, image_urls[i], i))
+                    self.__images.append(RecipeImage(id, image_urls[i], i))
+
+                ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
+                ingredient_part = parse_list(row.get("RecipeIngredientParts"))
+                ingredients = []
+                for i in range(min(len(ingredient_quantities), len(ingredient_part))):
+                    ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
+                    self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
+
+                instruction = parse_list(row.get("RecipeInstructions"))
+                instructions = []
+                for i in range(len(instruction)):
+                    instructions.append(RecipeInstruction(id, instruction[i], i))
+                    self.__instructions.append(RecipeInstruction(id, instruction[i], i))
+
 
     # --- Accessors ---
     def get_recipes(self) -> List[Recipe]:
@@ -112,3 +140,12 @@ class CSVReader:
 
     def get_nutrition(self) -> dict[int, Nutrition]:
         return self.__nutrition
+
+    def get_recipe_ingredients(self) -> list[RecipeIngredient]:
+        return self.__ingredients
+
+    def get_instructions(self) -> list[RecipeInstruction]:
+        return self.__instructions
+
+    def get_images(self) -> list[RecipeImage]:
+        return self.__images

@@ -8,6 +8,9 @@ from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 import abc
 
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 from recipe.domainmodel.review import Review
 from recipe.domainmodel.user import User
 
@@ -15,10 +18,6 @@ repo_instance = None
 
 class AbstractRepository(abc.ABC):
 
-    @abc.abstractmethod
-    def retrieve_csv_data(self, data_path:Path):
-        # Retrieve all data from csv file
-        raise NotImplementedError
     """-----------------------Authentication-------------------"""
     @abc.abstractmethod
     def add_user(self, user: User):
@@ -55,7 +54,11 @@ class AbstractRepository(abc.ABC):
 
     """----------------------Recipe actions----------------------"""
     @abc.abstractmethod
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -78,12 +81,59 @@ class AbstractRepository(abc.ABC):
     def get_nutrition_by_recipe_id(self, recipe_id: int) -> Nutrition:
         raise NotImplementedError
 
+#    @abc.abstractmethod
+#    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+#        raise NotImplementedError
+
+#    @abc.abstractmethod
+#    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+#        raise NotImplementedError
+
+    """-----------------------population-------------------"""
+
     @abc.abstractmethod
-    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+    def add_category(self, id: str,category: Category) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_nutrition(self, id:int, nutri: Nutrition) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_author(self, id:int, author: Author) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_instruction(self, instruction: RecipeInstruction) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_image(self, image: RecipeImage) -> None:
+        raise NotImplementedError
+    @abc.abstractmethod
+    def add_ingredient(self, ingredient: RecipeIngredient) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+    def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def add_multiple_category(self, categories: dict[str, Category]) -> None:
+        raise NotImplementedError
 
+    @abc.abstractmethod
+    def add_multiple_nutrition(self, nutrition: dict) -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_multiple_author(self, authors: dict[int, Author]) -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_multiple_instruction(self, instructions: list[RecipeInstruction]) -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_multiple_image(self, images: list[RecipeImage]) -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
+        raise NotImplementedError

@@ -7,6 +7,9 @@ from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.author import Author
 from recipe.domainmodel.category import Category
+from recipe.domainmodel.recipe_image import RecipeImage
+from recipe.domainmodel.recipe_ingredient import RecipeIngredient
+from recipe.domainmodel.recipe_instruction import RecipeInstruction
 from recipe.domainmodel.user import User
 from recipe.domainmodel.review import Review
 
@@ -22,13 +25,6 @@ class MemoryRepository(AbstractRepository):
         self.__reviews = []
         self.__review_counter = 1
 
-    def retrieve_csv_data(self, data_path: Path):
-        csv_reader = CSVReader(data_path)
-        csv_reader.extract_data()
-        self.__recipes = csv_reader.get_recipes()
-        self.__categories = csv_reader.get_categories()
-        self.__nutrition = csv_reader.get_nutrition()
-        self.__authors = csv_reader.get_authors()
 
     """-----------------------Authentication actions-------------------"""
 
@@ -86,8 +82,10 @@ class MemoryRepository(AbstractRepository):
 
 
     """----------------------Recipe actions----------------------"""
-    def get_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self) -> List[Recipe]:
         return self.__recipes
+    def get_recipes(self, page: int, page_size: int, sort_method: str) -> List[Recipe]:
+        return self.__recipes[0:page * page_size]
     def get_categories(self) -> dict[int, Category]:
         return self.__categories
     def get_authors(self) -> dict[int, Author]:
@@ -104,13 +102,50 @@ class MemoryRepository(AbstractRepository):
         if recipe_id in self.__nutrition:
             return self.__nutrition[recipe_id]
         return None
-    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
-        return sorted(
-            self.__recipes,
-            key=lambda r: r.nutrition_rating or 0,
-            reverse=descending
-        )
-    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
-        return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
+#    def get_recipes_sorted_by_nutrition(self, descending: bool = True) -> List[Recipe]:
+#        return sorted(
+#            self.__recipes,
+#            key=lambda r: r.nutrition_rating or 0,
+#            reverse=descending
+#        )
+#    def get_healthy_recipes(self, min_rating: float = 3.5) -> List[Recipe]:
+#        return [r for r in self.__recipes if r.nutrition_rating and r.nutrition_rating >= min_rating]
 
-#data_path = Path('recipe/adapters/data/recipes.csv')
+    """-----------------------population-------------------"""
+
+    def add_category(self, id: str, category: Category) -> None:
+        self.__categories[id] = category
+
+    def add_author(self, id: str, author: Author) -> None:
+        self.__authors[id] = author
+
+    def add_nutrition(self, id: str, nutrition: Nutrition) -> None:
+        self.__nutrition[id] = nutrition
+
+    def add_instruction(self, instruction: RecipeInstruction) -> None:
+        pass
+    def add_ingredient(self, ingredient: RecipeIngredient) -> None:
+        pass
+    def add_image(self, image: RecipeImage) -> None:
+        pass
+
+    def add_multiple_author(self, authors: dict[int, Author]) -> None:
+        self.__authors = authors
+
+    def add_multiple_nutrition(self, nutrition: dict[int, Nutrition]) -> None:
+        self.__nutrition = nutrition
+
+    def add_multiple_recipe(self, recipes) -> None:
+        self.__recipes = recipes
+
+    def add_multiple_category(self, category: dict[str, Category]) -> None:
+        self.__categories = category
+
+    def add_multiple_instruction(self, instructions: list[RecipeInstruction]) -> None:
+        pass
+
+    def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
+        pass
+
+    def add_multiple_image(self, images: list[RecipeImage]) -> None:
+        pass
