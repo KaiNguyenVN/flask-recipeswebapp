@@ -293,43 +293,57 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_instruction(self, instruction: list[RecipeInstruction]) -> None:
         with self._session_cm as scm:
             for i in instruction:
-                scm.session.add(i)
+                existing_instruction = scm.session.query(RecipeInstruction).filter(RecipeInstruction.recipe_id == i.recipe_id and RecipeInstruction.position == i.position).first()
+                if not existing_instruction:
+                    scm.session.add(i)
             scm.commit()
 
     def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
         with self._session_cm as scm:
             for i in ingredients:
-                scm.session.add(i)
+                existing_ingredient = scm.session.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == i.recipe_id and RecipeIngredient.position == i.position).first()
+                if not existing_ingredient:
+                    scm.session.add(i)
             scm.commit()
 
     def add_multiple_category(self, category: dict[str, Category]) -> None:
         with self._session_cm as scm:
             for i in category:
-                scm.session.merge(category[i])
+                existing_category = scm.session.query(Category).filter(Category.id == category[i].id).first()
+                if not existing_category:
+                    scm.session.merge(category[i])
             scm.commit()
 
     def add_multiple_nutrition(self, nutri: dict[int, Nutrition]) -> None:
         with self._session_cm as scm:
             for i in nutri:
-                scm.session.merge(nutri[i])
+                existing_ntri = scm.session.query(Nutrition).filter(Nutrition.id == nutri[i].id).first()
+                if not existing_ntri:
+                    scm.session.merge(nutri[i])
             scm.commit()
 
     def add_multiple_author(self, author: dict[int, Author]) -> None:
         with self._session_cm as scm:
             for i in author:
-                scm.session.merge(author[i])
+                existing_author = scm.session.query(Author).filter(Author.id == author[i].id).first()
+                if not existing_author:
+                    scm.session.merge(author[i])
             scm.commit()
 
     def add_multiple_image(self, image: list[RecipeImage]) -> None:
         with self._session_cm as scm:
             for i in image:
-                scm.session.add(i)
+                existing_image = scm.session.query(RecipeImage).filter(RecipeImage.recipe_id == i.recipe_id and RecipeImage.position == i.position).first()
+                if not existing_image:
+                    scm.session.add(i)
             scm.commit()
 
     def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
         with self._session_cm as scm:
             for i in recipes:
-                scm.session.merge(i)
+                existing_recipe = scm.session.query(Recipe).filter(Recipe.id == i.id).first()
+                if not existing_recipe:
+                    scm.session.merge(i)
             scm.commit()
 
 
