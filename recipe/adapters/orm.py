@@ -77,7 +77,7 @@ recipe_table = Table(
 ingredient_table = Table(
     'ingredient', mapper_registry.metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('recipe_id', Integer,ForeignKey('recipe.id'), nullable=False),
+    Column('recipe_id', Integer, nullable=False),
     Column('ingredient', String(255), nullable=False),
     Column('quantity', String(255), nullable=False),
     Column('position', Integer, nullable=False),
@@ -87,7 +87,7 @@ ingredient_table = Table(
 instruction_table = Table(
     'instruction', mapper_registry.metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
+    Column('recipe_id', Integer, nullable=False),
     Column('step', String(255), nullable=False),
     Column('position', Integer, nullable=False),
 )
@@ -96,7 +96,7 @@ instruction_table = Table(
 image_table = Table(
     'image', mapper_registry.metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
+    Column('recipe_id', Integer, nullable=False),
     Column('url', String(500), nullable=False),
     Column('position', Integer, nullable=False)
 )

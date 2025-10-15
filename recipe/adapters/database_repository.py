@@ -186,15 +186,13 @@ class SqlAlchemyRepository(AbstractRepository):
         query = self._session_cm.session.query(Author)
         authors: list[Author] = query.all()
         dic = {i.id: i for i in authors}
-        # Populate the related data for consistent domain model interface
         return dic
 
     def get_categories(self) -> dict[str, Category]:
-        query = self._session_cm.session.query(Category)
-        categories: list[Category] = query.all()
-        dic = {i.name: i for i in categories}
-        # Populate the related data for consistent domain model interface
-        return dic
+        with self._session_cm as scm:
+            categories: list[Category] = scm.session.query(Category).all()
+            dic = {c.name: c for c in categories}
+            return dic
 
     def add_recipe(self, recipe: Recipe) -> None:
         with self._session_cm as scm:
@@ -378,8 +376,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def _populate_recipe_data(self, recipe: Recipe) -> None:
         if recipe is None:
             return
-
-            # Use the same session context
+        # Use the same session context
         with self._session_cm as scm:
             self._populate_recipe_data_in_session(recipe, scm.session)
 

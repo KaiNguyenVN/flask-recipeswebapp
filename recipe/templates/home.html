@@ -49,11 +49,11 @@
     <div class="Categories">
         <h1 style = "font-family: 'Playfair Display', serif;">Top view Categories</h1>
         <ul class="category-list">
-            {% for category in categories[0:6] %}
+            {% for recipe in recipes_c %}
                 <li class="category-card">
-                    <a href="{{ url_for('search_bp.search', filter_by='category', q=category.name) }}">
-                        <img src="{{ category.recipes[0].images[0] }}" alt="Category Image">
-                        <p class="name">{{ category.name }}</p>
+                    <a href="{{ url_for('search_bp.search', filter_by='category', q=recipe.category.name) }}">
+                        <img src="{{ recipe.images[0] }}" alt="Category Image">
+                        <p class="name">{{ recipe.category.name }}</p>
                     </a>
                 </li>
             {% endfor %}
