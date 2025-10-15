@@ -132,11 +132,8 @@ class SqlAlchemyRepository(AbstractRepository):
     def get_user_favorites(self, user_name: str) -> List[Favourite]:
         favourites = None
         try:
-            query = self._session_cm.session.query(Favourite).filter(
-                Favourite._Favourite__username == user_name
-            )
-            favourites = query.all()
-            # Populate the related data for consistent domain model interface
+            user = self._session_cm.session.query(User).filter(User._User__username == user_name).first()
+            favourites = user.favourites
         except NoResultFound:
             print(f'{user_name} Favourites was not found')
         return favourites

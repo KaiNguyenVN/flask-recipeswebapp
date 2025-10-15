@@ -115,7 +115,7 @@ review_table = Table(
 # User table
 user_table = Table(
     'user', mapper_registry.metadata,
-    Column('id', Integer, nullable=False),
+#    Column('id', Integer, nullable=False),
     Column('username', String(255), primary_key=True),
     Column('password', String(255), nullable=False),
 )
@@ -201,6 +201,7 @@ def map_model_to_tables():
     # User mapping
     mapper_registry.map_imperatively(User, user_table, properties={
         '_User__username': user_table.c.username,
+        '_User__password': user_table.c.password,
         '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
         '_User__reviews': relationship(Review, back_populates='_Review__username')
     })
