@@ -323,7 +323,9 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_category(self, category: dict[str, Category]) -> None:
         with self._session_cm as scm:
             for i in category:
-                existing_category = scm.session.query(Category).filter(Category.id == category[i].id).first()
+                existing_category = scm.session.query(Category).filter(
+                    Category._Category__id == category[i].id
+                ).first()
                 if not existing_category:
                     scm.session.merge(category[i])
             scm.commit()
@@ -331,7 +333,9 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_nutrition(self, nutri: dict[int, Nutrition]) -> None:
         with self._session_cm as scm:
             for i in nutri:
-                existing_ntri = scm.session.query(Nutrition).filter(Nutrition.id == nutri[i].id).first()
+                existing_ntri = scm.session.query(Nutrition).filter(
+                    Nutrition._Nutrition__id == nutri[i].id
+                ).first()
                 if not existing_ntri:
                     scm.session.merge(nutri[i])
             scm.commit()
@@ -339,7 +343,9 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_author(self, author: dict[int, Author]) -> None:
         with self._session_cm as scm:
             for i in author:
-                existing_author = scm.session.query(Author).filter(Author.id == author[i].id).first()
+                existing_author = scm.session.query(Author).filter(
+                    Author._Author__id == author[i].id
+                ).first()
                 if not existing_author:
                     scm.session.merge(author[i])
             scm.commit()
