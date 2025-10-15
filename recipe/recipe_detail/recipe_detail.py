@@ -33,16 +33,10 @@ def recipe_detail(recipe_id):
     # Determine if the current recipe is already in the user's favorites (if logged in)
     is_favorited = False
     if "user_name" in session:
-        try:
-            is_favorited = services.is_favorited(
-                username=session["user_name"],
-                recipe_id=recipe_id,
-                repo=repo.repo_instance,
-            )
-        except AttributeError:
-            # services may not have is_favorited yet; default to False
-            is_favorited = False
-
+        is_favorited = services.is_favorited(
+            username=session["user_name"],
+            recipe_id=recipe_id,
+            repo=repo.repo_instance)
     # Store the recipe_id in the hidden field, so it persists across POSTs
     form.recipe_id.data = recipe_id
 
@@ -98,7 +92,6 @@ def add_favorite(recipe_id: int):
             recipe_id=recipe_id,
             repo=repo.repo_instance,
         )
-        flash("Recipe added to favorites!", "success")
     except Exception as e:
         # If already in favorites or other domain exceptions, surface an info message.
         msg = str(e) if str(e) else "Already in favorites."
@@ -108,13 +101,9 @@ def add_favorite(recipe_id: int):
 @recipe_blueprint.post('/recipe/<int:recipe_id>/unfavorite')
 @login_required
 def remove_favorite(recipe_id: int):
-    try:
-        services.remove_favorite_recipe(
-            username=session["user_name"],
-            recipe_id=recipe_id,
-            repo=repo.repo_instance,
-        )
-        flash("Recipe removed from favorites.", "info")
-    except Exception as e:
-        flash(str(e), "error")
+    services.remove_favorite_recipe(
+        username=session["user_name"],
+        recipe_id=recipe_id,
+        repo=repo.repo_instance,
+    )
     return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))

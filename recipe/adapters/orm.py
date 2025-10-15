@@ -115,7 +115,7 @@ review_table = Table(
 # User table
 user_table = Table(
     'user', mapper_registry.metadata,
-    Column('id', Integer, nullable=False),
+#    Column('id', Integer, nullable=False),
     Column('username', String(255), primary_key=True),
     Column('password', String(255), nullable=False),
 )
@@ -137,7 +137,7 @@ def map_model_to_tables():
     # Favorite mapping
     mapper_registry.map_imperatively(Favourite, favorite_table, properties={
         '_Favourite__id': favorite_table.c.id,
-        '_Favourite__username': relationship(User, back_populates='_User__favourite_recipes', foreign_keys=[favorite_table.c.username], uselist=False),
+        '_Favourite__username': favorite_table.c.username,
         '_Favourite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.recipe_id], uselist=False),
     })
     # Recipe mapping
@@ -196,11 +196,12 @@ def map_model_to_tables():
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
-        '_Review__username': relationship(User, back_populates='_User__reviews', foreign_keys=[review_table.c.username], uselist=False),
+        '_Review__username': review_table.c.username,
     })
     # User mapping
     mapper_registry.map_imperatively(User, user_table, properties={
         '_User__username': user_table.c.username,
-        '_User__favourite_recipes': relationship(Favourite, back_populates='_Favourite__username'),
-        '_User__reviews': relationship(Review, back_populates='_Review__username')
+        '_User__password': user_table.c.password,
+        '_User__favourite_recipes': relationship(Favourite, foreign_keys=[favorite_table.c.username]),
+        '_User__reviews': relationship(Review, foreign_keys=[review_table.c.username]),
     })

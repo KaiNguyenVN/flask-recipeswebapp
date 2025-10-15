@@ -83,6 +83,7 @@ class SqlAlchemyRepository(AbstractRepository):
                 User._User__username == user_name
             )
             user = query.one()
+#            self._populate_user_data(user)
         except NoResultFound:
             print(f'User {user_name} was not found')
         return user
@@ -123,20 +124,18 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Favourite).filter(
-                    Favourite._Favourite__id == favourite.id
-                )
-                if favourite in query.all():
-                    scm.session.delete(favourite)
+                    Favourite._Favourite__id == favourite.id and
+                    Favourite._Favourite__username == favourite.username
+                ).first()
+                if query:
+                    scm.session.delete(query)
                     scm.commit()
 
     def get_user_favorites(self, user_name: str) -> List[Favourite]:
         favourites = None
         try:
-            query = self._session_cm.session.query(Favourite).filter(
-                Favourite._Favourite__username == user_name
-            )
-            favourites = query.all()
-            # Populate the related data for consistent domain model interface
+            user = self.get_user(user_name)
+            favourites = user.get_favourite_recipes
         except NoResultFound:
             print(f'{user_name} Favourites was not found')
         return favourites
@@ -411,3 +410,27 @@ class SqlAlchemyRepository(AbstractRepository):
         if recipe_instructions:
             recipe._Recipe__instructions = [i.step for i in recipe_instructions]
 
+    def _populate_user_data(self, user:User) -> None:
+        if user is None:
+            return
+        # Use the same session context
+        with self._session_cm as scm:
+            self._populate_user_data_in_session(user, scm.session)
+
+    def _populate_user_data_in_session(self, user: User, session):
+        if user is None:
+            return
+        favorites = session.query(Favourite).filter(
+            Favourite._Favourite__username == user.username
+        ).all()
+        reviews = session.query(Review).filter(
+            Review._Review__username == user.username
+        )
+        if favorites:
+            User._User__favourite_recipes = favorites
+        else:
+            User._User__favourite_recipes = []
+        if reviews:
+            User._User__reviews = reviews
+        else:
+            User._User__reviews = []

@@ -10,31 +10,31 @@ class Favourite:
     def __init__(self, username: str, recipe: "Recipe", favourite_id) -> None:
         if (not isinstance(favourite_id, int) or favourite_id <= 0) and favourite_id is not None:
             raise ValueError("id must be a positive int.")
-        self.__favourite_id = favourite_id
+        self.__id = favourite_id
         self.__username = username
         self.__recipe = recipe
 
     def __repr__(self) -> str:
-        return f"Favorite_recipe(id={self.__favourite_id}, username={self.__username}, recipe={self.recipe.name})"
+        return f"Favorite_recipe(id={self.__id}, username={self.__username}, recipe={self.recipe.name})"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Favourite):
             raise TypeError("Comparison must be between Favorite instances")
         else:
-            return self.__favourite_id == other.__favourite_id
+            return self.__id == other.__id
 
     def __hash__(self) -> int:
-        return hash(self.__favourite_id)
+        return hash(self.__id)
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Favourite):
             raise TypeError("Comparison must be between Favorite instances")
         else:
-            return self.__favourite_id < other.__favourite_id
+            return self.__id < other.__id
 
     @property
     def id(self) -> int:
-        return self.__favourite_id
+        return self.__id
     @property
     def username(self) -> str:
         return self.__username
