@@ -9,8 +9,7 @@ home_blueprint = Blueprint('home_bp', __name__)
 def home():
     # Find Nutrition for this recipe
     health_stars = {}
-    list_of_recipes = services.get_recipes(2,6, "s", repo.repo_instance)
-    list_of_categories = list(services.get_categories(repo.repo_instance).values())
+    list_of_recipes = services.get_recipes(1,20, "s", repo.repo_instance)
     for recipe in list_of_recipes[:6]:  # only first 6 for home page
         nutrition = services.get_nutrition_by_recipe_id(recipe.id, repo.repo_instance)
         if nutrition:
@@ -18,4 +17,4 @@ def home():
         else:
             health_stars[recipe.id] = None
 
-    return render_template('home.html', recipes=list_of_recipes[:6], categories=list_of_categories, nutrition=nutrition, health_stars=health_stars)
+    return render_template('home.html', recipes=list_of_recipes[:6], recipes_c=list_of_recipes[14:20], nutrition=nutrition, health_stars=health_stars)
