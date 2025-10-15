@@ -109,22 +109,22 @@ class CSVReader:
 
                 id = int(row["RecipeId"])
                 image_urls = parse_list(row.get("Images"))
-                images = []
+#                images = []
                 for i in range(len(image_urls)):
-                    images.append(RecipeImage(id, image_urls[i], i))
+#                    images.append(RecipeImage(id, image_urls[i], i))
                     self.__images.append(RecipeImage(id, image_urls[i], i))
 
                 ingredient_quantities = parse_list(row.get("RecipeIngredientQuantities"))
                 ingredient_part = parse_list(row.get("RecipeIngredientParts"))
-                ingredients = []
+#                ingredients = []
                 for i in range(min(len(ingredient_quantities), len(ingredient_part))):
-                    ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
+#                    ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
                     self.__ingredients.append(RecipeIngredient(id, ingredient_quantities[i], ingredient_part[i], i))
 
                 instruction = parse_list(row.get("RecipeInstructions"))
-                instructions = []
+#                instructions = []
                 for i in range(len(instruction)):
-                    instructions.append(RecipeInstruction(id, instruction[i], i))
+#                    instructions.append(RecipeInstruction(id, instruction[i], i))
                     self.__instructions.append(RecipeInstruction(id, instruction[i], i))
 
 
