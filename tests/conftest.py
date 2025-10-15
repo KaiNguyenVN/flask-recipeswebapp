@@ -12,6 +12,7 @@ from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.review import Review
 from recipe.domainmodel.user import User
 from recipe.search_function.services import SearchService
+from recipe.adapters.repository_populate import populate
 
 #from utils import get_project_root
 
@@ -75,7 +76,7 @@ def sample_favourite(sample_user, sample_recipe):
 @pytest.fixture
 def in_memory_repo():
     repo = MemoryRepository()
-    repo.retrieve_csv_data(TEST_DATA_PATH)
+    populate(Path('tests/data/test_recipes.csv'), repo, False)
     return repo
 
 @pytest.fixture
@@ -176,7 +177,7 @@ def search_service(mock_repo):
 @pytest.fixture
 def unhealthy_recipe():
     return Nutrition(
-        recipe_id=2,
+        id=2,
         saturated_fat=10.0,
         sugar=25.0,
         sodium=800.0,
@@ -187,7 +188,7 @@ def unhealthy_recipe():
 @pytest.fixture
 def mixed_recipe():
     return Nutrition(
-        recipe_id=3,
+        id=3,
         saturated_fat=3.0,
         sugar=12.0,
         sodium=300.0,
@@ -198,7 +199,7 @@ def mixed_recipe():
 @pytest.fixture
 def medium_recipe():
     return Nutrition(
-        recipe_id=4,
+        id=4,
         saturated_fat=2.0,
         sugar=8.0,
         sodium=150.0,
@@ -219,7 +220,7 @@ def nutrition_factory():
         sugar=None,
         protein=None
     ):
-        return Nutrition(recipe_id=recipe_id, calories=calories,
+        return Nutrition(id=recipe_id, calories=calories,
             fat=fat,
             saturated_fat=saturated_fat,
             cholesterol=cholesterol,
@@ -233,7 +234,7 @@ def nutrition_factory():
 @pytest.fixture
 def full_recipe():
     return Nutrition(
-        recipe_id=1,
+        id=1,
         calories=300,
         fat=10.5,
         saturated_fat=3.2,

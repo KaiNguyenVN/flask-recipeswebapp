@@ -55,8 +55,8 @@ def test_add_and_remove_favourite(repo, sample_user, sample_recipe, sample_favou
 
 def test_add_and_get_recipe(repo, sample_recipe):
     repo.add_recipe(sample_recipe)
-    recipes = repo.get_recipes()
-    assert sample_recipe in recipes
+    recipes1 = repo.get_all_recipes()
+    assert sample_recipe in recipes1
 
 
 def test_get_recipe_by_id(repo, sample_recipe):

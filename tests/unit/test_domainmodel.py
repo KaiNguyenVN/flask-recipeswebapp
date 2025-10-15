@@ -10,6 +10,7 @@ from recipe.domainmodel.review import Review
 from recipe.domainmodel.favourite import Favourite
 from recipe.domainmodel.nutrition import Nutrition
 from recipe.adapters.datareader.csvreader import CSVReader
+from recipe.adapters.repository_populate import populate
 from pathlib import Path
 
 
@@ -52,7 +53,7 @@ def my_recipe(my_author, my_category):
 
 @pytest.fixture
 def info():
-    data_path = Path('tests/data/test_recipes.csv')
+    data_path = Path(__file__).resolve().parent.parent / "data" / "test_recipes.csv"
     info = CSVReader(data_path)
     info.extract_data()
     return info
@@ -60,7 +61,7 @@ def info():
 @pytest.fixture
 def repo():
     repo = MemoryRepository()
-    repo.retrieve_csv_data(Path('tests/data/test_recipes.csv'))
+    populate(Path('tests/data/test_recipes.csv'), repo, False)
     return repo
 
 # User tests
@@ -298,8 +299,8 @@ def test_nutrition_equality():
 def test_nutrition_comparison():
     n1 = Nutrition(1, calories=200)
     n2 = Nutrition(2, calories=300)
-    assert n1.__lt__(n2, "calories")
-    assert not n2.__lt__(n1, "calories")
+    assert n1.__lt__(n2)
+    assert not n2.__lt__(n1,)
 
 def test_nutrition_repr_and_hash():
     n1 = Nutrition(1, calories=100)
@@ -361,5 +362,16 @@ def test_csvreader_get_author_and_category(info):
     assert len(info.get_authors()) == 3 and author.id in info.get_authors()
     assert info.get_categories() == {"Frozen Desserts":category1, "Soy/Tofu":category2}
 
+def test_csvreader_get_images(info):
+    images = info.get_images()
+    assert len(images) == 9
+
+def test_csvreader_get_recipe_ingredients(info):
+    ingredients = info.get_recipe_ingredients()
+    assert len(ingredients) == 23
+
+def test_csvreader_get_instructions(info):
+    instructions = info.get_instructions()
+    assert len(instructions) == 29
 # ---------------------------------------------
 
