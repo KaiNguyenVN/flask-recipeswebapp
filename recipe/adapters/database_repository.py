@@ -293,7 +293,14 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_instruction(self, instruction: list[RecipeInstruction]) -> None:
         with self._session_cm as scm:
             for i in instruction:
-                existing_instruction = scm.session.query(RecipeInstruction).filter(RecipeInstruction.recipe_id == i.recipe_id and RecipeInstruction.position == i.position).first()
+                existing_instruction = (
+                    scm.session.query(RecipeInstruction)
+                    .filter(
+                        RecipeInstruction._RecipeInstruction__recipe_id == i.recipe_id,
+                        RecipeInstruction._RecipeInstruction__position == i.position,
+                    )
+                    .first()
+                )
                 if not existing_instruction:
                     scm.session.add(i)
             scm.commit()
@@ -301,7 +308,14 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_ingredient(self, ingredients: list[RecipeIngredient]) -> None:
         with self._session_cm as scm:
             for i in ingredients:
-                existing_ingredient = scm.session.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == i.recipe_id and RecipeIngredient.position == i.position).first()
+                existing_ingredient = (
+                    scm.session.query(RecipeIngredient)
+                    .filter(
+                        RecipeIngredient._RecipeIngredient__recipe_id == i.recipe_id,
+                        RecipeIngredient._RecipeIngredient__position == i.position,
+                    )
+                    .first()
+                )
                 if not existing_ingredient:
                     scm.session.add(i)
             scm.commit()
@@ -333,7 +347,14 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_image(self, image: list[RecipeImage]) -> None:
         with self._session_cm as scm:
             for i in image:
-                existing_image = scm.session.query(RecipeImage).filter(RecipeImage.recipe_id == i.recipe_id and RecipeImage.position == i.position).first()
+                existing_image = (
+                    scm.session.query(RecipeImage)
+                    .filter(
+                        RecipeImage._RecipeImage__recipe_id == i.recipe_id,
+                        RecipeImage._RecipeImage__position == i.position,
+                    )
+                    .first()
+                )
                 if not existing_image:
                     scm.session.add(i)
             scm.commit()
