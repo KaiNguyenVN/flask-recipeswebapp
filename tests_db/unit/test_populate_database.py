@@ -1,7 +1,6 @@
-from sqlalchemy import select, inspect
+from sqlalchemy import select, inspect, text
 
 from recipe import mapper_registry
-from recipe.adapters.orm import metadata
 
 def test_database_populate_inspect_table_names(database_engine):
 
@@ -125,3 +124,45 @@ def test_database_populate_all_reviews(database_engine):
         assert nr_authors == 13
 
         assert authors[0] == (1533, 'Dancer')
+
+
+def test_database_tables_exist(empty_session):
+    # Test that all required tables exist
+    tables = ['recipe', 'authors', 'category', 'user', 'review', 'favorite',
+              'nutrition', 'ingredient', 'instruction', 'image']
+
+    for table in tables:
+        result = empty_session.execute(text(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}'"))
+        assert result.fetchone() is not None, f"Table {table} does not exist"
+
+
+def test_tables_are_populated(session_factory):
+    from recipe.adapters.database_repository import SqlAlchemyRepository
+    repo = SqlAlchemyRepository(session_factory)
+
+    # Test recipes are populated
+    recipes = repo.get_all_recipes()
+    assert len(recipes) > 0, "Recipes table is not populated"
+
+    # Test authors are populated
+    authors = repo.get_authors()
+    assert len(authors) > 0, "Authors table is not populated"
+
+    # Test categories are populated
+    categories = repo.get_categories()
+    assert len(categories) > 0, "Categories table is not populated"
+
+
+def test_recipe_data_integrity(session_factory):
+    from recipe.adapters.database_repository import SqlAlchemyRepository
+    repo = SqlAlchemyRepository(session_factory)
+
+    # Test a specific recipe has all required data
+    recipe = repo.get_recipe_by_id(9518)  # Use an existing recipe ID
+
+    assert recipe is not None, "Recipe 9518 not found"
+    assert recipe.name is not None, "Recipe name is missing"
+    assert recipe.author is not None, "Recipe author is missing"
+    assert recipe.category is not None, "Recipe category is missing"
+    assert len(recipe.ingredients) > 0, "Recipe ingredients are missing"
+    assert len(recipe.instructions) > 0, "Recipe instructions are missing"

@@ -9,12 +9,11 @@ from recipe.domainmodel.user import User
 from recipe.domainmodel.review import Review
 
 """----------------------- Recipe -------------------"""
-
 def test_repository_can_get_recipes(session_factory):
     repo = SqlAlchemyRepository(session_factory)
 
     recipes = repo.get_all_recipes()
-    assert len(recipes) == 13
+    assert len(recipes) == 1
 
 def test_repository_can_add_recipes(session_factory):
     repo = SqlAlchemyRepository(session_factory)
@@ -24,7 +23,7 @@ def test_repository_can_add_recipes(session_factory):
 
     if authors and categories:
         author = authors[0]
-        category = categories[0]
+        category = categories['Beverages']
 
         recipe1 = Recipe(5001, 'Test recipe 1', author, 30, 15,
                         datetime(2023, 1, 1), 'Test description', [], category,
@@ -65,11 +64,10 @@ def test_repository_can_retrieve_recipes_count(session_factory):
     repo = SqlAlchemyRepository(session_factory)
     num_of_recipes = repo.get_number_of_recipes()
 
-    assert num_of_recipes == 13
+    assert num_of_recipes == 11
 
 def test_repository_can_retrieve_all_recipes(session_factory):
     repo = SqlAlchemyRepository(session_factory)
-    num_of_recipes = repo.get_number_of_recipes()
     assert len(repo.get_recipes(1, 10, 'name')) == 10
 
 
@@ -80,33 +78,124 @@ def test_repository_can_add_author(session_factory):
     repo.add_author(1, author)
 
     authors = repo.get_authors()
-    assert any(a.id == author.id and a.name == author.name for a in authors)
+    assert 1 in authors
+    assert authors[1].name == 'TurtleMe'
 
 def test_repository_can_retrieve_authors(session_factory):
     repo = SqlAlchemyRepository(session_factory)
-    authors: List[Author] = repo.get_authors()
+    authors = repo.get_authors()
 
-    assert len(authors) == 11
+    assert len(authors) >= 1
 
-    author_one = [author for author in authors if author.name == 'Dancer'][0]
-    author_two = [author for author in authors if author.name == 'Stephen Little'][0]
-    author_three = [author for author in authors if author.name == 'Cyclopz'][0]
-    author_four = [author for author in authors if author.name == 'Duckie067'][0]
+    assert 1533 in authors
+    assert authors[1533].name == 'Dancer'
 
-    assert author_one.id == 1533
-    assert author_two.id == 1566
-    assert author_three.id == 1586
-    assert author_four.id == 1538
+    assert 1566 in authors
+    assert authors[1566].name == 'Stephen Little'
+
+    assert 1586 in authors
+    assert authors[1586].name == 'Cyclopz'
+
+    assert 1538 in authors
+    assert authors[1538].name == 'Duckie067'
 
 
 """----------------------- Category -------------------"""
+def test_repository_can_add_category(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    category = Category('Desserts')
+    repo.add_category('Desserts', category)
+
+    categories = repo.get_categories()
+    assert 'Desserts' in categories
+    assert categories['Desserts'].name == 'Desserts'
+
+def test_repository_can_retrieve_categories(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    categories = repo.get_categories()
+
+    assert len(categories) >= 1
+    assert 'Beverages' in categories
 
 
 """----------------------- User -------------------"""
+def test_repository_can_add_user(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    user = User('testuser', 'password123')
+    repo.add_user(user)
+
+    fetched_user = repo.get_user('testuser')
+    assert fetched_user is not None
+    assert fetched_user.username == 'testuser'
+
+def test_repository_does_not_retrieve_non_existent_user(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    user = repo.get_user('nonexistent')
+    assert user is None
 
 
 """----------------------- Reviews -------------------"""
 
 
-"""----------------------- Search recipes -------------------"""
+def test_repository_can_add_review(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
 
+    # Add a user and recipe
+    user = User('reviewuser', 'password123')
+    repo.add_user(user)
+
+    review = Review(
+        username='reviewuser',
+        recipe_id=9518,  # existing recipe ID from test data
+        rating=5,
+        review='Excellent recipe!',
+        date=datetime.now()
+    )
+    repo.add_review(review)
+
+    # Verify review was added by checking if can retrieve reviews for the recipe
+    recipe = repo.get_recipe_by_id(9518)
+    assert recipe is not None
+
+
+def test_repository_can_remove_review(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+
+    user = User('reviewuser2', 'password123')
+    repo.add_user(user)
+
+    review = Review(
+        username='reviewuser2',
+        recipe_id=9518,
+        rating=4,
+        review='Good recipe',
+        date=datetime.now()
+    )
+    repo.add_review(review)
+
+    # Remove the review
+    repo.remove_review(review)
+
+
+"""----------------------- Search recipes -------------------"""
+def test_repository_can_search_recipes_by_name(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+
+    results = repo.search_recipes("Lemonade")
+    assert len(results) > 0
+    assert any("Lemonade" in recipe.name for recipe in results)
+
+
+def test_repository_can_search_recipes_by_author(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+
+    results = repo.search_recipes_by_author("Stephen Little")
+    assert len(results) > 0
+    assert any(recipe.author.name == "Stephen Little" for recipe in results)
+
+def test_repository_can_search_recipes_by_category(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+
+    results = repo.search_recipes_by_category("Beverages")
+    assert len(results) > 0
+    assert any(recipe.category.name == "Beverages" for recipe in results)

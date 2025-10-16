@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 
 from sqlalchemy import desc, asc
+from sqlalchemy import or_
 from sqlalchemy.orm.exc import NoResultFound
 
 from sqlalchemy.orm import scoped_session
@@ -440,3 +441,68 @@ class SqlAlchemyRepository(AbstractRepository):
             User._User__reviews = reviews
         else:
             User._User__reviews = []
+
+    """----------------------Recipe actions----------------------"""
+
+    def search_recipes(self, keyword: str) -> list[Recipe]:
+        """
+        Search recipes by name, author, or category (case-insensitive).
+        """
+        if not keyword:
+            return []
+
+        with self._session_cm as scm:
+            # Query the database for matches
+            query = scm.session.query(Recipe).filter(
+                or_(
+                    Recipe._Recipe__name.ilike(f'%{keyword}%'),
+                    Recipe._Recipe__author.ilike(f'%{keyword}%'),
+                    Recipe._Recipe__category.ilike(f'%{keyword}%')
+                )
+            )
+            results = query.all()
+
+            # Populate related data for each recipe
+            for recipe in results:
+                self._populate_recipe_data_in_session(recipe, scm.session)
+
+            return results
+
+    def search_recipes_by_author(self, author_name: str) -> list[Recipe]:
+        if not author_name:
+            return []
+
+        with self._session_cm as scm:
+            # Query recipes by joining with authors table
+            query = scm.session.query(Recipe).join(
+                Author, Recipe._Recipe__author_id == Author._Author__id
+            ).filter(
+                Author._Author__name.ilike(f'%{author_name}%')
+            )
+            results = query.all()
+
+            # Populate related data for each recipe
+            for recipe in results:
+                self._populate_recipe_data_in_session(recipe, scm.session)
+
+            return results
+
+    def search_recipes_by_category(self, category_name: str) -> list[Recipe]:
+        if not category_name:
+            return []
+
+        with self._session_cm as scm:
+            # Query recipes by joining with categories table
+            query = scm.session.query(Recipe).join(
+                Category, Recipe._Recipe__category_id == Category._Category__id
+            ).filter(
+                Category._Category__name.ilike(f'%{category_name}%')
+            )
+            results = query.all()
+
+            # Populate related data for each recipe
+            for recipe in results:
+                self._populate_recipe_data_in_session(recipe, scm.session)
+
+            return results
+
