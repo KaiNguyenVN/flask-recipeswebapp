@@ -1,6 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from datetime import datetime
+
+from .recipe_image import RecipeImage
+from .recipe_ingredient import RecipeIngredient
+from .recipe_instruction import RecipeInstruction
 from .review import Review
 
 if TYPE_CHECKING:
@@ -25,7 +29,8 @@ class Recipe:
                  nutrition: "Nutrition" = None,
                  servings: str | None = None,
                  recipe_yield: str | None = None,
-                 instructions: list[str] = None):
+                 instructions: list[str] = None,
+                 reviews: list["Review"] = None):
 
         if not isinstance(recipe_id, int) or recipe_id <= 0:
             raise ValueError("id must be a positive int.")
@@ -43,7 +48,6 @@ class Recipe:
         self.__description = description
         self.__images = images if images else []
         self.__category = category
-        self.__ingredient_quantities = ingredient_quantities if ingredient_quantities else []
         self.__ingredients = ingredients if ingredients else []
         self.__rating = rating
         self.__nutrition = nutrition
@@ -51,7 +55,7 @@ class Recipe:
         self.__servings = servings if servings else "Not specified"
         self.__recipe_yield = recipe_yield if recipe_yield else "Not specified"
         self.__instructions = instructions if instructions else []
-        self.__reviews = []
+        self.__reviews = reviews if reviews else []
 
 
     def __repr__(self) -> str:

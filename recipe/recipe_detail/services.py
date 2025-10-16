@@ -21,8 +21,7 @@ def add_review(username: str, recipe_id: int, review_text: str, rating: int, dat
         raise ReviewException("Recipe or user not found")
 
     # Create review object
-    review = Review(username = username, recipe_id=recipe_id, rating=rating, review=review_text, date=date)
-
+    review = Review(username = username, recipe = recipe, rating=rating, review=review_text, date=date)
     # Store review in repo
     repo.add_review(review)
     return review

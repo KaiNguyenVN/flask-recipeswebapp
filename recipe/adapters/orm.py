@@ -153,7 +153,7 @@ def map_model_to_tables():
         '_Recipe__rating': recipe_table.c.rating,
         '_Recipe__servings': recipe_table.c.servings,
         '_Recipe__recipe_yield': recipe_table.c.recipe_yield,
-        '_Recipe__reviews': relationship(Review, foreign_keys=[review_table.c.recipe_id]),
+        '_Recipe__reviews': relationship(Review, back_populates='_Review__recipe'),
         '_Recipe__nutrition': relationship(Nutrition, back_populates='_Nutrition__recipe', uselist=False)
     })
     # Nutrition mapping
@@ -191,8 +191,8 @@ def map_model_to_tables():
     })
     # Review mapping
     mapper_registry.map_imperatively(Review, review_table, properties={
-        '_Review__review_id': review_table.c.id,
-        '_Review__recipe_id': review_table.c.recipe_id,
+        '_Review__id': review_table.c.id,
+        '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False, lazy='joined'),
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
