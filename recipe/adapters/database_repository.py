@@ -93,7 +93,7 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Review).filter(
-                    Review._Review__review_id == review.review_id
+                    Review._Review__id == review.review_id
                 )
                 if review not in query.all():
                     scm.session.add(review)
