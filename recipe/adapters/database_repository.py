@@ -96,7 +96,7 @@ class SqlAlchemyRepository(AbstractRepository):
                     Review._Review__id == review.review_id
                 )
                 if review not in query.all():
-                    scm.session.merge(review)
+                    scm.session.add(review)
                     scm.commit()
 
     def remove_review(self, review: Review):
@@ -365,7 +365,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
         with self._session_cm as scm:
             for i in recipes:
-                existing_recipe = scm.session.query(Recipe).filter(Recipe.id == i.id).first()
+                existing_recipe = scm.session.query(Recipe).filter(Recipe._Recipe__id == i.id).first()
                 if not existing_recipe:
                     scm.session.merge(i)
             scm.commit()

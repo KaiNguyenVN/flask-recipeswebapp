@@ -104,7 +104,7 @@ image_table = Table(
 # Review table
 review_table = Table(
     'review', mapper_registry.metadata,
-    Column('id', Integer, primary_key=True),
+    Column('id', Integer, primary_key=True, autoincrement=True),
     Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
     Column('username', String(255), ForeignKey('user.username'), nullable=False),
     Column('rating', Integer, nullable=False),
@@ -192,7 +192,7 @@ def map_model_to_tables():
     # Review mapping
     mapper_registry.map_imperatively(Review, review_table, properties={
         '_Review__id': review_table.c.id,
-        '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False),
+        '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False, lazy='joined'),
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
