@@ -91,13 +91,18 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add_review(self, review: Review):
         with self._session_cm as scm:
-            with scm.session.no_autoflush:
-                query = scm.session.query(Review).filter(
-                    Review._Review__id == review.review_id
-                )
-                if review not in query.all():
-                    scm.session.merge(review)
-                    scm.commit()
+            existing = scm.session.query(Review).filter(
+                Review._Review__id == review.review_id
+            ).first()
+
+            if not existing:
+                scm.session.add(review)
+                scm.commit()
+            else:
+                existing.rating = review.rating
+                existing.review = review.review
+                existing.date = review.date
+                scm.commit()
 
     def remove_review(self, review: Review):
         with self._session_cm as scm:
@@ -223,8 +228,9 @@ class SqlAlchemyRepository(AbstractRepository):
         nutri = query.one()
         return nutri
 
-
-
+    def get_number_of_recipes(self) -> int:
+        num_recipes = self._session_cm.session.query(Recipe).count()
+        return num_recipes
 
     """-----------------------population-------------------"""
     def add_category(self, id: str,category: Category) -> None:
