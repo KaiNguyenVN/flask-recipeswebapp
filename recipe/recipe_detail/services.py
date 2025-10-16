@@ -24,6 +24,7 @@ def add_review(username: str, recipe_id: int, review_text: str, rating: int, dat
     review = Review(username = username, recipe_id=recipe_id, rating=rating, review=review_text, date=date)
 
     # Store review in repo
+    review.recipe = recipe
     repo.add_review(review)
     return review
 

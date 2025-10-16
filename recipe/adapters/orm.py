@@ -18,6 +18,7 @@ from recipe.domainmodel.user import User
 
 # Global variable giving access to the MetaData (schema) information of the database
 mapper_registry = registry()
+metadata = mapper_registry.metadata
 
 # Authors table
 authors_table = Table(
