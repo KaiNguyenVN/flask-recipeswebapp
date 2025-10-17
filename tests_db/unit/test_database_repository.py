@@ -107,7 +107,7 @@ def test_can_add_and_remove_favorite(session_factory):
     repo.add_user(user)
     recipe = repo.get_recipe_by_id(38)
 
-    fav = Favourite(recipe=recipe, username="dave")
+    fav = Favourite(recipe=recipe, username="dave", favourite_id=recipe.id)
     repo.add_favorite_recipe(fav)
 
     favorites = repo.get_user_favorites("dave")

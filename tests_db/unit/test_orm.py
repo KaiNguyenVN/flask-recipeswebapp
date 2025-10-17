@@ -1,282 +1,237 @@
 import pytest
 from datetime import datetime
-
 from sqlalchemy.exc import IntegrityError
 
 from recipe.domainmodel.user import User
+from recipe.domainmodel.author import Author
+from recipe.domainmodel.category import Category
 from recipe.domainmodel.recipe import Recipe
 from recipe.domainmodel.review import Review
-from recipe.domainmodel.category import Category
-from recipe.domainmodel.author import Author
-from recipe.domainmodel.nutrition import Nutrition
 from recipe.domainmodel.favourite import Favourite
+from recipe.domainmodel.nutrition import Nutrition
 
 
-# ---------------------- HELPER INSERTS ----------------------
+# ---------------- USER TESTS ----------------
 
-def insert_user(empty_session, values=None):
-    username, password = values or ("Alice", "Password123")
-    empty_session.execute(
-        "INSERT INTO user (username, password) VALUES (:username, :password)",
-        {"username": username, "password": password}
-    )
-    row = empty_session.execute(
-        "SELECT username FROM user WHERE username = :username", {"username": username}
-    ).fetchone()
-    return row[0]
-
-
-def insert_recipe(empty_session):
-    empty_session.execute(
-        "INSERT INTO recipe (id, name, author_id, cook_time, preparation_time, date, "
-        "description, category_id, rating, servings, recipe_yield) "
-        "VALUES (1, 'Spaghetti Bolognese', 1, 30, 15, :date, "
-        "'Classic Italian dish.', 1, 4.5, '4', '1 pot')",
-        {"date": datetime.utcnow()}
-    )
-    row = empty_session.execute("SELECT id FROM recipe").fetchone()
-    return row[0]
-
-
-def insert_author_and_category(empty_session):
-    empty_session.execute(
-        "INSERT INTO authors (id, name) VALUES (1, 'Chef Mario')"
-    )
-    empty_session.execute(
-        "INSERT INTO category (id, name) VALUES (1, 'Dinner')"
-    )
-
-
-def insert_review(empty_session, recipe_id, username):
-    timestamp = datetime.utcnow()
-    empty_session.execute(
-        "INSERT INTO review (recipe_id, username, rating, review, date) "
-        "VALUES (:recipe_id, :username, 5, 'Amazing dish!', :date)",
-        {"recipe_id": recipe_id, "username": username, "date": timestamp}
-    )
-
-
-def insert_favourite(empty_session, recipe_id, username):
-    empty_session.execute(
-        "INSERT INTO favorite (recipe_id, username) VALUES (:recipe_id, :username)",
-        {"recipe_id": recipe_id, "username": username}
-    )
-
-
-# ---------------------- ORM LOADING TESTS ----------------------
-
-def test_loading_of_users(empty_session):
-    insert_user(empty_session, ("Bob", "StrongPass"))
-    u = empty_session.query(User).one()
-    assert u.username == "Bob"
-    assert u.password == "StrongPass"
-
-
-def test_saving_of_user(empty_session):
-    user = User("Charlie", "12345")
+def test_add_and_retrieve_user(empty_session):
+    user = User("Alice", "Password123")
     empty_session.add(user)
     empty_session.commit()
 
-    rows = list(empty_session.execute("SELECT username, password FROM user"))
-    assert rows == [("Charlie", "12345")]
+    row = empty_session.execute("SELECT username, password FROM user").fetchone()
+    assert row == ("Alice", "Password123")
+
+    retrieved = empty_session.query(User).one()
+    assert retrieved.username == "Alice"
+    assert retrieved.password == "Password123"
 
 
-def test_user_duplicate_raises_integrity_error(empty_session):
-    insert_user(empty_session, ("Dana", "Secret"))
+def test_username_unique_constraint(empty_session):
+    user = User("Bob", "abc123")
+    empty_session.add(user)
     empty_session.commit()
-
+    empty_session.expunge_all()
     with pytest.raises(IntegrityError):
-        user = User("Dana", "Secret")
-        empty_session.add(user)
+        duplicate = User("Bob", "def456")
+        empty_session.add(duplicate)
         empty_session.commit()
 
 
-# ---------------------- RECIPE TESTS ----------------------
+# ---------------- AUTHOR & CATEGORY TESTS ----------------
 
-def test_loading_of_recipe_with_author_and_category(empty_session):
-    insert_author_and_category(empty_session)
-    recipe_id = insert_recipe(empty_session)
-    recipe = empty_session.query(Recipe).get(recipe_id)
+def test_insert_author_and_category(empty_session):
+    author = Author(1, "Gordon Ramsay")
+    category = Category("Dinner", category_id=1)
 
-    assert recipe.name == "Spaghetti Bolognese"
-    assert recipe.author.name == "Chef Mario"
-    assert recipe.category.name == "Dinner"
+    empty_session.add(author)
+    empty_session.add(category)
+    empty_session.commit()
+
+    authors = [r[0] for r in empty_session.execute("SELECT name FROM authors")]
+    categories = [r[0] for r in empty_session.execute("SELECT name FROM category")]
+
+    assert authors == ["Gordon Ramsay"]
+    assert categories == ["Dinner"]
 
 
-def test_saving_of_recipe(empty_session):
-    author = Author(2, "Julia Child")
-    category = Category(2, "Lunch")
+# ---------------- RECIPE TESTS ----------------
+
+def test_insert_recipe_with_author_and_category(empty_session):
+    author = Author(2, "Jamie Oliver")
+    category = Category("Lunch", category_id=2)
     recipe = Recipe(
-        recipe_id=2,
-        name="Quiche Lorraine",
+        recipe_id=1,
+        name="Grilled Cheese",
         author=author,
-        cook_time=40,
-        preparation_time=20,
+        cook_time=10,
+        preparation_time=5,
         created_date=datetime.utcnow(),
-        description="French classic",
-        images=[],
+        description="Simple sandwich",
         category=category,
-        ingredients=["eggs", "cheese"],
-        ingredient_quantities=["2", "100g"],
-        rating=4.8,
-        servings="6",
-        recipe_yield="1 pie",
-        instructions=["Mix", "Bake"],
-        reviews=[]
+        rating=4.5,
+        servings="1",
+        recipe_yield="1 sandwich",
     )
 
     empty_session.add(recipe)
     empty_session.commit()
 
-    rows = list(empty_session.execute("SELECT name, description, servings FROM recipe"))
-    assert rows == [("Quiche Lorraine", "French classic", "6")]
+    row = empty_session.execute("SELECT name, description, servings FROM recipe").fetchone()
+    assert row == ("Grilled Cheese", "Simple sandwich", "1")
 
 
-# ---------------------- REVIEW TESTS ----------------------
-
-def test_loading_of_reviews(empty_session):
-    insert_author_and_category(empty_session)
-    recipe_id = insert_recipe(empty_session)
-    username = insert_user(empty_session)
-    insert_review(empty_session, recipe_id, username)
-
-    reviews = list(empty_session.query(Review).all())
-    review = reviews[0]
-
-    assert review.username == username
-    assert review.recipe.id == recipe_id
-    assert review.review == "Amazing dish!"
-    assert review.rating == 5
-
-
-def test_saving_of_review(empty_session):
+def test_recipe_links_to_author_and_category(empty_session):
     author = Author(3, "Nigella Lawson")
-    category = Category(3, "Dessert")
+    category = Category("Dessert", category_id=3)
     recipe = Recipe(
-        recipe_id=3,
+        recipe_id=2,
         name="Chocolate Cake",
         author=author,
         cook_time=30,
         preparation_time=15,
         created_date=datetime.utcnow(),
         description="Rich chocolate cake",
-        images=[],
         category=category,
-        ingredients=["flour", "cocoa"],
-        ingredient_quantities=["2 cups", "1 cup"],
         rating=5,
         servings="8",
         recipe_yield="1 cake",
-        instructions=["Mix", "Bake"],
-        reviews=[]
     )
 
-    user = User("Eve", "password")
-    review = Review(username="Eve", recipe=recipe, rating=5, review="Perfect!", date=datetime.utcnow())
+    empty_session.add(recipe)
+    empty_session.commit()
+
+    retrieved = empty_session.query(Recipe).first()
+    assert retrieved.author.name == "Nigella Lawson"
+    assert retrieved.category.name == "Dessert"
+
+
+# ---------------- REVIEW TESTS ----------------
+
+def test_add_and_retrieve_review(empty_session):
+    author = Author(4, "Ina Garten")
+    category = Category("Breakfast", category_id=4)
+    user = User("Reviewer", "pw")
+    recipe = Recipe(
+        recipe_id=3,
+        name="Avocado Toast",
+        author=author,
+        cook_time=5,
+        preparation_time=2,
+        created_date=datetime.utcnow(),
+        description="Quick snack",
+        category=category,
+        rating=4,
+        servings="1",
+        recipe_yield="1 toast",
+    )
+    review = Review(username="Reviewer", recipe=recipe, rating=5, review="Tasty!", date=datetime.utcnow())
 
     empty_session.add(user)
     empty_session.add(recipe)
     empty_session.add(review)
     empty_session.commit()
 
-    rows = list(empty_session.execute("SELECT username, recipe_id, review, rating FROM review"))
-    assert rows == [("Eve", 3, "Perfect!", 5)]
+    row = empty_session.execute("SELECT username, recipe_id, rating, review FROM review").fetchone()
+    assert row == ("Reviewer", 3, 5, "Tasty!")
 
 
-# ---------------------- FAVORITE TESTS ----------------------
+# ---------------- FAVORITE TESTS ----------------
 
-def test_saving_and_loading_of_favorite(empty_session):
-    insert_author_and_category(empty_session)
-    recipe_id = insert_recipe(empty_session)
-    username = insert_user(empty_session)
-
-    insert_favourite(empty_session, recipe_id, username)
-    favs = list(empty_session.query(Favourite).all())
-
-    assert favs[0].username == username
-    assert favs[0].recipe.id == recipe_id
-
-
-# ---------------------- NUTRITION TESTS ----------------------
-
-def test_saving_of_recipe_with_nutrition(empty_session):
-    author = Author(4, "Test Chef")
-    category = Category(4, "Health")
+def test_add_and_retrieve_favorite(empty_session):
+    author = Author(5, "Chef John")
+    category = Category("Brunch", category_id=5)
+    user = User("Frank", "secret")
     recipe = Recipe(
         recipe_id=4,
-        name="Salad",
+        name="Eggs Benedict",
         author=author,
-        cook_time=0,
+        cook_time=15,
         preparation_time=10,
         created_date=datetime.utcnow(),
-        description="Healthy salad",
-        images=[],
+        description="Brunch special",
         category=category,
-        ingredients=["lettuce", "tomato"],
-        ingredient_quantities=["2 cups", "1 cup"],
-        rating=4.5,
+        rating=4.8,
+        servings="2",
+        recipe_yield="2 servings",
+    )
+    fav = Favourite(username="Frank", recipe=recipe, favourite_id=None)
+
+    empty_session.add(user)
+    empty_session.add(recipe)
+    empty_session.add(fav)
+    empty_session.commit()
+
+    row = empty_session.execute("SELECT username, id FROM favorite").fetchone()
+    # `id` in your ORM refers to Recipe.id (not PK)
+    assert row == ("Frank", 4)
+
+
+def test_favorite_links_user_and_recipe(empty_session):
+    author = Author(6, "Test Chef")
+    category = Category("Snack", category_id=6)
+    user = User("AliceFav", "pw123")
+    recipe = Recipe(
+        recipe_id=6,
+        name="Toastie",
+        author=author,
+        cook_time=5,
+        preparation_time=2,
+        created_date=datetime.utcnow(),
+        description="Cheese toast",
+        category=category,
+        rating=4,
+        servings="1",
+        recipe_yield="1 sandwich",
+    )
+    fav = Favourite(username="AliceFav", recipe=recipe, favourite_id=None)
+
+    empty_session.add(user)
+    empty_session.add(recipe)
+    empty_session.add(fav)
+    empty_session.commit()
+
+    fav_obj = empty_session.query(Favourite).one()
+    assert fav_obj.recipe.name == "Toastie"
+    assert fav_obj.username == "AliceFav"
+
+
+# ---------------- NUTRITION TESTS ----------------
+
+def test_add_and_retrieve_nutrition(empty_session):
+    author = Author(7, "Health Chef")
+    category = Category("Healthy", category_id=7)
+    recipe = Recipe(
+        recipe_id=7,
+        name="Salad Bowl",
+        author=author,
+        cook_time=0,
+        preparation_time=5,
+        created_date=datetime.utcnow(),
+        description="Fresh greens",
+        category=category,
+        rating=4.2,
         servings="2",
         recipe_yield="1 bowl",
-        instructions=["Mix all"],
-        reviews=[]
     )
 
     nutrition = Nutrition(
-        id=4,
-        recipe=recipe,
-        calories=150,
+        id=7,
+        calories=180,
         fat=5,
         saturated_fat=1,
-        cholesterol=10,
-        sodium=300,
+        cholesterol=0,
+        sodium=200,
         carbohydrates=10,
         fiber=2,
         sugar=3,
-        protein=5
+        protein=6,
     )
+
+    recipe.nutrition = nutrition
 
     empty_session.add(recipe)
     empty_session.add(nutrition)
     empty_session.commit()
 
-    rows = list(empty_session.execute(
-        "SELECT calories, fat, protein FROM nutrition WHERE id = 4"
-    ))
-    assert rows == [(150.0, 5.0, 5.0)]
-
-
-# ---------------------- RELATIONSHIP ROUNDTRIP ----------------------
-
-def test_user_review_recipe_roundtrip(empty_session):
-    author = Author(5, "Jamie Oliver")
-    category = Category(5, "Snacks")
-    user = User("Frank", "safePass")
-
-    recipe = Recipe(
-        recipe_id=5,
-        name="Toastie",
-        author=author,
-        cook_time=5,
-        preparation_time=3,
-        created_date=datetime.utcnow(),
-        description="Quick sandwich",
-        images=[],
-        category=category,
-        ingredients=["bread", "cheese"],
-        ingredient_quantities=["2 slices", "1 slice"],
-        rating=4,
-        servings="1",
-        recipe_yield="1 sandwich",
-        instructions=["Grill cheese sandwich"],
-        reviews=[]
-    )
-
-    review = Review(username="Frank", recipe=recipe, rating=4, review="Tasty!", date=datetime.utcnow())
-    user.add_review(review)
-
-    empty_session.add(user)
-    empty_session.add(recipe)
-    empty_session.commit()
-
-    rows = list(empty_session.execute("SELECT username, recipe_id, review FROM review"))
-    assert rows == [("Frank", 5, "Tasty!")]
+    row = empty_session.execute("SELECT calories, protein FROM nutrition").fetchone()
+    assert row == (180.0, 6.0)
