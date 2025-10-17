@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pytest
 import tests.conftest
+from tests.conftest import *
 from recipe import MemoryRepository
 from recipe.authentication.services import AuthenticationException
 from recipe.authentication import services as auth_services
@@ -227,7 +228,7 @@ def test_get_favourite_recipes(user, repo, sample_recipe, recipes):
     user.add_favourite_recipe(fav)
     recipes = favorite_services.get_favourite_recipes(user.username, repo)
     assert len(recipes) == 1
-    assert recipes[0] == 38
+    assert recipes[0].id == 38
 
 
 # ----------------- search_function -----------------
