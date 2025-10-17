@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import List
 
 from sqlalchemy import desc, asc
-from sqlalchemy import or_
 from sqlalchemy.orm.exc import NoResultFound
 
 from sqlalchemy.orm import scoped_session
@@ -92,18 +91,13 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add_review(self, review: Review):
         with self._session_cm as scm:
-            existing = scm.session.query(Review).filter(
-                Review._Review__id == review.review_id
-            ).first()
-
-            if not existing:
-                scm.session.add(review)
-                scm.commit()
-            else:
-                existing.rating = review.rating
-                existing.review = review.review
-                existing.date = review.date
-                scm.commit()
+            with scm.session.no_autoflush:
+                query = scm.session.query(Review).filter(
+                    Review._Review__id == review.review_id
+                )
+                if review not in query.all():
+                    scm.session.add(review)
+                    scm.commit()
 
     def remove_review(self, review: Review):
         with self._session_cm as scm:
@@ -120,7 +114,8 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Favourite).filter(
-                    Favourite._Favourite__id == favourite.id
+                    Favourite._Favourite__id == favourite.id,
+                    Favourite._Favourite__username == favourite.username
                 )
                 if favourite not in query.all():
                     scm.session.merge(favourite)
@@ -130,7 +125,7 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Favourite).filter(
-                    Favourite._Favourite__id == favourite.id and
+                    Favourite._Favourite__id == favourite.id,
                     Favourite._Favourite__username == favourite.username
                 ).first()
                 if query:
@@ -229,9 +224,8 @@ class SqlAlchemyRepository(AbstractRepository):
         nutri = query.one()
         return nutri
 
-    def get_number_of_recipes(self) -> int:
-        num_recipes = self._session_cm.session.query(Recipe).count()
-        return num_recipes
+
+
 
     """-----------------------population-------------------"""
     def add_category(self, id: str,category: Category) -> None:
@@ -372,7 +366,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_multiple_recipe(self, recipes: List[Recipe]) -> None:
         with self._session_cm as scm:
             for i in recipes:
-                existing_recipe = scm.session.query(Recipe).filter(Recipe.id == i.id).first()
+                existing_recipe = scm.session.query(Recipe).filter(Recipe._Recipe__id == i.id).first()
                 if not existing_recipe:
                     scm.session.merge(i)
             scm.commit()
@@ -441,68 +435,3 @@ class SqlAlchemyRepository(AbstractRepository):
             User._User__reviews = reviews
         else:
             User._User__reviews = []
-
-    """----------------------Recipe actions----------------------"""
-
-    def search_recipes(self, keyword: str) -> list[Recipe]:
-        """
-        Search recipes by name, author, or category (case-insensitive).
-        """
-        if not keyword:
-            return []
-
-        with self._session_cm as scm:
-            # Query the database for matches
-            query = scm.session.query(Recipe).filter(
-                or_(
-                    Recipe._Recipe__name.ilike(f'%{keyword}%'),
-                    Recipe._Recipe__author.ilike(f'%{keyword}%'),
-                    Recipe._Recipe__category.ilike(f'%{keyword}%')
-                )
-            )
-            results = query.all()
-
-            # Populate related data for each recipe
-            for recipe in results:
-                self._populate_recipe_data_in_session(recipe, scm.session)
-
-            return results
-
-    def search_recipes_by_author(self, author_name: str) -> list[Recipe]:
-        if not author_name:
-            return []
-
-        with self._session_cm as scm:
-            # Query recipes by joining with authors table
-            query = scm.session.query(Recipe).join(
-                Author, Recipe._Recipe__author_id == Author._Author__id
-            ).filter(
-                Author._Author__name.ilike(f'%{author_name}%')
-            )
-            results = query.all()
-
-            # Populate related data for each recipe
-            for recipe in results:
-                self._populate_recipe_data_in_session(recipe, scm.session)
-
-            return results
-
-    def search_recipes_by_category(self, category_name: str) -> list[Recipe]:
-        if not category_name:
-            return []
-
-        with self._session_cm as scm:
-            # Query recipes by joining with categories table
-            query = scm.session.query(Recipe).join(
-                Category, Recipe._Recipe__category_id == Category._Category__id
-            ).filter(
-                Category._Category__name.ilike(f'%{category_name}%')
-            )
-            results = query.all()
-
-            # Populate related data for each recipe
-            for recipe in results:
-                self._populate_recipe_data_in_session(recipe, scm.session)
-
-            return results
-

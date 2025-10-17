@@ -18,67 +18,76 @@ class ReviewForm(FlaskForm):
     rating = IntegerField("Rating (1-5)", validators=[DataRequired(), NumberRange(min=1, max=5)])
     submit = SubmitField("Post Review")
 
+# ----------------------Recipe details rendered-------------------------
 
-@recipe_blueprint.route('/recipe/<int:recipe_id>', methods=['GET', 'POST'])
+@recipe_blueprint.route('/recipe/<int:recipe_id>', methods=['GET'])
 def recipe_detail(recipe_id):
-
     recipe = repo.repo_instance.get_recipe_by_id(recipe_id)
     list_of_recipes = repo.repo_instance.get_recipes(1, 100, "s")
+
     if recipe is None:
-        # simple 404 fallback
         return render_template('404.html', message="Recipe not found"), 404
 
     form = ReviewForm()
+    form.recipe_id.data = recipe_id
 
-    # Determine if the current recipe is already in the user's favorites (if logged in)
+    # Determine if current user has favorited this recipe
     is_favorited = False
     if "user_name" in session:
         is_favorited = services.is_favorited(
             username=session["user_name"],
             recipe_id=recipe_id,
-            repo=repo.repo_instance)
-    # Store the recipe_id in the hidden field, so it persists across POSTs
-    form.recipe_id.data = recipe_id
+            repo=repo.repo_instance,
+        )
 
-    if form.validate_on_submit():
-        if "user_name" not in session:
-            flash("You must be logged in to post a review", "danger")
-            return redirect(url_for("authentication_bp.login"))
-
-        try:
-            services.add_review(
-                username=session["user_name"],
-                recipe_id=int(form.recipe_id.data),
-                review_text=form.review_text.data,
-                rating=form.rating.data,
-                date=datetime.now(),
-                repo=repo.repo_instance,
-            )
-            flash("Your review has been added!", "success")
-
-            # Redirect to recipe detail (PRG pattern: Post -> Redirect -> Get)
-            return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))
-        except services.ReviewException as e:
-            flash(str(e), "danger")
-
-    # If GET request or failed POST, render recipe detail + form again
+    # Reviews & nutrition
     reviews = services.get_reviews_for_recipe(recipe_id, repo.repo_instance)
-    # Find Nutrition for this recipe
     nutrition = repo.repo_instance.get_nutrition_by_recipe_id(recipe_id)
-    health_stars = {recipe.id: repo.repo_instance.get_nutrition_by_recipe_id(recipe.id).calculate_health_stars() for recipe in
-                    list_of_recipes}
+    health_stars = {
+        recipe.id: repo.repo_instance.get_nutrition_by_recipe_id(recipe.id).calculate_health_stars()
+        for recipe in list_of_recipes
+    }
+
     return render_template(
         "recipe_detail.html",
         recipe=recipe,
         form=form,
         reviews=reviews,
-        handler_url=url_for("recipe_bp.recipe_detail", recipe_id=recipe_id),
+        handler_url=url_for("recipe_bp.add_review", recipe_id=recipe_id),
         nutrition=nutrition,
         health_stars=health_stars,
         is_favorited=is_favorited,
         favorite_handler_url=url_for("recipe_bp.add_favorite", recipe_id=recipe_id),
     )
 
+#---------------------------------Review --------------------------------
+@recipe_blueprint.route('/recipe/<int:recipe_id>/add_review', methods=['POST'])
+@login_required
+def add_review(recipe_id):
+    form = ReviewForm()
+
+    # Ensure recipe_id persists
+    form.recipe_id.data = recipe_id
+
+    if not form.validate_on_submit():
+        flash("Please fill in all fields correctly.", "danger")
+        return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))
+
+    try:
+        services.add_review(
+            username=session["user_name"],
+            recipe_id=int(form.recipe_id.data),
+            review_text=form.review_text.data,
+            rating=form.rating.data,
+            date=datetime.utcnow(),
+            repo=repo.repo_instance,
+        )
+        flash("Your review has been added!", "success")
+    except services.ReviewException as e:
+        flash(str(e), "danger")
+
+    # redirect back to recipe detail
+    return redirect(url_for("recipe_bp.recipe_detail", recipe_id=recipe_id))
 
 @recipe_blueprint.post('/recipe/<int:recipe_id>/favorite')
 @login_required

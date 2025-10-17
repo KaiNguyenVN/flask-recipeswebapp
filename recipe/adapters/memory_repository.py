@@ -48,7 +48,7 @@ class MemoryRepository(AbstractRepository):
             self.__review_counter += 1
         user = self.get_user(review.username)
         user.add_review(review)
-        recipe = self.get_recipe_by_id(review.recipe_id)
+        recipe = self.get_recipe_by_id(review.recipe.id)
         recipe.add_review(review)
         self.__reviews.append(review)
 
@@ -57,7 +57,7 @@ class MemoryRepository(AbstractRepository):
         if review in user.reviews:
             user.remove_review(review)
 
-        recipe = self.get_recipe_by_id(review.recipe_id)
+        recipe = self.get_recipe_by_id(review.recipe.id)
         if review in recipe.reviews:
             recipe.reviews.remove(review)
 

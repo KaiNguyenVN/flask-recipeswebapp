@@ -11,6 +11,7 @@ search_service = SearchService(repo)
 
 @search_blueprint.route("/search")
 def search():
+
     query = request.args.get("q", "").strip()
     filter_by = request.args.get("filter_by", "").strip()
     page = request.args.get("page", 1, type=int)

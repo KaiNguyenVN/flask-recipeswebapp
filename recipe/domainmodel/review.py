@@ -1,8 +1,12 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from recipe.domainmodel.recipe import Recipe
+
 
 class Review:
     # Hazziq - recipe: "Recipe" to fix error
-    def __init__(self, username:str, recipe_id:int, rating: int, review: str, date: datetime, review_id = None) -> None:
+    def __init__(self, username:str, recipe:"Recipe", rating: int, review: str, date: datetime, review_id = None) -> None:
         if not isinstance(rating, int) or rating <= 0 or rating > 5:
             raise ValueError("rating must be a positive value and less than 5.")
         if review_id is not None:
@@ -11,7 +15,7 @@ class Review:
 
         self.__review_id = review_id
         self.__username = username
-        self.__recipe_id = recipe_id
+        self.__recipe = recipe
         self.__rating = rating
         self.__review = review
         self.__date = date if date else datetime.now()
@@ -39,8 +43,8 @@ class Review:
     def username(self) -> str:
         return self.__username
     @property
-    def recipe_id(self) -> int:
-        return self.__recipe_id
+    def recipe(self) -> "Recipe":
+        return self.__recipe
     @property
     def rating(self) -> int:
         return self.__rating

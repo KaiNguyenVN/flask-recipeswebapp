@@ -18,7 +18,6 @@ from recipe.domainmodel.user import User
 
 # Global variable giving access to the MetaData (schema) information of the database
 mapper_registry = registry()
-metadata = mapper_registry.metadata
 
 # Authors table
 authors_table = Table(
@@ -37,8 +36,8 @@ categories_table = Table(
 # Favorite table
 favorite_table = Table(
     'favorite', mapper_registry.metadata,
-    Column('id', Integer,primary_key=True),
-    Column('recipe_id', Integer, ForeignKey('recipe.id'), nullable=False),
+    Column('PK', Integer, primary_key=True, autoincrement=True),
+    Column('id', Integer, ForeignKey('recipe.id'), nullable=False),
     Column('username', String(255), ForeignKey('user.username'), nullable=False),
 )
 
@@ -139,7 +138,7 @@ def map_model_to_tables():
     mapper_registry.map_imperatively(Favourite, favorite_table, properties={
         '_Favourite__id': favorite_table.c.id,
         '_Favourite__username': favorite_table.c.username,
-        '_Favourite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.recipe_id], uselist=False),
+        '_Favourite__recipe': relationship(Recipe, foreign_keys=[favorite_table.c.id], uselist=False),
     })
     # Recipe mapping
     mapper_registry.map_imperatively(Recipe, recipe_table, properties={
@@ -193,8 +192,7 @@ def map_model_to_tables():
     # Review mapping
     mapper_registry.map_imperatively(Review, review_table, properties={
         '_Review__id': review_table.c.id,
-        '_Review__recipe_id': review_table.c.recipe_id,
-        '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False),
+        '_Review__recipe': relationship(Recipe, back_populates='_Recipe__reviews',foreign_keys=[review_table.c.recipe_id], uselist=False, lazy='joined'),
         '_Review__rating': review_table.c.rating,
         '_Review__date': review_table.c.date,
         '_Review__review': review_table.c.review,
