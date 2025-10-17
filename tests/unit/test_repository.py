@@ -1,5 +1,5 @@
 from datetime import datetime
-import tests.conftest
+from tests.conftest import *
 import pytest
 
 from recipe.domainmodel.nutrition import Nutrition

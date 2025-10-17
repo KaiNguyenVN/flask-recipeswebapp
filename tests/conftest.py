@@ -172,8 +172,8 @@ def mock_repo(recipes):
     return Repo()
 
 @pytest.fixture
-def search_service(mock_repo):
-    return SearchService(mock_repo)
+def search_service(repo):
+    return SearchService(repo)
 
 
 @pytest.fixture
