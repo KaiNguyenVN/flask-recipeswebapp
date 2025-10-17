@@ -8,8 +8,8 @@ from pathlib import Path
 
 # --- Data paths ---
 PROJECT_ROOT = Path(__file__).parent.parent
-FULL_DATA_PATH = PROJECT_ROOT / "recipe" / "adapters" / "data"
-TEST_DATA_PATH = PROJECT_ROOT / "tests" / "data"
+FULL_DATA_PATH = PROJECT_ROOT / "recipe" / "adapters" / "data" / "recipes.csv"
+TEST_DATA_PATH = PROJECT_ROOT / "tests" / "data" / "test_recipes.csv"
 
 # --- Database URIs ---
 TEST_DATABASE_URI_FILE = 'sqlite:///recipes-test.db'
@@ -18,6 +18,7 @@ TEST_DATABASE_URI_IN_MEMORY = 'sqlite://'
 
 # ----------------------- Persistent file database (LIMITED dataset) ---------------------------
 @pytest.fixture
+
 def database_engine():
     clear_mappers()
     engine = create_engine(TEST_DATABASE_URI_FILE)
@@ -45,7 +46,7 @@ def database_engine():
 
 
 # ---------------------------In-memory database (FULL dataset)---------------------------
-@pytest.fixture
+@pytest.fixture(scope="session")
 def session_factory():
     clear_mappers()
     engine = create_engine(TEST_DATABASE_URI_IN_MEMORY)
