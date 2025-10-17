@@ -127,16 +127,16 @@ def test_post_review_requires_login_redirects_to_login(client):
 # ----------------- Search Test -----------------
 
 def test_search_by_name(search_service):
-    results = search_service.search_recipes(query="Chocolate", filter_by="name")
+    results = search_service.search_recipes(query="Best", filter_by="name")
     assert results['total_recipes'] == 1
-    assert results['recipes'][0].name == "Chocolate Cake"
+    assert results['recipes'][0].name == "Best Lemonade"
     assert results['pagination']['page'] == 1
     assert results['pagination']['total_pages'] == 1
 
 def test_search_by_ingredients(search_service):
-    results = search_service.search_recipes(query="chicken", filter_by="ingredients")
+    results = search_service.search_recipes(query="blueberries", filter_by="ingredients")
     assert results['total_recipes'] == 1
-    assert results['recipes'][0].name == "Salad Bowl"
+    assert results['recipes'][0].name == "Low-Fat Berry Blue Frozen Dessert"
 
 def test_search_pagination(search_service):
     results = search_service.search_recipes(per_page=2, page=1)
@@ -146,11 +146,11 @@ def test_search_pagination(search_service):
 
 def test_search_suggestions(search_service):
     results = search_service.search_recipes()
-    assert "Chocolate Cake" in results['suggestions']['names']
-    assert "Dessert" in results['suggestions']['categories']
-    assert "Main Course" in results['suggestions']['categories']
-    assert "Chef John" in results['suggestions']['authors']
-    assert "flour" in results['suggestions']['ingredients']
+    assert "Low-Fat Berry Blue Frozen Dessert" in results['suggestions']['names']
+    assert "Soy/Tofu" in results['suggestions']['categories']
+    assert "Frozen Desserts" in results['suggestions']['categories']
+    assert "Dancer" in results['suggestions']['authors']
+    assert "sugar" in results['suggestions']['ingredients']
 
 def test_search_route_integration(client):
     response = client.get("/search?q=chicken")
