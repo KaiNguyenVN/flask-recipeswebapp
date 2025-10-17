@@ -311,10 +311,10 @@ def test_nutrition_repr_and_hash():
 
 # ---------------- REVIEW TESTS ----------------
 def test_review_construction(my_user, my_recipe):
-    review = Review(my_user.username, my_recipe.id, 5, "Amazing!", datetime.now(),1)
+    review = Review(my_user.username, my_recipe, 5, "Amazing!", datetime.now(),1)
     assert review.review_id == 1
     assert review.username == my_user.username
-    assert review.recipe_id == my_recipe.id
+    assert review.recipe == my_recipe
     assert review.rating == 5
     assert review.review == "Amazing!"
     assert isinstance(review.date, datetime)

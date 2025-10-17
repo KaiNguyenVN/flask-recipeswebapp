@@ -48,7 +48,7 @@ def sample_review(sample_user, sample_recipe):
     # Make sure username and recipe_id align with repo expectations
     return Review(
         sample_user.username,
-        sample_recipe.id,
+        sample_recipe,
         5,
         "Great!",
         datetime.now(),

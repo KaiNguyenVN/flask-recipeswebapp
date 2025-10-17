@@ -87,7 +87,7 @@ def test_post_review_success_shows_flash_and_review(client):
 
     # post a review
     r = client.post(
-        f"/recipe/{RECIPE_ID}",
+        f"/recipe/{RECIPE_ID}/add_review",
         data={
             "recipe_id": str(RECIPE_ID),
             "review_text": "So refreshing and easy!",
@@ -109,7 +109,7 @@ def test_post_review_requires_login_redirects_to_login(client):
        - a flash explains they must be logged in
     """
     r = client.post(
-        f"/recipe/{RECIPE_ID}",
+        f"/recipe/{RECIPE_ID}/add_review",
         data={
             "recipe_id": str(RECIPE_ID),
             "review_text": "I should not be able to post",

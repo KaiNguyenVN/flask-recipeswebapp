@@ -4,8 +4,7 @@ from pathlib import Path
 import recipe.adapters.repository as repo
 from recipe.adapters import memory_repository, repository_populate, database_repository
 from recipe.adapters.memory_repository import MemoryRepository
-from recipe.adapters.database_repository import SqlAlchemyRepository
-from recipe.adapters.orm import metadata, map_model_to_tables, mapper_registry
+from recipe.adapters.orm import map_model_to_tables, mapper_registry
 from recipe.adapters.repository_populate import populate
 from recipe.authentication.authentication import authentication_blueprint
 
@@ -14,6 +13,8 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from sqlalchemy.pool import NullPool
 
+
+
 def create_app(test_config=None):
     """Construct the core application."""
 
@@ -21,13 +22,6 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_object('config.Config')
     data_path = Path('recipe/adapters/data/recipes.csv')
-
-    # Database and Repository setup
-    database_uri = "sqlite:///recipes.db"
-    engine = create_engine(database_uri)
-    clear_mappers()
-    session_factory = sessionmaker(bind=engine)
-    repo.repo_instance = SqlAlchemyRepository(session_factory)
 
     @app.before_request
     def check_session_user():
@@ -63,21 +57,13 @@ def create_app(test_config=None):
         # Create the SQLAlchemy DatabaseRepository instance for an sqlite3-based repository.
         repo.repo_instance = database_repository.SqlAlchemyRepository(session_factory)
 
-        # Check if database needs to be initialised or reset
-        inspector = inspect(database_engine)
-
-        if app.config['TESTING'] == 'True' or len(inspector.get_table_names()) == 0:
+        if app.config['TESTING'] == 'True' or len(database_engine.table_names()) == 0:
             print("REPOPULATING DATABASE...")
             # For testing, or first-time use of the web application, reinitialise the database.
             clear_mappers()
             mapper_registry.metadata.create_all(database_engine)  # Conditionally create database tables.
-
-            # Clear existing data for a clean start
-            with database_engine.connect() as connection:
-                for table in reversed(metadata.sorted_tables):
-                    connection.execute(table.delete())
-                    connection.commit()
-
+            for table in reversed(mapper_registry.metadata.sorted_tables):  # Remove any data from the tables.
+                database_engine.execute(table.delete())
 
             # Generate mappings that map domain model classes to the database tables.
             map_model_to_tables()

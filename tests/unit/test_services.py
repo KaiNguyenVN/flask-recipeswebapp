@@ -94,7 +94,7 @@ def test_add_review_happy_path(repo, user, sample_recipe):
     assert isinstance(review, Review)
     assert review in sample_recipe.reviews
     assert review.username == "alice"
-    assert review.recipe_id == sample_recipe.id
+    assert review.recipe == sample_recipe
     assert review.rating == 5
     assert review.review == "Great!"
     assert  sample_recipe.reviews[0].review == "Great!"
@@ -106,13 +106,13 @@ def test_add_review_missing_user_or_recipe_raises(repo, user, sample_recipe):
     # No user added
     repo.add_recipe(sample_recipe)
     with pytest.raises(ReviewException):
-        recipe_services.add_review("alice", sample_recipe.id, "ok", 5, datetime.now(), repo)
+        recipe_services.add_review("alice", sample_recipe, "ok", 5, datetime.now(), repo)
 
     # No recipe added
     repo = MemoryRepository()
     repo.add_user(user)
     with pytest.raises(ReviewException):
-        recipe_services.add_review("alice", sample_recipe.id, "ok", 5, datetime.now(), repo)
+        recipe_services.add_review("alice", sample_recipe, "ok", 5, datetime.now(), repo)
 
 
 
@@ -143,7 +143,7 @@ def test_remove_review_wrong_user_raises(repo, user, other_user, sample_recipe):
     with pytest.raises(ReviewException):
         recipe_services.remove_review(
             username=other_user.username,  # not the owner
-            recipe_id=sample_recipe.id,
+            recipe_id =sample_recipe.id,
             review_id=r.review_id,
             repo=repo,
         )
@@ -221,9 +221,9 @@ def test_remove_favorite_recipe_missing_user_or_recipe_raises(repo, user, sample
 
 # ----------------- favorite -----------------
 
-def test_get_favourite_recipes(user, repo,sample_recipe):
+def test_get_favourite_recipes(user, repo, sample_recipe, recipes):
     repo.add_user(user)
-    fav = Favourite(user.username, sample_recipe.id, sample_recipe.id)
+    fav = Favourite(user.username, sample_recipe, sample_recipe.id)
     user.add_favourite_recipe(fav)
     recipes = favorite_services.get_favourite_recipes(user.username, repo)
     assert len(recipes) == 1
@@ -277,6 +277,7 @@ def test_suggestions_structure(search_service):
 
 
 def test_empty_query_returns_all(search_service):
+    print(type(search_service))
     out = search_service.search_recipes(query="", filter_by="")
     assert out["total_recipes"] == 3
     assert {r.name for r in out["recipes"]} == {"Chocolate Cake", "Beef Stew", "Salad Bowl"}
