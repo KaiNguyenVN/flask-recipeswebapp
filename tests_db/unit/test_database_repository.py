@@ -83,6 +83,12 @@ def test_can_add_recipe(session_factory):
     retrieved = repo.get_recipe_by_id(999)
     assert retrieved.name == "Test Cheesecake"
 
+def test_populate_recipe_data(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    recipe = repo.get_recipe_by_id(38)
+    assert recipe.images
+    assert recipe.ingredients
+    assert recipe.instructions
 
 # ----------------------- REVIEW TESTS -----------------------
 
@@ -118,6 +124,16 @@ def test_can_add_and_remove_favorite(session_factory):
     favorites = repo.get_user_favorites("dave")
     assert not any(f._Favourite__recipe.id == recipe.id for f in favorites)
 
+def test_can_get_user_favorites(session_factory):
+    repo = SqlAlchemyRepository(session_factory)
+    recipe = repo.get_recipe_by_id(38)
+
+    fav = Favourite(recipe=recipe, username="dave", favourite_id=recipe.id)
+    repo.add_favorite_recipe(fav)
+
+    favorites = repo.get_user_favorites("dave")
+    assert isinstance(favorites, list)
+    assert any(f._Favourite__recipe.id == recipe.id for f in favorites)
 
 # ----------------------- CATEGORY & AUTHOR TESTS -----------------------
 

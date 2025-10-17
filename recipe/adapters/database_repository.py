@@ -410,28 +410,3 @@ class SqlAlchemyRepository(AbstractRepository):
         ).order_by(RecipeInstruction._RecipeInstruction__position).all()
         if recipe_instructions:
             recipe._Recipe__instructions = [i.step for i in recipe_instructions]
-
-    def _populate_user_data(self, user:User) -> None:
-        if user is None:
-            return
-        # Use the same session context
-        with self._session_cm as scm:
-            self._populate_user_data_in_session(user, scm.session)
-
-    def _populate_user_data_in_session(self, user: User, session):
-        if user is None:
-            return
-        favorites = session.query(Favourite).filter(
-            Favourite._Favourite__username == user.username
-        ).all()
-        reviews = session.query(Review).filter(
-            Review._Review__username == user.username
-        )
-        if favorites:
-            User._User__favourite_recipes = favorites
-        else:
-            User._User__favourite_recipes = []
-        if reviews:
-            User._User__reviews = reviews
-        else:
-            User._User__reviews = []
