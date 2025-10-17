@@ -114,7 +114,8 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Favourite).filter(
-                    Favourite._Favourite__id == favourite.id
+                    Favourite._Favourite__id == favourite.id,
+                    Favourite._Favourite__username == favourite.username
                 )
                 if favourite not in query.all():
                     scm.session.merge(favourite)
@@ -124,7 +125,7 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             with scm.session.no_autoflush:
                 query = scm.session.query(Favourite).filter(
-                    Favourite._Favourite__id == favourite.id and
+                    Favourite._Favourite__id == favourite.id,
                     Favourite._Favourite__username == favourite.username
                 ).first()
                 if query:
