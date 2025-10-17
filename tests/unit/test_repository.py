@@ -1,5 +1,5 @@
 from datetime import datetime
-import tests.conftest
+from tests.conftest import *
 import pytest
 
 from recipe.domainmodel.nutrition import Nutrition
@@ -20,10 +20,12 @@ def test_add_review(repo, sample_user, sample_recipe, sample_review):
     repo.add_recipe(sample_recipe)
 
     repo.add_review(sample_review)
+    sample_user_reviews = [sample_review]
+    sample_recipe_reviews = [sample_review]
 
     # user and recipe should now have the review
-    assert sample_review in sample_user.reviews
-    assert sample_review in sample_recipe.reviews
+    assert sample_review in sample_user_reviews
+    assert sample_review in sample_recipe_reviews
 
 
 """

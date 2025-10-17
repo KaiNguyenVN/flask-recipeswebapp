@@ -20,7 +20,9 @@ TEST_DATA_PATH =  Path('./tests/data/test_recipes.csv')
 
 @pytest.fixture
 def repo():
-    return MemoryRepository()
+    repo = MemoryRepository()
+    populate(TEST_DATA_PATH, repo, False)
+    return repo
 
 
 @pytest.fixture
@@ -170,8 +172,8 @@ def mock_repo(recipes):
     return Repo()
 
 @pytest.fixture
-def search_service(mock_repo):
-    return SearchService(mock_repo)
+def search_service(repo):
+    return SearchService(repo)
 
 
 @pytest.fixture
