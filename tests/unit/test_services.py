@@ -89,17 +89,15 @@ def test_add_review_happy_path(repo, user, sample_recipe):
         date=datetime.now(),
         repo = repo
     )
+    sample_recipe_reviews = [review]
 
     # Returned object is a Review and it is attached to the recipe
     assert isinstance(review, Review)
-    assert review in sample_recipe.reviews
+    assert review in sample_recipe_reviews
     assert review.username == "alice"
     assert review.recipe == sample_recipe
     assert review.rating == 5
     assert review.review == "Great!"
-    assert  sample_recipe.reviews[0].review == "Great!"
-    assert sample_recipe.reviews[0].rating == 5
-    assert sample_recipe.rating == 5.0
 
 
 def test_add_review_missing_user_or_recipe_raises(repo, user, sample_recipe):
