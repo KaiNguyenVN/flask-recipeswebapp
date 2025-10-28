@@ -1,9 +1,25 @@
-# COMPSCI 235 - Starter Repository for the CS235 Recipe Portal
-This is a starter repository for the recipes webapp project of CompSci 235 in Semester 2, 2025.
+# Recipe Portal
+
 
 ## Description
 
-This repository contains a partial implementation of the domain model. It contains unit tests which can be run through pytest. It also contains a simple Flask application that renders content of a Recipe object instance from our domain model on a blank HTML page. You'll be expanding the domain model implementation, and you have the freedom to add, modify or remove test cases as needed.
+Recipe Web App
+A Flask-based web application that allows users to browse, view, and review recipes.
+It features user authentication, recipe details, and review management, with a modular structure using Blueprints and an SQLAlchemy database backend.
+
+### Key Features
+
+1. Built with Flask and Jinja2 templating
+
+2. User authentication (login, registration, and session management)
+
+3. Recipe browsing and detail pages with user reviews
+
+4. WTForms for secure form handling (with CSRF protection)
+
+5. Uses SQLAlchemy ORM for database integration
+
+6. Simple, responsive HTML/CSS interface
 
 ## Installation
 
